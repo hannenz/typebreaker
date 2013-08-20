@@ -5,29 +5,46 @@ namespace TypeBreaker {
 
 	public class Breaker : GLib.Object {
 
+		private GLib.Settings settings;
+
 		public signal void have_a_break();
 		public signal void warn_break();
 
-		public uint break_time;
 		public uint work_time;
 		public uint warn_time;
+		public uint break_time;
+		public uint postpones;
+		public uint postpone_time;
 
 		public DBusProxy screensaver_proxy;
 
 		private Timer timer;
 		private uint timeout_id;
 		private bool has_been_warned;
+		private bool is_idle;
 
 		private KeyGrabber key_grabber;
 		private BreakWindow break_window;
 
 		public Breaker(){
 			this.timer = new Timer();
-			timer.start();
+			this.timer.start();
 			this.timeout_id = Timeout.add(1000, main_poll);
-			this.break_time = 3; //5 * 60;
-			this.work_time = 90 * 60;
-			this.warn_time = 1 * 60;
+
+			this.settings = new GLib.Settings("org.pantheon.typebreaker");
+
+			this.work_time = settings.get_int("type-time");
+			this.warn_time = settings.get_int("warn-time");
+			this.break_time = settings.get_int("break-time");
+			this.postpones = settings.get_int("postpones");
+			this.postpone_time = settings.get_int("postpone-time");
+
+			print ("type time:    %u\n", this.work_time);
+			print ("warn time:    %u\n", this.warn_time);
+			print ("break time:    %u\n", this.break_time);
+			print ("postpones:    %u\n", this.postpones);
+			print ("postpone time:    %u\n", this.postpone_time);
+
 			this.break_window = null;
 
 			this.key_grabber = new KeyGrabber();
@@ -46,28 +63,32 @@ namespace TypeBreaker {
 			if (this.break_window == null){
 				this.break_window = new BreakWindow();
 				this.break_window.lock_screen_requested.connect(on_lock_screen_requested);
-				this.break_window.run(this.break_time);
+				this.break_window.postpone_requested.connect(on_postpone_requested);
+				this.break_window.countdown_finished.connect(on_break_completed);
+				this.break_window.run();
 			}
 		}
 
 		private void on_break_completed(){
 			print ("BREAK HAS BEEN COMPLETED\n");
+			this.timer.start();
+			this.has_been_warned = false;
 			if (this.break_window != null){
 				this.break_window.destroy();
 				this.break_window = null;
-				timer.start();
-				this.has_been_warned = false;
 			}
 		}
 
 		private void on_warn_break(){
-			try {
-				string mssg = "Attention, attention! KeyBreaker will shut down your keyboard in %u seconds!".printf(this.warn_time);
-				var notification = new Notification(mssg, null, null);
-				notification.show();
-			}
-			catch (Error e){
-				stderr.printf("Failed to show notification: %s\n", e.message);
+			if (this.warn_time > 0){
+				try {
+					string mssg = "Attention, attention! KeyBreaker will shut down your keyboard in %u seconds!".printf(this.warn_time);
+					var notification = new Notification(mssg, null, null);
+					notification.show();
+				}
+				catch (Error e){
+					stderr.printf("Failed to show notification: %s\n", e.message);
+				}
 			}
 		}
 
@@ -107,26 +128,50 @@ namespace TypeBreaker {
 			proxy.call("Lock", new Variant("()"), DBusCallFlags.NONE, -1, null);
 		}
 
+		private void on_postpone_requested(){
+
+			this.break_window.hide();
+			timer.start();
+			// show notification
+			try {
+				string mssg = "Postponed typing break by %u seconds!".printf(this.postpone_time);
+				var notification = new Notification(mssg, null, null);
+				notification.show();
+			}
+			catch (Error e){
+				stderr.printf("Failed to show notification: %s\n", e.message);
+			}
+
+		}
+
 		public bool main_poll(){
 
 			uint seconds_elapsed = (uint)this.timer.elapsed();
 
 //			print("%.f seconds elsapsed...\n", seconds_elapsed);
 
-			if (seconds_elapsed >= this.work_time - this.warn_time && !has_been_warned){
+			if ((seconds_elapsed >= this.work_time - this.warn_time) && !has_been_warned){
 				print("Uh oh! Time to warn the user...\n");
 				this.warn_break();
 				has_been_warned = true;
 			}
 
-			if (seconds_elapsed >= this.work_time){
-				print ("Time for a break!");
-				this.have_a_break();
+			if (this.break_window != null){
+				if (seconds_elapsed >= this.postpone_time){
+					this.break_window.show();
+				}
+			}
+			else {
+				if (seconds_elapsed >= this.work_time){
+					print ("Time for a break!");
+					this.have_a_break();
+				}
 			}
 			return true;
 		}
 
 		public void on_activity(){
+			this.is_idle = false;
 			//print("Hah!\n");
 		}
 

@@ -7,9 +7,15 @@ namespace TypeBreaker {
 
 		public signal void postpone_requested();
 		public signal void lock_screen_requested();
+		public signal void countdown_finished();
 
 		private Gtk.Label clock_label;
+
+		/* Duration of a typing break in seconds */
 		private uint break_time;
+
+		/* Number of allowed postpones */
+		private uint postpones;
 
 		public BreakWindow (){
 			GLib.Object(
@@ -18,23 +24,18 @@ namespace TypeBreaker {
 				skip_pager_hint:true,
 				focus_on_map:true
 			);
-
-
 			this.set_keep_above(true);
 			this.fullscreen();
 			this.set_modal(true);
-
-
 			this.set_default_size(this.screen.get_width(), this.screen.get_height());
-			
 			this.set_decorated(false);
 			this.set_app_paintable(true);
-
 			setup_background();
+			var settings = new GLib.Settings("org.pantheon.typebreaker");
+			this.postpones = settings.get_int("postpones");
+			this.break_time = settings.get_int("break-time");
 			populate();
-
 		}
-
 
 		public void setup_background(){
 			var visual = this.screen.get_rgba_visual();
@@ -113,10 +114,13 @@ namespace TypeBreaker {
 			button_box.set_spacing(12);
 			outer_vbox.pack_start(button_box, false, false, 0);;
 
-			var postpone_button = new Button.with_mnemonic("Postpone Break");
-			postpone_button.set_focus_on_click(false);
-			postpone_button.clicked.connect(on_postpone_button_clicked);
-			button_box.pack_end(postpone_button, false, true, 0);;
+			if (postpones > 0){
+				var postpone_button = new Button();
+				postpone_button.set_label("Postpone Break (%u)".printf(postpones));
+				postpone_button.set_focus_on_click(false);
+				postpone_button.clicked.connect(on_postpone_button_clicked);
+				button_box.pack_end(postpone_button, false, true, 0);
+			}
 
 			var lock_button = new Button.with_mnemonic("Lock screen");
 			lock_button.clicked.connect(on_lock_button_clicked);
@@ -146,9 +150,13 @@ namespace TypeBreaker {
 			return false;
 		}
 
-		private void on_postpone_button_clicked(){
+		private void on_postpone_button_clicked(Gtk.Button button){
 			print("postpone button has been clicked\n");
 			this.postpone_requested();
+			if (--postpones == 0){
+				button.set_sensitive(false);
+			}
+			button.set_label("Postpone (%u)".printf(postpones));
 		}
 
 		private void on_lock_button_clicked(){
@@ -158,16 +166,21 @@ namespace TypeBreaker {
 
 		private bool countdown(){
 			this.break_time--;
-			set_clock_label(this.break_time);
-			return (this.break_time > 0);
+			if (this.break_time == 0){
+				countdown_finished();
+				return false;
+			}
+			else {
+				set_clock_label(this.break_time);
+				return true;
+			}
 		}
 
 		private void set_clock_label(uint n){
 			clock_label.set_markup("<span size=\"x-large\" foreground=\"white\"><b>%u</b></span>".printf(n));
 		}
 
-		public void run(uint break_time){
-			this.break_time = break_time;
+		public void run(){
 			set_clock_label(this.break_time);
 			this.show_all();
 			Timeout.add(1000, countdown);

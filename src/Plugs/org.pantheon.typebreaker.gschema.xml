@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+	<schema id="org.pantheon.typebreaker" path="/org/pantheon/typebreaker/">
+		<key type="i" name="type-time">
+			<default>5400</default>
+			<summary>Type time</summary>
+			<description>Typing period in seconds</description>
+		</key>
+		<key type="i" name="warn-time">
+			<default>180</default>
+			<summary>Warn time</summary>
+			<description>Warn user n seconds before the break</description>
+		</key>
+		<key type="i" name="break-time">
+			<default>300</default>
+			<summary>Break time</summary>
+			<description>Duration of the typing break</description>
+		</key>
+		<key type="i" name="postpones">
+			<default>2</default>
+			<summary>Postpones</summary>
+			<description>Number of allowed postpones</description>
+		</key>
+		<key type="i" name="postpone-time">
+			<default>60</default>
+			<summary>Postone time</summary>
+			<description>Postpone break by this number of seconds</description>
+		</key>
+	</schema>
+</schemalist>
+
