@@ -98,7 +98,6 @@ namespace TypeBreaker {
 			if (this.screensaver_proxy != null){
 				return this.screensaver_proxy;
 			}
-
 			try {
 				connection = Bus.get_sync(BusType.SESSION, null);
 				screensaver_proxy = new DBusProxy.sync(connection,
@@ -106,9 +105,9 @@ namespace TypeBreaker {
 					DBusProxyFlags.DO_NOT_CONNECT_SIGNALS |
 					DBusProxyFlags.DO_NOT_AUTO_START,
 					null,
-					"screensaver",
-					"object-path",
-					"interface-name",
+					"org.gnome.ScreenSaver",
+					"/org/gnome/ScreenSaver",
+					"org.gnome.ScreenSaver",
 					null
 				);
 			}
@@ -125,6 +124,7 @@ namespace TypeBreaker {
 			if (proxy == null){
 				return;
 			}
+			Gdk.keyboard_ungrab(0);
 			proxy.call("Lock", new Variant("()"), DBusCallFlags.NONE, -1, null);
 		}
 

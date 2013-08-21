@@ -5,7 +5,7 @@ all:
 install:
 	mkdir -p /usr/lib/plugs/TypeBreaker
 	cp TypeBreaker /usr/lib/plugs/TypeBreaker/
-	cp typebreaker.plug /usr/lib/plugs/typebreaker
+	cp typebreaker.plug /usr/lib/plugs/TypeBreaker/
 	cp org.pantheon.typebreaker.gschema.xml /usr/share/glib-2.0/schemas/
 	glib-compile-schemas /usr/share/glib-2.0/schemas/ 
 

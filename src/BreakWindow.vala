@@ -24,6 +24,7 @@ namespace TypeBreaker {
 				skip_pager_hint:true,
 				focus_on_map:true
 			);
+			this.set_focus_on_map(true);
 			this.set_keep_above(true);
 			this.fullscreen();
 			this.set_modal(true);
@@ -34,6 +35,7 @@ namespace TypeBreaker {
 			var settings = new GLib.Settings("org.pantheon.typebreaker");
 			this.postpones = settings.get_int("postpones");
 			this.break_time = settings.get_int("break-time");
+
 			populate();
 		}
 
@@ -122,6 +124,9 @@ namespace TypeBreaker {
 				button_box.pack_end(postpone_button, false, true, 0);
 			}
 
+			var entry = new Entry();
+			button_box.pack_end(entry, true, true, 0);
+
 			var lock_button = new Button.with_mnemonic("Lock screen");
 			lock_button.clicked.connect(on_lock_button_clicked);
 			button_box.pack_start(lock_button, false, false, 0);
@@ -145,7 +150,13 @@ namespace TypeBreaker {
 			vbox.pack_start(clock_label, true, true, 8);
 
 			this.stick();
-			this.set_focus(null);
+			this.set_focus(entry);
+
+			this.show.connect((w) => {
+				while (Gdk.keyboard_grab(w.get_window(), false, Gtk.get_current_event_time()) != Gdk.GrabStatus.SUCCESS){
+					Posix.sleep(1);
+				}
+			});
 
 			return false;
 		}

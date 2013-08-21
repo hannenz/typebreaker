@@ -34,8 +34,8 @@ public class TypeBreakerSettings : Pantheon.Switchboard.Plug {
 		var type_time_entry = new Gtk.SpinButton.with_range(1, 180*60, 1);
 		grid.attach(type_time_entry, 1, 0, 1, 1);
 		type_time_entry.set_value(this.type_time);
-		type_time_entry.changed.connect( () => {
-			settings.set_int("type-time", type_time_entry.get_value_as_int());
+		type_time_entry.value_changed.connect( (entry) => {
+			settings.set_int("type-time", entry.get_value_as_int());
 		});
 
 		label = new Label("Warn time (seconds)");
@@ -44,8 +44,8 @@ public class TypeBreakerSettings : Pantheon.Switchboard.Plug {
 		var warn_time_entry = new Gtk.SpinButton.with_range(1, 180*60, 1);
 		grid.attach(warn_time_entry, 1, 1, 1, 1);
 		warn_time_entry.set_value(this.warn_time);
-		warn_time_entry.changed.connect( () => {
-			settings.set_int("warn-time", warn_time_entry.get_value_as_int());
+		warn_time_entry.value_changed.connect( (entry) => {
+			settings.set_int("warn-time", entry.get_value_as_int());
 		});
 
 		label = new Label("Break time (seconds)");
@@ -54,8 +54,8 @@ public class TypeBreakerSettings : Pantheon.Switchboard.Plug {
 		var break_time_entry = new Gtk.SpinButton.with_range(1, 180*60, 1);
 		grid.attach(break_time_entry, 1, 2, 1, 1);
 		break_time_entry.set_value(this.break_time);
-		break_time_entry.changed.connect( () => {
-			settings.set_int("break-time", break_time_entry.get_value_as_int());
+		break_time_entry.value_changed.connect( (entry) => {
+			settings.set_int("break-time", entry.get_value_as_int());
 		});
 
 		label = new Label("Number of allowed postpones");
@@ -64,8 +64,8 @@ public class TypeBreakerSettings : Pantheon.Switchboard.Plug {
 		var postpones_entry = new Gtk.SpinButton.with_range(0, 10, 1);
 		grid.attach(postpones_entry, 1, 3, 1, 1);
 		postpones_entry.set_value(this.postpones);
-		postpones_entry.changed.connect( () => {
-			settings.set_int("postpones", postpones_entry.get_value_as_int());
+		postpones_entry.value_changed.connect( (entry) => {
+			settings.set_int("postpones", entry.get_value_as_int());
 		});
 
 		label = new Label("Postpone time (seconds)");
@@ -74,8 +74,8 @@ public class TypeBreakerSettings : Pantheon.Switchboard.Plug {
 		var postpone_time_entry = new Gtk.SpinButton.with_range(1, 180*60, 1);
 		grid.attach(postpone_time_entry, 1, 4, 1, 1);
 		postpone_time_entry.set_value(this.postpone_time);
-		postpone_time_entry.changed.connect( () => {
-			settings.set_int("postpone-time", postpone_time_entry.get_value_as_int());
+		postpone_time_entry.value_changed.connect( (entry) => {
+			settings.set_int("postpone-time", entry.get_value_as_int());
 		});
 
 		grid.show_all();
