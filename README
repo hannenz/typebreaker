@@ -1,0 +1,19 @@
+#TypeBreaker
+
+A typing monitor and typing break application inspired by drwright.
+After i could not get drwright running on elementaryos I decided
+to port it and learn vala/ elementary development by this means.
+
+The result is a bit of a clone/ rewrite/ hack which gets its job
+done and helped me diving into vala programming.
+
+## Compile / Install
+
+```
+$ make
+# make install
+$ cd Plug
+$ make
+# make install
+
+
