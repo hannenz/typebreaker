@@ -10,9 +10,12 @@ namespace TypeBreaker {
 		public signal void countdown_finished();
 
 		private Gtk.Label clock_label;
+		private Gtk.ProgressBar pbar;
 
 		/* Duration of a typing break in seconds */
 		private uint break_time;
+
+		private uint break_time2;
 
 		/* Number of allowed postpones */
 		private uint postpones;
@@ -22,9 +25,11 @@ namespace TypeBreaker {
 				type: Gtk.WindowType.POPUP,
 				skip_taskbar_hint: true,
 				skip_pager_hint:true,
-				focus_on_map:true
+				focus_on_map:false
 			);
-			this.set_focus_on_map(true);
+			this.set_focus_on_map(false);
+			this.set_focus(null);
+
 			this.set_keep_above(true);
 			this.fullscreen();
 			this.set_modal(true);
@@ -32,9 +37,11 @@ namespace TypeBreaker {
 			this.set_decorated(false);
 			this.set_app_paintable(true);
 			setup_background();
+
 			var settings = new GLib.Settings("org.pantheon.typebreaker");
 			this.postpones = settings.get_int("postpones");
 			this.break_time = settings.get_int("break-time");
+			this.break_time2 = this.break_time;
 
 			populate();
 		}
@@ -119,13 +126,13 @@ namespace TypeBreaker {
 			if (postpones > 0){
 				var postpone_button = new Button();
 				postpone_button.set_label("Postpone Break (%u)".printf(postpones));
-				postpone_button.set_focus_on_click(false);
+				//postpone_button.set_focus_on_click(false);
 				postpone_button.clicked.connect(on_postpone_button_clicked);
 				button_box.pack_end(postpone_button, false, true, 0);
 			}
 
-			var entry = new Entry();
-			button_box.pack_end(entry, true, true, 0);
+			// var entry = new Entry();
+			// button_box.pack_end(entry, true, true, 0);
 
 			var lock_button = new Button.with_mnemonic("Lock screen");
 			lock_button.clicked.connect(on_lock_button_clicked);
@@ -134,23 +141,31 @@ namespace TypeBreaker {
 			var vbox = new Box(Orientation.VERTICAL, 0);
 			align.add(vbox);
 
-			var hbox = new Box(Orientation.HORIZONTAL, 0);
-			vbox.pack_start(hbox, true, false, 0);
+//			var hbox = new Box(Orientation.HORIZONTAL, 0);
+//			vbox.pack_start(hbox, true, false, 0);
+
+			var dummyLabel = new Label("...");
+			vbox.pack_start(dummyLabel, true, true, 0);
 
 			var image = new Image.from_stock(Gtk.Stock.STOP, Gtk.IconSize.DIALOG);
-			image.set_alignment(1.0f, 0.5f);
-			hbox.pack_start(image, true, false, 8);
+			image.set_alignment(0.5f, 0.5f);
+			vbox.pack_start(image, false, false, 0);
 
 			var label = new Label(null);
 			label.set_markup("<span size=\"xx-large\" foreground=\"white\"><b>Time for a break...!</b></span>");
-			hbox.pack_start(label, false, true, 12);
+			label.set_alignment(0.5f, 0.5f);
+			vbox.pack_start(label, false, false, 0);
 
 			clock_label = new Label(null);
 			clock_label.set_alignment(0.5f, 0.5f);
 			vbox.pack_start(clock_label, true, true, 8);
 
+			pbar = new ProgressBar();
+			pbar.set_text("0");
+			pbar.set_fraction(0.0);
+			vbox.pack_start(pbar, true, false, 0);
+
 			this.stick();
-			this.set_focus(entry);
 
 			this.show.connect((w) => {
 				while (Gdk.keyboard_grab(w.get_window(), false, Gtk.get_current_event_time()) != Gdk.GrabStatus.SUCCESS){
@@ -183,12 +198,15 @@ namespace TypeBreaker {
 			}
 			else {
 				set_clock_label(this.break_time);
+				double frac = 1.0 - (double)this.break_time / (double)this.break_time2;
+				pbar.set_fraction(frac);
+				pbar.set_text("%u".printf(this.break_time2 - this.break_time));
 				return true;
 			}
 		}
 
 		private void set_clock_label(uint n){
-			clock_label.set_markup("<span size=\"x-large\" foreground=\"white\"><b>%u</b></span>".printf(n));
+			clock_label.set_markup("<span size=\"xx-large\" foreground=\"white\"><b>%u</b></span>".printf(n));
 		}
 
 		public void run(){

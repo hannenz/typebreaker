@@ -57,6 +57,8 @@ namespace TypeBreaker {
 
 			this.screensaver_proxy = null;
 			this.has_been_warned = false;
+
+			take_break();
 		}
 
 		private void take_break(){
