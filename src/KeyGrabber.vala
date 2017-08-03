@@ -17,7 +17,7 @@ namespace TypeBreaker {
 		public KeyGrabber(){
 
 			Timeout.add (1000, () => {
-				this.idle_time = get_idle_time();
+				idle_time = get_idle_time();
 				if (idle_time < 1){
 					this.activity();
 				}

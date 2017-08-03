@@ -10,7 +10,7 @@ done and helped me diving into vala programming.
 # Dependencies (Ubuntu)
 
 ```
-# apt install libxss-dev
+# apt install libx11-dev libxss-dev
 
 ## Compile / Install
 
