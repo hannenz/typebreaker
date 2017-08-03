@@ -85,7 +85,7 @@ namespace TypeBreaker {
 			if (this.warn_time > 0){
 				try {
 					string mssg = "Attention, attention! KeyBreaker will shut down your keyboard in %u seconds!".printf(this.warn_time);
-					var notification = new Notification(mssg, null, null);
+					var notification = new Notify.Notification(mssg, null, null);
 					notification.show();
 				}
 				catch (Error e){
@@ -137,7 +137,7 @@ namespace TypeBreaker {
 			// show notification
 			try {
 				string mssg = "Postponed typing break by %u seconds!".printf(this.postpone_time);
-				var notification = new Notification(mssg, null, null);
+				var notification = new Notify.Notification(mssg, null, null);
 				notification.show();
 			}
 			catch (Error e){

@@ -1,7 +1,7 @@
 using Gtk;
-using Pantheon;
+/* using Pantheon; */
 
-public class TypeBreakerSettings : Pantheon.Switchboard.Plug {
+public class TypeBreakerSettings : Switchboard.Plug {
 
 	GLib.Settings settings;
 
@@ -12,6 +12,13 @@ public class TypeBreakerSettings : Pantheon.Switchboard.Plug {
 	public int postpone_time;
 
 	public TypeBreakerSettings(){
+		Object (
+			category: Category.NETWORK,
+			code_name: Build.PLUGCODENAME,
+			display_name: "Type Breaker",
+			description: "Save your wrist",
+			icon: ""
+		);
 
 		settings = new GLib.Settings("org.pantheon.typebreaker");
 
@@ -79,7 +86,8 @@ public class TypeBreakerSettings : Pantheon.Switchboard.Plug {
 		});
 
 		grid.show_all();
-		this.add(grid);
+		var widget = this.get_widget() as Gtk.Container;
+		widget.add(grid);
 	}
 
 	public static int main(string[] args){

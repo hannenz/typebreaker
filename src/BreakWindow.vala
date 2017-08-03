@@ -3,6 +3,7 @@ using Gdk;
 using Cairo;
 
 namespace TypeBreaker {
+
 	public class BreakWindow : Gtk.Window {
 
 		public signal void postpone_requested();

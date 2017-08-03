@@ -7,13 +7,23 @@ to port it and learn vala/ elementary development by this means.
 The result is a bit of a clone/ rewrite/ hack which gets its job
 done and helped me diving into vala programming.
 
+
+## Dependencies
+
+On Ubuntu, install
+
+```
+# apt install libx11-dev
+```
+
 ## Compile / Install
 
 ```
 $ make
 # make install
-$ cd Plug
+$ cd Plugs
 $ make
 # make install
+```
 
 
