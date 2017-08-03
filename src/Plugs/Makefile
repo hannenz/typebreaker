@@ -1,6 +1,6 @@
 
 all:
-	valac -o TypeBreaker main.vala --pkg gtk+-3.0 --pkg pantheon
+	valac --thread -o TypeBreaker main.vala --pkg gtk+-3.0 --pkg switchboard-2.0
 
 install:
 	mkdir -p /usr/lib/plugs/TypeBreaker
