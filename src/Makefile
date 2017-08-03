@@ -3,7 +3,7 @@ VALAFLAGS = -C
 VALAPCKGS = --pkg gtk+-3.0 --pkg libnotify --pkg posix
 CC = gcc
 CFLAGS = -Wall
-CPCKGS = `pkg-config --cflags --libs gtk+-3.0 xscrnsaver libnotify x11`
+CPCKGS = `pkg-config --cflags --libs gtk+-3.0 libnotify x11 xscrnsaver`
 
 VALASRCS = main.vala KeyGrabber.vala TypeBreaker.vala BreakWindow.vala
 COBJS = $(VALASRCS:%.vala=%.c)
