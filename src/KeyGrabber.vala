@@ -1,7 +1,7 @@
 using GLib;
 using Gtk;
 
-extern int get_idle_time();
+//extern int get_idle_time();
 
 namespace TypeBreaker {
 
@@ -10,11 +10,15 @@ namespace TypeBreaker {
 		public signal void activity ();
 		public signal void break_completed ();
 
+		private uint default_screen;
+
 		public uint break_time;
 
-		private int idle_time;
+		private uint idle_time;
 
-		public KeyGrabber(){
+		public KeyGrabber() {
+
+			default_screen = Gdk.X11.get_default_screen();
 
 			Timeout.add (1000, () => {
 				this.idle_time = get_idle_time();
@@ -26,6 +30,17 @@ namespace TypeBreaker {
 				}
 				return true;
 			});
+		}
+
+		/**
+		  * Returns the number of seconds since the last input (mouse, keyboard...)
+		  * on the user's system
+		  *
+		  * @return uint 
+		  */
+		private uint get_idle_time() {
+
+			return 1;
 		}
 	}
 }

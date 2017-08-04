@@ -11,10 +11,11 @@ CSRCS = get_idle_time.c
 
 all:	typebreaker
 
-typebreaker: $(VALASRCS)
+typebreaker: $(VALASRCS) $(CSRCS)
 	$(VALAC) $(VALAFLAGS) $(VALAPCKGS) $(VALASRCS)
 	$(CC) $(CFLAGS) -o $@ $(COBJS) $(CSRCS) $(CPCKGS)
 
 .PHONY: clean
 clean:
-	rm -rf $(COBJS)
+	rm -rf $(COBJS) typebreaker
+
