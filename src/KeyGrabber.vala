@@ -21,7 +21,7 @@ namespace TypeBreaker {
 			default_screen = Gdk.X11.get_default_screen();
 
 			Timeout.add (1000, () => {
-				this.idle_time = get_idle_time();
+				idle_time = get_idle_time();
 				if (idle_time < 1){
 					this.activity();
 				}

@@ -85,7 +85,6 @@ namespace TypeBreaker {
 			this.add(grid);
 			this.show_all();
 		}
-
 	}
 
 	public class Plug : Switchboard.Plug {
