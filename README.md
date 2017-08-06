@@ -11,6 +11,7 @@ done and helped me diving into vala programming.
 
 ```
 # apt install elementary-sdk libx11-dev libxss-dev
+```
 
 ## Compile / Install
 
@@ -33,15 +34,15 @@ $ gsettings list-keys com.github.hannenz.typebreaker
 
 At the moment these are:
 
-break-time: Duration of the break in seconds
+- break-time: Duration of the break in seconds
 
-warn-time: When to notify before break - in seconds
+- warn-time: When to notify before break - in seconds
 
-postpone-time: Time when postponing
+- postpone-time: Time when postponing
 
-postpones: Allow n postpones
+- postpones: Allow n postpones
 
-type-time: Duration of non-idle time in seconds
+- type-time: Duration of non-idle time in seconds
 
 e.g. set break time to 10 Minutes
 
