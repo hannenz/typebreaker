@@ -1,13 +1,10 @@
-#TypeBreaker
+# TypeBreaker
 
-A typing monitor and typing break application inspired by drwright.
-After i could not get drwright running on elementaryos I decided
-to port it and learn vala/ elementary development by this means.
+A typing monitor and typing break application for elementary os inspired by drwright.
 
-The result is a bit of a clone/ rewrite/ hack which gets its job
-done and helped me diving into vala programming.
+After i could not get drwright running on elementaryos I decided to port it and learn vala/ elementary development by this means.
 
-# Dependencies (Ubuntu)
+## Dependencies (Ubuntu)
 
 ```
 # apt install elementary-sdk libx11-dev libxss-dev
@@ -24,7 +21,7 @@ $ sudo make install
 
 ## Configuration
 
-Typebraker is configured via GSettings in path `/com/github/hannenz/typebreaker`, so use dconf-editor or `dconf-`
+TypeBreaker is configured via GSettings in path `com.github.hannenz.typebreaker`
 
 ### List available keys
 
