@@ -31,7 +31,7 @@ namespace TypeBreaker {
 			this.timer.start();
 			this.timeout_id = Timeout.add(1000, main_poll);
 
-			this.settings = new GLib.Settings("org.pantheon.typebreaker");
+			this.settings = new GLib.Settings("com.github.hannenz.typebreaker");
 
 			this.work_time = settings.get_int("type-time");
 			this.warn_time = settings.get_int("warn-time");

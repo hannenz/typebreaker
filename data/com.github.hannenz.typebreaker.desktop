@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Typebreaker
+GenericName=Typing Break Monitor
+Comment=Saves your wrist
+Categories=Utility;
+Exec=com.github.hannenz.typebreaker
+Icon=application-default-icon
+Terminal=false
+Type=Application
+X-GNOME-Gettext-Domain=typebreaker
+Keywords=Keyboard;Typing;Break;Wrist

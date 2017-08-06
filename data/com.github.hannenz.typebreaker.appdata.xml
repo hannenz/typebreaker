@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2017 Johannes Braun <johannes.braun@hannenz.de> -->
+<component type="desktop">
+  <id>com.github.hannenz.typebreaker.desktop</id>
+  <metadata_license>CC0</metadata_license>
+  <name>Typebreaker</name>
+  <summary>Saves your wrist.</summary>
+  <description>
+    <p>Forces you to take periodically typing breaks to prevent RSI and refresh your concentration.</p>
+  </description>
+</component>

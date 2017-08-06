@@ -23,7 +23,7 @@ set (VERSION_INFO "")
 find_package(PkgConfig)
 
 # now let's actually check for the required dependencies
-pkg_check_modules(DEPS REQUIRED gtk+-3.0 granite libnotify gdk-x11-3.0)
+pkg_check_modules(DEPS REQUIRED gtk+-3.0 granite libnotify gdk-x11-3.0 x11 xscrnsaver)
 
 add_definitions(${DEPS_CFLAGS})
 link_libraries(${DEPS_LIBRARIES})
@@ -53,8 +53,11 @@ PACKAGES
 	gdk-x11-3.0
 )
 
+include(GSettings)
+add_schema("com.github.hannenz.typebreaker.gschema.xml")
+
 # tell cmake what to call the executable we just made
-add_executable(${EXEC_NAME} ${VALA_C})
+add_executable(${EXEC_NAME} ${VALA_C} src/get_idle_time.c)
 
 # install the binaries we just made
 install (TARGETS ${EXEC_NAME} RUNTIME DESTINATION bin)
@@ -64,4 +67,5 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.hannenz.typebreaker.d
 
 # install our .appdata.xml file so AppCenter will see it
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.hannenz.typebreaker.appdata.xml DESTINATION ${DATADIR}/metainfo/)
+
 

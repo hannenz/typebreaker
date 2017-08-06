@@ -10,15 +10,11 @@ namespace TypeBreaker {
 		public signal void activity ();
 		public signal void break_completed ();
 
-		private uint default_screen;
-
 		public uint break_time;
 
 		private uint idle_time;
 
 		public KeyGrabber() {
-
-			default_screen = Gdk.X11.get_default_screen();
 
 			Timeout.add (1000, () => {
 				idle_time = get_idle_time();

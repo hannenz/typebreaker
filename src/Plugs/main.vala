@@ -18,7 +18,7 @@ namespace TypeBreaker {
 
 		public MainBox() {
 
-			settings = new GLib.Settings("org.pantheon.typebreaker");
+			settings = new GLib.Settings("com.github.hannenz.typebreaker");
 
 			type_time = settings.get_int("type-time");
 			warn_time = settings.get_int("warn-time");

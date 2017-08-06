@@ -39,7 +39,7 @@ namespace TypeBreaker {
 			this.set_app_paintable(true);
 			setup_background();
 
-			var settings = new GLib.Settings("org.pantheon.typebreaker");
+			var settings = new GLib.Settings("com.github.hannenz.typebreaker");
 			this.postpones = settings.get_int("postpones");
 			this.break_time = settings.get_int("break-time");
 			this.break_time2 = this.break_time;
@@ -60,8 +60,7 @@ namespace TypeBreaker {
 			}
 			else {
 				is_composited = false;
-			}
-			if (is_composited){
+			} if (is_composited){
 				this.draw.connect(on_draw);
 			}
 			else {
@@ -178,7 +177,6 @@ namespace TypeBreaker {
 		}
 
 		private void on_postpone_button_clicked(Gtk.Button button){
-			print("postpone button has been clicked\n");
 			this.postpone_requested();
 			if (--postpones == 0){
 				button.set_sensitive(false);
@@ -187,7 +185,6 @@ namespace TypeBreaker {
 		}
 
 		private void on_lock_button_clicked(){
-			print ("lock screen button has been clicked\n");
 			this.lock_screen_requested();
 		}
 

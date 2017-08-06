@@ -1,3 +1,0 @@
-# Hashes of file build rules.
-f45ce5936de13d69a03432de9c4c6df5 com.github.hannenz.typebreaker_valac.stamp
-ec18fbcc930150a22cc6d3384a2cd007 src/main.c
