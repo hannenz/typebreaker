@@ -43,6 +43,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	src/TypeBreaker.vala
 	src/BreakWindow.vala
 	src/KeyGrabber.vala
+	src/CountdownClock.vala
 
 # tell what libraries to use when compiling
 PACKAGES

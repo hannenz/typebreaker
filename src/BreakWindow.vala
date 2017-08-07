@@ -11,7 +11,8 @@ namespace TypeBreaker {
 		public signal void countdown_finished();
 
 		private Gtk.Label clock_label;
-		private Gtk.ProgressBar pbar;
+		/* private Gtk.ProgressBar pbar; */
+		private CountdownClock countdown_clock;
 
 		/* Duration of a typing break in seconds */
 		private uint break_time;
@@ -131,18 +132,12 @@ namespace TypeBreaker {
 				button_box.pack_end(postpone_button, false, true, 0);
 			}
 
-			// var entry = new Entry();
-			// button_box.pack_end(entry, true, true, 0);
-
 			var lock_button = new Button.with_mnemonic("Lock screen");
 			lock_button.clicked.connect(on_lock_button_clicked);
 			button_box.pack_start(lock_button, false, false, 0);
 
 			var vbox = new Box(Orientation.VERTICAL, 0);
 			align.add(vbox);
-
-//			var hbox = new Box(Orientation.HORIZONTAL, 0);
-//			vbox.pack_start(hbox, true, false, 0);
 
 			var dummyLabel = new Label("...");
 			vbox.pack_start(dummyLabel, true, true, 0);
@@ -156,14 +151,19 @@ namespace TypeBreaker {
 			label.set_alignment(0.5f, 0.5f);
 			vbox.pack_start(label, false, false, 0);
 
-			clock_label = new Label(null);
-			clock_label.set_alignment(0.5f, 0.5f);
-			vbox.pack_start(clock_label, true, true, 8);
 
-			pbar = new ProgressBar();
-			pbar.set_text("0");
-			pbar.set_fraction(0.0);
-			vbox.pack_start(pbar, true, false, 0);
+			countdown_clock = new CountdownClock((int)this.break_time);
+			vbox.pack_start(countdown_clock, true, true, 8);
+			countdown_clock.start();
+
+			/* clock_label = new Label(null); */
+			/* clock_label.set_alignment(0.5f, 0.5f); */
+			/* vbox.pack_start(clock_label, true, true, 8); */
+
+			/* pbar = new ProgressBar(); */
+			/* pbar.set_text("0"); */
+			/* pbar.set_fraction(0.0); */
+			/* vbox.pack_start(pbar, true, false, 0); */
 
 			this.stick();
 
@@ -195,10 +195,10 @@ namespace TypeBreaker {
 				return false;
 			}
 			else {
-				set_clock_label(this.break_time);
-				double frac = 1.0 - (double)this.break_time / (double)this.break_time2;
-				pbar.set_fraction(frac);
-				pbar.set_text("%u".printf(this.break_time2 - this.break_time));
+				/* set_clock_label(this.break_time); */
+				/* double frac = 1.0 - (double)this.break_time / (double)this.break_time2; */
+				/* pbar.set_fraction(frac); */
+				/* pbar.set_text("%u".printf(this.break_time2 - this.break_time)); */
 				return true;
 			}
 		}
