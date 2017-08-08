@@ -68,4 +68,6 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.hannenz.typebreaker.d
 # install our .appdata.xml file so AppCenter will see it
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.hannenz.typebreaker.appdata.xml DESTINATION ${DATADIR}/metainfo/)
 
+# install icon
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker.svg DESTINATION ${DATADIR}/share/icons/hicolor/48x48/apps/)
 

@@ -30,6 +30,8 @@ namespace TypeBreaker {
 				focus_on_map:false
 			);
 
+			debug ("BreakWindow::Constructing BreakWindow");
+
 			this.break_time = break_time;
 			this.postpones = postpones;
 
@@ -50,8 +52,12 @@ namespace TypeBreaker {
 			populate();
 		}
 
+		~BreakWindow() {
+			debug ("BreakWindow::Deconstructing BreakWindow");
+		}
+
 		public void setup_background(){
-			debug ("setup_background");
+			debug ("BreakWindow::setup_background");
 
 			var visual = this.screen.get_rgba_visual();
 			bool is_composited;
@@ -80,6 +86,8 @@ namespace TypeBreaker {
 			int width;
 			int height;
 
+			debug ("BreakWindow::on_draw");
+
 			context.set_operator(Cairo.Operator.SOURCE);
 
 			this.get_size(out width, out height);
@@ -106,7 +114,7 @@ namespace TypeBreaker {
 		}
 
 		private bool populate(){
-			debug ("populate");
+			debug ("BreakWindow::populate");
 
 			Gdk.Rectangle monitor;
 			this.screen.get_monitor_geometry(0, out monitor);
@@ -169,13 +177,14 @@ namespace TypeBreaker {
 			label.set_yalign(0.5f);
 			vbox.pack_start(label, false, false, 0);
 
-			countdown_clock = new CountdownClock((int)this.break_time);
-			vbox.pack_start(countdown_clock, true, true, 8);
-			countdown_clock.zero.connect( () => {
-				// Emit signal
-				countdown_finished();
-			});
-			countdown_clock.start();
+			/* countdown_clock = new CountdownClock((int)this.break_time); */
+			/* vbox.pack_start(countdown_clock, true, true, 8); */
+			/* countdown_clock.zero.connect( () => { */
+			/* 	debug ("COUNTDOWN HAS FINISHED"); */
+			/* 	// Emit signal */
+			/* 	countdown_finished(); */
+			/* }); */
+			/* countdown_clock.start(); */
 
 			this.stick();
 
@@ -186,10 +195,13 @@ namespace TypeBreaker {
 				}
 			});
 
+			debug ("BreakWindow::populate - end");
+
 			return false;
 		}
 
 		private void on_postpone_button_clicked(Gtk.Button button){
+			debug ("BreakWindow::on_postpone_button_clicked");
 			this.postpone_requested();
 			if (--postpones == 0){
 				button.set_sensitive(false);
@@ -198,6 +210,7 @@ namespace TypeBreaker {
 		}
 
 		private void on_lock_button_clicked(){
+			debug ("BreakWindow::on_lock_button_clicked");
 			this.lock_screen_requested();
 		}
 
@@ -206,6 +219,7 @@ namespace TypeBreaker {
 		/* } */
 
 		public void run(){
+			debug ("BreakWindow::run");
 			/* set_clock_label(this.break_time); */
 			this.show_all();
 			/* Timeout.add(1000, countdown); */

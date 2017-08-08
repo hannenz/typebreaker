@@ -3,7 +3,7 @@ using Gtk;
 namespace TypeBreaker {
 
 	/* public class Breaker : GLib.Object { */
-	public class Breaker : Gtk.Application {
+	public class Breaker : GLib.Application {
 
 		private GLib.Settings settings;
 
@@ -26,16 +26,20 @@ namespace TypeBreaker {
 		private KeyGrabber key_grabber;
 		private BreakWindow break_window;
 
-		public Breaker(){
+		private Gtk.Image icon;
+
+		public Breaker () {
 			Object (
 				application_id: "com.github.hannenz.typebreaker",
+				/* flags: ApplicationFlags.IS_SERVICE */
 				flags: ApplicationFlags.FLAGS_NONE
 			);
+			/* icon = new Gtk.Image.from_file("/usr/share/icons/48x48/apps/typebreaker.svg"); */
 		}
 
 		protected override void activate () {
 
-			debug ("Application activate");
+			debug ("TypeBreaker::activate");
 
 			this.timer = new Timer();
 			this.timer.start();
@@ -70,11 +74,11 @@ namespace TypeBreaker {
 				}
 			});
 
-			print ("type time:    %u\n", this.work_time);
-			print ("warn time:    %u\n", this.warn_time);
-			print ("break time:    %u\n", this.break_time);
-			print ("postpones:    %u\n", this.postpones);
-			print ("postpone time:    %u\n", this.postpone_time);
+			debug ("type time:    %u\n", this.work_time);
+			debug ("warn time:    %u\n", this.warn_time);
+			debug ("break time:    %u\n", this.break_time);
+			debug ("postpones:    %u\n", this.postpones);
+			debug ("postpone time:    %u\n", this.postpone_time);
 
 			this.break_window = null;
 
@@ -93,6 +97,7 @@ namespace TypeBreaker {
 		}
 
 		private void take_break(){
+			debug ("TypeBreaker::take_break");
 			if (this.break_window == null){
 				this.break_window = new BreakWindow(this.break_time, this.postpones);
 				this.break_window.lock_screen_requested.connect(on_lock_screen_requested);
@@ -103,7 +108,7 @@ namespace TypeBreaker {
 		}
 
 		private void on_break_completed(){
-			debug ("BREAK HAS BEEN COMPLETED\n");
+			debug ("TypeBreaker::on_break_completed");
 			this.timer.start();
 			this.has_been_warned = false;
 			if (this.break_window != null){
@@ -117,6 +122,7 @@ namespace TypeBreaker {
 				try {
 					string mssg = "Attention, attention! KeyBreaker will shut down your keyboard in %u seconds!".printf(this.warn_time);
 					var notification = new Notification("Type Breaker");
+					notification.set_icon(icon.gicon);
 					notification.set_body(mssg);
 					this.send_notification("typebreaker.notification.warn", notification);
 				}
@@ -163,6 +169,7 @@ namespace TypeBreaker {
 		}
 
 		private void on_postpone_requested(){
+			debug ("TypeBreaker::on_postpone_requested");
 
 			this.break_window.hide();
 			timer.start();
@@ -170,20 +177,20 @@ namespace TypeBreaker {
 			try {
 				string mssg = "Postponed typing break by %u seconds!".printf(this.postpone_time);
 				var notification = new Notification("Type Breaker");
+				notification.set_icon(icon.gicon);
 				notification.set_body(mssg);
 				this.send_notification("typebreaker.notification.postpone", notification);
 			}
 			catch (Error e){
 				stderr.printf("Failed to show notification: %s\n", e.message);
 			}
-
 		}
 
 		public bool main_poll(){
 
 			uint seconds_elapsed = (uint)this.timer.elapsed();
 
-			debug ("main_poll: %.f seconds elsapsed...\n", seconds_elapsed);
+			debug ("TypeBreaker::main_poll: %.f seconds elsapsed...\n", seconds_elapsed);
 
 			if ((seconds_elapsed >= this.work_time - this.warn_time) && !has_been_warned){
 				debug ("Uh oh! Time to warn the user...\n");
