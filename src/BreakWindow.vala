@@ -10,7 +10,7 @@ namespace TypeBreaker {
 		public signal void lock_screen_requested();
 		public signal void countdown_finished();
 
-		private Gtk.Label clock_label;
+		/* private Gtk.Label clock_label; */
 		/* private Gtk.ProgressBar pbar; */
 		private CountdownClock countdown_clock;
 
@@ -22,13 +22,17 @@ namespace TypeBreaker {
 		/* Number of allowed postpones */
 		private uint postpones;
 
-		public BreakWindow (){
+		public BreakWindow (uint break_time, uint postpones){
 			GLib.Object(
 				type: Gtk.WindowType.POPUP,
 				skip_taskbar_hint: true,
 				skip_pager_hint:true,
 				focus_on_map:false
 			);
+
+			this.break_time = break_time;
+			this.postpones = postpones;
+
 			this.set_focus_on_map(false);
 			this.set_focus(null);
 
@@ -38,17 +42,17 @@ namespace TypeBreaker {
 			this.set_default_size(this.screen.get_width(), this.screen.get_height());
 			this.set_decorated(false);
 			this.set_app_paintable(true);
+
 			setup_background();
 
-			var settings = new GLib.Settings("com.github.hannenz.typebreaker");
-			this.postpones = settings.get_int("postpones");
-			this.break_time = settings.get_int("break-time");
 			this.break_time2 = this.break_time;
 
 			populate();
 		}
 
 		public void setup_background(){
+			debug ("setup_background");
+
 			var visual = this.screen.get_rgba_visual();
 			bool is_composited;
 
@@ -102,6 +106,8 @@ namespace TypeBreaker {
 		}
 
 		private bool populate(){
+			debug ("populate");
+
 			Gdk.Rectangle monitor;
 			this.screen.get_monitor_geometry(0, out monitor);
 
@@ -132,6 +138,14 @@ namespace TypeBreaker {
 				button_box.pack_end(postpone_button, false, true, 0);
 			}
 
+			// For debugging only
+			if (true) {
+				var exit_button = new Button();
+				exit_button.set_label("Exit");
+				exit_button.clicked.connect(Gtk.main_quit);
+				button_box.pack_start(exit_button, false, true, 0);
+			}
+			
 			var lock_button = new Button.with_mnemonic("Lock screen");
 			lock_button.clicked.connect(on_lock_button_clicked);
 			button_box.pack_start(lock_button, false, false, 0);
@@ -143,30 +157,29 @@ namespace TypeBreaker {
 			vbox.pack_start(dummyLabel, true, true, 0);
 
 			var image = new Image.from_stock(Gtk.Stock.STOP, Gtk.IconSize.DIALOG);
-			image.set_alignment(0.5f, 0.5f);
+			/* image.set_alignment(0.5f, 0.5f); */
+			image.set_halign(Align.CENTER);
+			image.set_valign(Align.CENTER);
+
 			vbox.pack_start(image, false, false, 0);
 
 			var label = new Label(null);
 			label.set_markup("<span size=\"xx-large\" foreground=\"white\"><b>Time for a break...!</b></span>");
-			label.set_alignment(0.5f, 0.5f);
+			label.set_xalign(0.5f);
+			label.set_yalign(0.5f);
 			vbox.pack_start(label, false, false, 0);
-
 
 			countdown_clock = new CountdownClock((int)this.break_time);
 			vbox.pack_start(countdown_clock, true, true, 8);
+			countdown_clock.zero.connect( () => {
+				// Emit signal
+				countdown_finished();
+			});
 			countdown_clock.start();
-
-			/* clock_label = new Label(null); */
-			/* clock_label.set_alignment(0.5f, 0.5f); */
-			/* vbox.pack_start(clock_label, true, true, 8); */
-
-			/* pbar = new ProgressBar(); */
-			/* pbar.set_text("0"); */
-			/* pbar.set_fraction(0.0); */
-			/* vbox.pack_start(pbar, true, false, 0); */
 
 			this.stick();
 
+			// What is this..???!
 			this.show.connect((w) => {
 				while (Gdk.keyboard_grab(w.get_window(), false, Gtk.get_current_event_time()) != Gdk.GrabStatus.SUCCESS){
 					Posix.sleep(1);
@@ -188,29 +201,14 @@ namespace TypeBreaker {
 			this.lock_screen_requested();
 		}
 
-		private bool countdown(){
-			this.break_time--;
-			if (this.break_time == 0){
-				countdown_finished();
-				return false;
-			}
-			else {
-				/* set_clock_label(this.break_time); */
-				/* double frac = 1.0 - (double)this.break_time / (double)this.break_time2; */
-				/* pbar.set_fraction(frac); */
-				/* pbar.set_text("%u".printf(this.break_time2 - this.break_time)); */
-				return true;
-			}
-		}
-
-		private void set_clock_label(uint n){
-			clock_label.set_markup("<span size=\"xx-large\" foreground=\"white\"><b>%u</b></span>".printf(n));
-		}
+		/* private void set_clock_label(uint n){ */
+		/* 	clock_label.set_markup("<span size=\"xx-large\" foreground=\"white\"><b>%u</b></span>".printf(n)); */
+		/* } */
 
 		public void run(){
-			set_clock_label(this.break_time);
+			/* set_clock_label(this.break_time); */
 			this.show_all();
-			Timeout.add(1000, countdown);
+			/* Timeout.add(1000, countdown); */
 			//this.draw.connect_after(populate);
 			//this.queue_draw();
 		}

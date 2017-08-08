@@ -23,7 +23,7 @@ set (VERSION_INFO "")
 find_package(PkgConfig)
 
 # now let's actually check for the required dependencies
-pkg_check_modules(DEPS REQUIRED gtk+-3.0 granite libnotify gdk-x11-3.0 x11 xscrnsaver)
+pkg_check_modules(DEPS REQUIRED gtk+-3.0 granite gdk-x11-3.0 x11 xscrnsaver)
 
 add_definitions(${DEPS_CFLAGS})
 link_libraries(${DEPS_LIBRARIES})
@@ -49,7 +49,6 @@ vala_precompile(VALA_C ${EXEC_NAME}
 PACKAGES
 	gtk+-3.0
 	granite
-	libnotify
 	posix
 	gdk-x11-3.0
 )

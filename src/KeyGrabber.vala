@@ -1,7 +1,7 @@
 using GLib;
 using Gtk;
 
-//extern int get_idle_time();
+extern int get_idle_time();
 
 namespace TypeBreaker {
 
@@ -26,17 +26,6 @@ namespace TypeBreaker {
 				}
 				return true;
 			});
-		}
-
-		/**
-		  * Returns the number of seconds since the last input (mouse, keyboard...)
-		  * on the user's system
-		  *
-		  * @return uint 
-		  */
-		private uint get_idle_time() {
-
-			return 1;
 		}
 	}
 }

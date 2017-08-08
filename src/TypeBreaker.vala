@@ -1,9 +1,9 @@
 using Gtk;
-using Notify;
 
 namespace TypeBreaker {
 
-	public class Breaker : GLib.Object {
+	/* public class Breaker : GLib.Object { */
+	public class Breaker : Gtk.Application {
 
 		private GLib.Settings settings;
 
@@ -27,6 +27,16 @@ namespace TypeBreaker {
 		private BreakWindow break_window;
 
 		public Breaker(){
+			Object (
+				application_id: "com.github.hannenz.typebreaker",
+				flags: ApplicationFlags.FLAGS_NONE
+			);
+		}
+
+		protected override void activate () {
+
+			debug ("Application activate");
+
 			this.timer = new Timer();
 			this.timer.start();
 			this.timeout_id = Timeout.add(1000, main_poll);
@@ -38,6 +48,27 @@ namespace TypeBreaker {
 			this.break_time = settings.get_int("break-time");
 			this.postpones = settings.get_int("postpones");
 			this.postpone_time = settings.get_int("postpone-time");
+
+			// Allow hot changing settings
+			settings.changed.connect( (key) => {
+				switch (key) {
+					case "type-time":
+						this.work_time = settings.get_int(key);
+						break;
+					case "warn-time":
+						this.warn_time = settings.get_int(key);
+						break;
+					case "break-time":
+						this.break_time = settings.get_int(key);
+						break;
+					case "postpones":
+						this.postpones = settings.get_int(key);
+						break;
+					case "postpone-time":
+						this.postpone_time = settings.get_int(key);
+						break;
+				}
+			});
 
 			print ("type time:    %u\n", this.work_time);
 			print ("warn time:    %u\n", this.warn_time);
@@ -63,7 +94,7 @@ namespace TypeBreaker {
 
 		private void take_break(){
 			if (this.break_window == null){
-				this.break_window = new BreakWindow();
+				this.break_window = new BreakWindow(this.break_time, this.postpones);
 				this.break_window.lock_screen_requested.connect(on_lock_screen_requested);
 				this.break_window.postpone_requested.connect(on_postpone_requested);
 				this.break_window.countdown_finished.connect(on_break_completed);
@@ -72,7 +103,7 @@ namespace TypeBreaker {
 		}
 
 		private void on_break_completed(){
-			print ("BREAK HAS BEEN COMPLETED\n");
+			debug ("BREAK HAS BEEN COMPLETED\n");
 			this.timer.start();
 			this.has_been_warned = false;
 			if (this.break_window != null){
@@ -85,8 +116,9 @@ namespace TypeBreaker {
 			if (this.warn_time > 0){
 				try {
 					string mssg = "Attention, attention! KeyBreaker will shut down your keyboard in %u seconds!".printf(this.warn_time);
-					var notification = new Notify.Notification(mssg, null, null);
-					notification.show();
+					var notification = new Notification("Type Breaker");
+					notification.set_body(mssg);
+					this.send_notification("typebreaker.notification.warn", notification);
 				}
 				catch (Error e){
 					stderr.printf("Failed to show notification: %s\n", e.message);
@@ -137,8 +169,9 @@ namespace TypeBreaker {
 			// show notification
 			try {
 				string mssg = "Postponed typing break by %u seconds!".printf(this.postpone_time);
-				var notification = new Notify.Notification(mssg, null, null);
-				notification.show();
+				var notification = new Notification("Type Breaker");
+				notification.set_body(mssg);
+				this.send_notification("typebreaker.notification.postpone", notification);
 			}
 			catch (Error e){
 				stderr.printf("Failed to show notification: %s\n", e.message);
@@ -150,10 +183,10 @@ namespace TypeBreaker {
 
 			uint seconds_elapsed = (uint)this.timer.elapsed();
 
-//			print("%.f seconds elsapsed...\n", seconds_elapsed);
+			debug ("main_poll: %.f seconds elsapsed...\n", seconds_elapsed);
 
 			if ((seconds_elapsed >= this.work_time - this.warn_time) && !has_been_warned){
-				print("Uh oh! Time to warn the user...\n");
+				debug ("Uh oh! Time to warn the user...\n");
 				this.warn_break();
 				has_been_warned = true;
 			}
@@ -165,7 +198,7 @@ namespace TypeBreaker {
 			}
 			else {
 				if (seconds_elapsed >= this.work_time){
-					print ("Time for a break!");
+					debug ("Time for a break!");
 					this.have_a_break();
 				}
 			}
@@ -174,8 +207,6 @@ namespace TypeBreaker {
 
 		public void on_activity(){
 			this.is_idle = false;
-			//print("Hah!\n");
 		}
-
 	}
 }
