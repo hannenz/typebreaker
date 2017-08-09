@@ -17,7 +17,7 @@ namespace TypeBreaker {
 
 		public CountdownClock (int seconds) {
 
-			this.microseconds = seconds * 1000;
+			microseconds = seconds * 1000;
 		}
 
 		public void start() {

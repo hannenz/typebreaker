@@ -195,10 +195,15 @@ namespace TypeBreaker {
 			this.stick();
 
 			// What is this..???!
-			this.show.connect((w) => {
-				while (Gdk.keyboard_grab(w.get_window(), false, Gtk.get_current_event_time()) != Gdk.GrabStatus.SUCCESS){
-					Posix.sleep(1);
+			this.show.connect( (widget) => {
+				start_countdown();
+				while (Gdk.keyboard_grab (widget.get_window (), false, Gtk.get_current_event_time ()) != Gdk.GrabStatus.SUCCESS){
+					Posix.sleep (1);
 				}
+			});
+
+			this.hide.connect( (widget) => {
+				stop_countdown ();
 			});
 
 			return false;
@@ -218,5 +223,12 @@ namespace TypeBreaker {
 		}
 
 
+		public void start_countdown() {
+			countdown_clock.start();
+		}
+
+		public void stop_countdown() {
+			//
+		}
 	}
 }

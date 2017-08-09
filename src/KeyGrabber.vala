@@ -16,15 +16,14 @@ namespace TypeBreaker {
 
 		public KeyGrabber() {
 
-			debug("Keygrabber::KeyGrabber");
-
 			Timeout.add (1000, () => {
 				idle_time = get_idle_time();
-				debug ("Keygrabber::poll, idle_time=%u", idle_time);
+
 				if (idle_time < 1){
-					this.activity();
+					this.activity ();
 				}
 				if (idle_time > this.break_time){
+					debug ("About to emit <break-completed> signal");
 					this.break_completed();
 				}
 				return true;

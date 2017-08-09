@@ -21,6 +21,7 @@ namespace TypeBreaker {
 		private Timer timer;
 		private uint timeout_id;
 		private bool has_been_warned;
+		// Do we still need this at all?
 		private bool is_idle;
 
 		private KeyGrabber key_grabber;
@@ -53,21 +54,27 @@ namespace TypeBreaker {
 
 			// Allow hot changing settings
 			settings.changed.connect( (key) => {
+				debug ("Change in settings key <%s> detected", key);
 				switch (key) {
 					case "type-time":
 						this.work_time = settings.get_int(key);
+						debug ("work_time has been updated to %u", this.work_time);
 						break;
 					case "warn-time":
 						this.warn_time = settings.get_int(key);
+						debug ("warn_time has been updated to %u", this.warn_time);
 						break;
 					case "break-time":
 						this.break_time = settings.get_int(key);
+						debug ("break_time has been updated to %u", this.break_time);
 						break;
 					case "postpones":
 						this.postpones = settings.get_int(key);
+						debug ("postpones has been updated to %u", this.postpones);
 						break;
 					case "postpone-time":
 						this.postpone_time = settings.get_int(key);
+						debug ("postpone_time has been updated to %u", this.postpone_time);
 						break;
 				}
 			});
@@ -102,17 +109,24 @@ namespace TypeBreaker {
 			add_window(this.break_window);
 
 			// only for debugging
-			take_break();
+			/* take_break(); */
+
+			on_break_completed();
 		}
 
 		private void take_break(){
-			this.break_window.show_all();
+			break_window.show_all();
 		}
 
 		private void on_break_completed(){
-			this.timer.start();
+			debug ("Break has been completed");
+			this.timer.start(); // Will reset the timer!
 			this.has_been_warned = false;
 			this.break_window.hide();
+
+			var notification = new Notification("Type Breaker");
+			notification.set_body("Happy hacking for the next %u seconds".printf(work_time));
+			send_notification("typebreaker.notification.work", notification);
 		}
 
 		private void on_warn_break(){
@@ -183,9 +197,11 @@ namespace TypeBreaker {
 			}
 		}
 
-		public bool main_poll(){
+		public bool main_poll () {
 
 			uint seconds_elapsed = (uint)this.timer.elapsed();
+
+			debug ("Seconds elapsed since timer start: %u", seconds_elapsed);
 
 			if ((seconds_elapsed >= this.work_time - this.warn_time) && !has_been_warned){
 				debug ("Uh oh! Time to warn the user...\n");
@@ -195,7 +211,7 @@ namespace TypeBreaker {
 
 			if (this.break_window != null){
 				if (seconds_elapsed >= this.postpone_time){
-					this.break_window.show();
+					this.break_window.show_all();
 				}
 			}
 			else {
@@ -207,7 +223,9 @@ namespace TypeBreaker {
 			return true;
 		}
 
-		public void on_activity(){
+		// Do we still need this at all?
+		public void on_activity () {
+			debug("Activity detected!");
 			this.is_idle = false;
 		}
 	}

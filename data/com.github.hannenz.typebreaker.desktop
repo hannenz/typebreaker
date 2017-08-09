@@ -9,3 +9,5 @@ Terminal=false
 Type=Application
 X-GNOME-Gettext-Domain=typebreaker
 Keywords=Keyboard;Typing;Break;Wrist
+X-GNOME-Uses-Notifications=true
+
