@@ -27,7 +27,7 @@ namespace TypeBreaker {
 		private KeyGrabber key_grabber;
 		private BreakWindow break_window;
 
-		/* private Gtk.Image icon; */
+		private Gtk.Image icon;
 
 		public Breaker () {
 			Object (
@@ -35,7 +35,8 @@ namespace TypeBreaker {
 				/* flags: ApplicationFlags.IS_SERVICE */
 				flags: ApplicationFlags.FLAGS_NONE
 			);
-			/* icon = new Gtk.Image.from_file("/usr/share/icons/48x48/apps/typebreaker.svg"); */
+
+			/* icon = new Gtk.Image.from_file("/usr/share/icons/hicolor/48x48/apps/typebreaker.png"); */
 		}
 
 		protected override void activate () {
@@ -126,6 +127,8 @@ namespace TypeBreaker {
 
 			var notification = new Notification("Type Breaker");
 			notification.set_body("Happy hacking for the next %u seconds".printf(work_time));
+			var icon = new Gtk.Image.from_icon_name ("input-keyboard", Gtk.IconSize.DIALOG);
+			notification.set_icon(icon.gicon);
 			send_notification("typebreaker.notification.work", notification);
 		}
 

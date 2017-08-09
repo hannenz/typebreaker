@@ -56,7 +56,7 @@ PACKAGES
 include(GSettings)
 add_schema("com.github.hannenz.typebreaker.gschema.xml")
 
-# tell cmake what to call the executable we just made
+# tell cmake what to call the executable we just made, pulling in the C-Source 
 add_executable(${EXEC_NAME} ${VALA_C} src/get_idle_time.c)
 
 # install the binaries we just made
