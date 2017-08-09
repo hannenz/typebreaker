@@ -16,13 +16,11 @@ namespace TypeBreaker {
 		private int interval = 50;
 
 		public CountdownClock (int seconds) {
-			debug("CountdownClock::CountdownClock");
 
 			this.microseconds = seconds * 1000;
 		}
 
 		public void start() {
-			debug ("CountdownClock::start");
 
 			timer = microseconds;
 			ticked = timer / 1000;
@@ -34,8 +32,6 @@ namespace TypeBreaker {
 
 			Timeout.add(interval, () => {
 				
-				debug ("CountdownClock::poll");
-
 				timer -= interval;
 				progress = (double)(microseconds - timer) / (double)microseconds; 
 
@@ -58,8 +54,6 @@ namespace TypeBreaker {
 
 		public override bool draw (Cairo.Context cr) {
 
-			debug ("CountdownClock::draw");
-
 			int radius = 50;
 			string digits;
 			int seconds_left = (timer / 1000) + 1;
@@ -71,7 +65,7 @@ namespace TypeBreaker {
 			cr.new_path();
 			cr.arc(x, y, r, 0, 2 * Math.PI * (1.0 - progress));
 			cr.set_source_rgba(1, 1, 1, 1);
-			cr.set_line_width(10);
+			cr.set_line_width(6);
 			cr.stroke();
 
 			digits = (seconds_left >= 60) 
@@ -90,7 +84,7 @@ namespace TypeBreaker {
 		}
 
 		private void redraw_canvas() {
-			debug ("CountdownClock::redraw_canvas");
+
 			var window = get_window();
 			if (window == null) {
 				return;

@@ -9,6 +9,7 @@ namespace TypeBreaker {
 		public signal void postpone_requested();
 		public signal void lock_screen_requested();
 		public signal void countdown_finished();
+		public signal void exit_application();
 
 		/* private Gtk.Label clock_label; */
 		/* private Gtk.ProgressBar pbar; */
@@ -29,8 +30,6 @@ namespace TypeBreaker {
 				skip_pager_hint:true,
 				focus_on_map:false
 			);
-
-			debug ("BreakWindow::Constructing BreakWindow");
 
 			this.break_time = break_time;
 			this.postpones = postpones;
@@ -57,7 +56,6 @@ namespace TypeBreaker {
 		}
 
 		public void setup_background(){
-			debug ("BreakWindow::setup_background");
 
 			var visual = this.screen.get_rgba_visual();
 			bool is_composited;
@@ -71,7 +69,8 @@ namespace TypeBreaker {
 			}
 			else {
 				is_composited = false;
-			} if (is_composited){
+			} 
+			if (is_composited){
 				this.draw.connect(on_draw);
 			}
 			else {
@@ -85,8 +84,6 @@ namespace TypeBreaker {
 			Surface surface;
 			int width;
 			int height;
-
-			debug ("BreakWindow::on_draw");
 
 			context.set_operator(Cairo.Operator.SOURCE);
 
@@ -114,7 +111,6 @@ namespace TypeBreaker {
 		}
 
 		private bool populate(){
-			debug ("BreakWindow::populate");
 
 			Gdk.Rectangle monitor;
 			this.screen.get_monitor_geometry(0, out monitor);
@@ -138,24 +134,34 @@ namespace TypeBreaker {
 			button_box.set_spacing(12);
 			outer_vbox.pack_start(button_box, false, false, 0);;
 
+			var bgcolor = new Gdk.RGBA();
+			bgcolor.red = bgcolor.green = bgcolor.blue = 0.75;
+			bgcolor.alpha = 1;
+
 			if (postpones > 0){
 				var postpone_button = new Button();
 				postpone_button.set_label("Postpone Break (%u)".printf(postpones));
+				postpone_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
 				//postpone_button.set_focus_on_click(false);
 				postpone_button.clicked.connect(on_postpone_button_clicked);
 				button_box.pack_end(postpone_button, false, true, 0);
 			}
 
+
 			// For debugging only
 			if (true) {
 				var exit_button = new Button();
 				exit_button.set_label("Exit");
-				exit_button.clicked.connect(Gtk.main_quit);
+				exit_button.clicked.connect(() => {
+					exit_application();
+				});
+				exit_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
 				button_box.pack_start(exit_button, false, true, 0);
 			}
 			
 			var lock_button = new Button.with_mnemonic("Lock screen");
 			lock_button.clicked.connect(on_lock_button_clicked);
+			lock_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
 			button_box.pack_start(lock_button, false, false, 0);
 
 			var vbox = new Box(Orientation.VERTICAL, 0);
@@ -177,14 +183,14 @@ namespace TypeBreaker {
 			label.set_yalign(0.5f);
 			vbox.pack_start(label, false, false, 0);
 
-			/* countdown_clock = new CountdownClock((int)this.break_time); */
-			/* vbox.pack_start(countdown_clock, true, true, 8); */
-			/* countdown_clock.zero.connect( () => { */
-			/* 	debug ("COUNTDOWN HAS FINISHED"); */
-			/* 	// Emit signal */
-			/* 	countdown_finished(); */
-			/* }); */
-			/* countdown_clock.start(); */
+			countdown_clock = new CountdownClock((int)this.break_time);
+			vbox.pack_start(countdown_clock, true, true, 8);
+			countdown_clock.zero.connect( () => {
+				debug ("COUNTDOWN HAS FINISHED");
+				// Emit signal
+				countdown_finished();
+			});
+			countdown_clock.start();
 
 			this.stick();
 
@@ -195,13 +201,11 @@ namespace TypeBreaker {
 				}
 			});
 
-			debug ("BreakWindow::populate - end");
-
 			return false;
 		}
 
 		private void on_postpone_button_clicked(Gtk.Button button){
-			debug ("BreakWindow::on_postpone_button_clicked");
+
 			this.postpone_requested();
 			if (--postpones == 0){
 				button.set_sensitive(false);
@@ -210,21 +214,9 @@ namespace TypeBreaker {
 		}
 
 		private void on_lock_button_clicked(){
-			debug ("BreakWindow::on_lock_button_clicked");
 			this.lock_screen_requested();
 		}
 
-		/* private void set_clock_label(uint n){ */
-		/* 	clock_label.set_markup("<span size=\"xx-large\" foreground=\"white\"><b>%u</b></span>".printf(n)); */
-		/* } */
 
-		public void run(){
-			debug ("BreakWindow::run");
-			/* set_clock_label(this.break_time); */
-			this.show_all();
-			/* Timeout.add(1000, countdown); */
-			//this.draw.connect_after(populate);
-			//this.queue_draw();
-		}
 	}
 }
