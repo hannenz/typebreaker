@@ -49,7 +49,7 @@ namespace TypeBreaker {
 				redraw_canvas();
 				return true;
 
-			}, Priority.DEFAULT);
+			}, Priority.DEFAULT_IDLE);
 		}
 
 		public override bool draw (Cairo.Context cr) {

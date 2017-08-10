@@ -2,6 +2,12 @@ using Gtk;
 
 namespace TypeBreaker {
 
+	public enum State {
+		IDLE,
+		ACTIVE
+	}
+		
+
 	/* public class Breaker : GLib.Object { */
 	public class Breaker : Gtk.Application { // Shouldn't this rather be Gdk.Application??
 
@@ -28,6 +34,8 @@ namespace TypeBreaker {
 		private BreakWindow break_window;
 
 		private Gtk.Image icon;
+
+		private State state = State.ACTIVE;
 
 		public Breaker () {
 			Object (
@@ -90,8 +98,16 @@ namespace TypeBreaker {
 
 			this.key_grabber = new KeyGrabber();
 			this.key_grabber.break_time = this.break_time;
-			this.key_grabber.activity.connect(on_activity);
+			/* this.key_grabber.activity.connect(on_activity); */
 			this.key_grabber.break_completed.connect(on_break_completed);
+			key_grabber.activity_begin.connect( () => {
+				state = State.ACTIVE;
+				debug ("Going ACTIVE");
+			});
+			key_grabber.idle_begin.connect( () => {
+				state = State.IDLE;
+				debug ("Going IDLE");
+			});
 
 			this.have_a_break.connect(take_break);
 			this.warn_break.connect(on_warn_break);
@@ -102,7 +118,7 @@ namespace TypeBreaker {
 			break_window = new BreakWindow(this.break_time, this.postpones);
 			break_window.lock_screen_requested.connect(on_lock_screen_requested);
 			break_window.postpone_requested.connect(on_postpone_requested);
-			break_window.countdown_finished.connect(on_break_completed);
+			/* break_window.countdown_finished.connect(on_break_completed); */
 
 			// Only in debugging mode: Quit app if qxit button has been clicked
 			break_window.exit_application.connect(quit);
@@ -112,7 +128,7 @@ namespace TypeBreaker {
 			// only for debugging
 			/* take_break(); */
 
-			on_break_completed();
+			/* on_break_completed(); */
 		}
 
 		private void take_break(){

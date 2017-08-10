@@ -190,7 +190,7 @@ namespace TypeBreaker {
 				// Emit signal
 				countdown_finished();
 			});
-			countdown_clock.start();
+			/* countdown_clock.start(); */
 
 			this.stick();
 
