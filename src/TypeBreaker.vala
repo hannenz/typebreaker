@@ -6,7 +6,6 @@ namespace TypeBreaker {
 		IDLE,
 		ACTIVE
 	}
-		
 
 	/* public class Breaker : GLib.Object { */
 	public class Breaker : Gtk.Application { // Shouldn't this rather be Gdk.Application??
@@ -88,11 +87,11 @@ namespace TypeBreaker {
 				}
 			});
 
-			debug ("type time:    %u\n", this.work_time);
-			debug ("warn time:    %u\n", this.warn_time);
-			debug ("break time:    %u\n", this.break_time);
-			debug ("postpones:    %u\n", this.postpones);
-			debug ("postpone time:    %u\n", this.postpone_time);
+			/* debug ("type time:    %u\n", this.work_time); */
+			/* debug ("warn time:    %u\n", this.warn_time); */
+			/* debug ("break time:    %u\n", this.break_time); */
+			/* debug ("postpones:    %u\n", this.postpones); */
+			/* debug ("postpone time:    %u\n", this.postpone_time); */
 
 			this.break_window = null;
 
@@ -118,7 +117,7 @@ namespace TypeBreaker {
 			break_window = new BreakWindow(this.break_time, this.postpones);
 			break_window.lock_screen_requested.connect(on_lock_screen_requested);
 			break_window.postpone_requested.connect(on_postpone_requested);
-			/* break_window.countdown_finished.connect(on_break_completed); */
+			break_window.countdown_finished.connect(on_break_completed);
 
 			// Only in debugging mode: Quit app if qxit button has been clicked
 			break_window.exit_application.connect(quit);
@@ -142,7 +141,8 @@ namespace TypeBreaker {
 			this.break_window.hide();
 
 			var notification = new Notification("Type Breaker");
-			notification.set_body("Happy hacking for the next %u seconds".printf(work_time));
+			
+			notification.set_body("Happy hacking for the next %u minutes".printf(work_time / 60));
 			var icon = new Gtk.Image.from_icon_name ("input-keyboard", Gtk.IconSize.DIALOG);
 			notification.set_icon(icon.gicon);
 			send_notification("typebreaker.notification.work", notification);
@@ -150,16 +150,12 @@ namespace TypeBreaker {
 
 		private void on_warn_break(){
 			if (this.warn_time > 0){
-				try {
-					string mssg = "Attention, attention! KeyBreaker will shut down your keyboard in %u seconds!".printf(this.warn_time);
-					var notification = new Notification("Type Breaker");
-					/* notification.set_icon(icon.gicon); */
-					notification.set_body(mssg);
-					this.send_notification("typebreaker.notification.warn", notification);
-				}
-				catch (Error e){
-					stderr.printf("Failed to show notification: %s\n", e.message);
-				}
+				string mssg = "Attention, attention! KeyBreaker will shut down your keyboard in %u:%0u!".printf(warn_time / 60, warn_time % 60);
+				var notification = new Notification("Type Breaker");
+				/* notification.set_icon(icon.gicon); */
+				notification.set_body(mssg);
+				this.send_notification("typebreaker.notification.warn", notification);
+				has_been_warned = true;
 			}
 		}
 
@@ -204,16 +200,11 @@ namespace TypeBreaker {
 			this.break_window.hide();
 			timer.start();
 			// show notification
-			try {
-				string mssg = "Postponed typing break by %u seconds!".printf(this.postpone_time);
-				var notification = new Notification("Type Breaker");
-				/* notification.set_icon(icon.gicon); */
-				notification.set_body(mssg);
-				this.send_notification("typebreaker.notification.postpone", notification);
-			}
-			catch (Error e){
-				stderr.printf("Failed to show notification: %s\n", e.message);
-			}
+			string mssg = "Postponed typing break by %u seconds!".printf(this.postpone_time);
+			var notification = new Notification("Type Breaker");
+			/* notification.set_icon(icon.gicon); */
+			notification.set_body(mssg);
+			this.send_notification("typebreaker.notification.postpone", notification);
 		}
 
 		public bool main_poll () {
@@ -225,7 +216,6 @@ namespace TypeBreaker {
 			if ((seconds_elapsed >= this.work_time - this.warn_time) && !has_been_warned){
 				debug ("Uh oh! Time to warn the user...\n");
 				this.warn_break();
-				has_been_warned = true;
 			}
 
 			if (this.break_window != null){

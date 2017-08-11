@@ -2,26 +2,22 @@ using Gtk;
 
 namespace TypeBreaker {
 
-	public class CountdownClock : DrawingArea {
+	public class Countdown {
 
+		public double progress { get; set; }
 		public int microseconds { get; set; }
-		public int ticked;
 
 		public signal void tick(int seconds, double progress);
 		public signal void zero();
 
 		protected int timer;
-		protected double progress;
+		protected int ticked;
 
 		private int interval = 50;
 
-		public CountdownClock (int seconds) {
+		public Countdown (uint seconds) {
 
 			microseconds = seconds * 1000;
-		}
-
-		public void start() {
-
 			timer = microseconds;
 			ticked = timer / 1000;
 
@@ -41,15 +37,35 @@ namespace TypeBreaker {
 				}
 
 				if (timer <= 0 ) {
-					redraw_canvas();
+					/* redraw_canvas(); */
+	
 					zero();
 					return false;
 				}
 
-				redraw_canvas();
+				/* redraw_canvas(); */
 				return true;
 
 			}, Priority.DEFAULT_IDLE);
+		}
+	}
+
+	public class CountdownClock : DrawingArea {
+
+		protected Countdown countdown;
+		protected uint microseconds;
+
+		public CountdownClock () {
+
+			countdown = new Countdown(seconds);
+			countdown.tick.connect( () => {
+				redraw_canvas();
+			});
+			microseconds.changed.connect(redraw_canvas);
+		}
+
+		// Get rid of this!!
+		public void start () {
 		}
 
 		public override bool draw (Cairo.Context cr) {
