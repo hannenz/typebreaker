@@ -183,7 +183,7 @@ namespace TypeBreaker {
 			label.set_yalign(0.5f);
 			vbox.pack_start(label, false, false, 0);
 
-			countdown_clock = new CountdownClock();
+			countdown_clock = new CountdownClock(this.break_time);
 			vbox.pack_start(countdown_clock, true, true, 8);
 			var countdown = new Countdown(this.break_time);
 			countdown.zero.connect( () => {
@@ -191,7 +191,6 @@ namespace TypeBreaker {
 				// Emit signal
 				countdown_finished();
 			});
-			/* countdown_clock.start(); */
 
 			this.stick();
 

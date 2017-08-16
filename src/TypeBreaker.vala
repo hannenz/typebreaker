@@ -125,7 +125,7 @@ namespace TypeBreaker {
 			add_window(this.break_window);
 
 			// only for debugging
-			/* take_break(); */
+			take_break();
 
 			/* on_break_completed(); */
 		}
