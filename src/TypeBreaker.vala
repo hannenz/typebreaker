@@ -63,8 +63,6 @@ namespace TypeBreaker {
 			icon_warning = new FileIcon(File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-warning.png"));
 			icon_time = new FileIcon(File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-time.png"));
 
-
-			/* icon = new Gtk.Image.from_file("/usr/share/icons/hicolor/48x48/apps/typebreaker.png"); */
 		}
 
 
@@ -185,7 +183,7 @@ namespace TypeBreaker {
 			// Send notification
 			var t = new TimeString();
 			var notification = new Notification("Type Breaker");
-			notification.set_body("Happy hacking for the next %s".printf(t.nice(work_time / 60)));
+			notification.set_body(_("Happy hacking for the next %s").printf(t.nice(work_time / 60)));
 			notification.set_icon(icon_play);
 			send_notification("typebreaker.notification.work", notification);
 

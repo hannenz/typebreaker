@@ -14,6 +14,8 @@ set (DATADIR "${CMAKE_INSTALL_PREFIX}/share")
 # what to call that directory where we install data too
 set (PKGDATADIR "${DATADIR}/com.github.hannenz.typebreaker")
 
+set (GETTEXT_PACKAGE "${CMAKE_PROJECT_NAME}")
+
 set (EXEC_NAME "com.github.hannenz.typebreaker")
 set (RELEASE_NAME "Saves your wrist")
 set (VERSION "0.1")
@@ -56,6 +58,10 @@ PACKAGES
 	gdk-x11-3.0
 )
 
+# i18n
+add_definitions (-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
+add_subdirectory (po)
+
 include(GSettings)
 add_schema("com.github.hannenz.typebreaker.gschema.xml")
 
@@ -71,6 +77,14 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.hannenz.typebreaker.d
 # install our .appdata.xml file so AppCenter will see it
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.hannenz.typebreaker.appdata.xml DESTINATION ${DATADIR}/metainfo/)
 
-# install icon
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker.png DESTINATION ${DATADIR}/share/icons/hicolor/48x48/apps/)
+# install icons
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-pause.png DESTINATION ${DATADIR}/share/icons/hicolor/48x48/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-play.png DESTINATION ${DATADIR}/share/icons/hicolor/48x48/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-warning.png DESTINATION ${DATADIR}/share/icons/hicolor/48x48/apps/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-time.png DESTINATION ${DATADIR}/share/icons/hicolor/48x48/apps/)
+
+
+
+
+
 
