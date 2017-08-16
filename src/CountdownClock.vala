@@ -4,10 +4,23 @@ namespace TypeBreaker {
 
 	public class CountdownClock : DrawingArea {
 
+
+
+		public uint radius { get; set; default = 50; }
+
+
+
 		protected Countdown countdown;
 		/* protected uint microseconds; */
 		protected uint seconds_left;
 		protected double progress;
+
+
+
+		// Signals
+		public signal void finished();
+
+
 
 		public CountdownClock (uint seconds) {
 			seconds_left = seconds;
@@ -18,15 +31,27 @@ namespace TypeBreaker {
 				this.progress = progress;
 				redraw_canvas();
 			});
+			countdown.finished.connect( () => {
+				this.seconds_left = 0;
+				redraw_canvas();
+				finished();
+			});
 		}
+
+
 
 		public void start() {
 			countdown.start();
 		}
 
+
+
+		/**
+		  * Draw the "clock"
+		  */
 		public override bool draw (Cairo.Context cr) {
 
-			int radius = 50;
+			/* int radius = 50; */
 			string digits;
 
 			var x = ((get_allocated_width()  - radius) / 2) + radius/2;
@@ -53,8 +78,6 @@ namespace TypeBreaker {
 
 			return false;
 		}
-
-
 
 
 

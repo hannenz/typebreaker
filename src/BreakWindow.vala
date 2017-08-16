@@ -2,14 +2,13 @@ using Gtk;
 using Gdk;
 using Cairo;
 
+
+
 namespace TypeBreaker {
 
 	public class BreakWindow : Gtk.Window {
 
-		public signal void postpone_requested();
-		public signal void lock_screen_requested();
-		public signal void countdown_finished();
-		public signal void exit_application();
+
 
 		/* private Gtk.Label clock_label; */
 		/* private Gtk.ProgressBar pbar; */
@@ -22,6 +21,16 @@ namespace TypeBreaker {
 
 		/* Number of allowed postpones */
 		private uint postpones;
+
+
+
+		// Signalse
+		public signal void postpone_requested();
+		public signal void lock_screen_requested();
+		public signal void countdown_finished();
+		public signal void exit_application();
+
+
 
 		public BreakWindow (uint break_time, uint postpones){
 			GLib.Object(
@@ -51,9 +60,13 @@ namespace TypeBreaker {
 			populate();
 		}
 
+
+
 		~BreakWindow() {
 			debug ("BreakWindow::Deconstructing BreakWindow");
 		}
+
+
 
 		public void setup_background(){
 
@@ -77,6 +90,8 @@ namespace TypeBreaker {
 				stderr.printf("Heck, no composited screen available...\n");
 			}
 		}
+
+
 
 		public bool on_draw(Cairo.Context context){
 
@@ -109,6 +124,8 @@ namespace TypeBreaker {
 			context.paint();
 			return false;
 		}
+
+
 
 		private bool populate(){
 
@@ -184,13 +201,10 @@ namespace TypeBreaker {
 			vbox.pack_start(label, false, false, 0);
 
 			countdown_clock = new CountdownClock(this.break_time);
-			vbox.pack_start(countdown_clock, true, true, 8);
-			var countdown = new Countdown(this.break_time);
-			countdown.zero.connect( () => {
-				debug ("COUNTDOWN HAS FINISHED");
-				// Emit signal
+			countdown_clock.finished.connect( () => {
 				countdown_finished();
 			});
+			vbox.pack_start(countdown_clock, true, true, 8);
 
 			this.stick();
 
@@ -209,6 +223,8 @@ namespace TypeBreaker {
 			return false;
 		}
 
+
+
 		private void on_postpone_button_clicked(Gtk.Button button){
 
 			this.postpone_requested();
@@ -218,14 +234,20 @@ namespace TypeBreaker {
 			button.set_label("Postpone (%u)".printf(postpones));
 		}
 
+
+
 		private void on_lock_button_clicked(){
 			this.lock_screen_requested();
 		}
 
 
+
+
 		public void start_countdown() {
 			countdown_clock.start();
 		}
+
+
 
 		public void stop_countdown() {
 			//

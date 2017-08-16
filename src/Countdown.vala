@@ -4,43 +4,61 @@ namespace TypeBreaker {
 
 		public double progress { get; set; }
 		public uint microseconds { get; set; }
+		public uint interval { get; set; default = 20;}
 
-		public signal void tick(uint seconds_left, double progress);
-		public signal void microtick(uint microseconds_left, double progress);
-		public signal void zero();
+
 
 		protected uint timer;
-		protected uint ticked;
-		private uint seconds_left;
+		protected uint seconds_left;
+		private uint seconds_count;
 
-		private uint interval = 50;
+		private uint timeout_id;
 
 
+
+		// Signals
+		public signal void tick(uint seconds_count, double progress);
+		public signal void microtick(uint microseconds_left, double progress);
+		public signal void finished();
 
 
 
 		public Countdown (uint seconds) {
 			
-			seconds_left = seconds;
-			microseconds = seconds * 1000;
-			timer = microseconds;
-			ticked = timer / 1000;
-
-			if (timer == 0) {
-				zero();
-			}
+			seconds_count = seconds;
 		}
-
 
 
 
 		public void start() {
-			Timeout.add(interval, on_interval, Priority.DEFAULT_IDLE);
+
+			setup();
+
+			if (timer == 0) {
+				finished();
+			}
+
+			timeout_id = Timeout.add(interval, on_interval, Priority.DEFAULT_IDLE);
+		}
+
+
+		
+		public void stop() {
+
+			GLib.Source.remove(timeout_id);
+			setup();
 		}
 
 
 
-		
+		protected void setup() {
+			microseconds = seconds_count * 1000;
+			timer = microseconds;
+			seconds_left = seconds_count;
+		}
+
+
+
 		public bool on_interval() {
 
 			timer -= interval;
@@ -48,16 +66,14 @@ namespace TypeBreaker {
 
 			microtick(timer, progress);
 
-			if (timer / 1000 < ticked) {
-				ticked--;
+			if (timer / 1000 < seconds_left) {
 				/* tick((timer / 1000) + 1, progress); */
-				tick (ticked, progress);
+				tick (seconds_left, progress);
+				seconds_left--;
 			}
 
 			if (timer <= 0 ) {
-				/* redraw_canvas(); */
-
-				zero();
+				finished();
 				return false;
 			}
 

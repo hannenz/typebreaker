@@ -2,15 +2,22 @@ using Gtk;
 
 namespace TypeBreaker {
 
+
+
 	public enum State {
 		IDLE,
 		ACTIVE
 	}
+	
 
-	/* public class Breaker : GLib.Object { */
+
+	/**
+	 * @class Breaker
+	 *
+	 * The main application
+	 */
 	public class Breaker : Gtk.Application { // Shouldn't this rather be Gdk.Application??
 
-		private GLib.Settings settings;
 
 		public signal void have_a_break();
 		public signal void warn_break();
@@ -23,6 +30,8 @@ namespace TypeBreaker {
 
 		public DBusProxy screensaver_proxy;
 
+		private GLib.Settings settings;
+
 		private Timer timer;
 		private uint timeout_id;
 		private bool has_been_warned;
@@ -32,9 +41,14 @@ namespace TypeBreaker {
 		private KeyGrabber key_grabber;
 		private BreakWindow break_window;
 
-		private Gtk.Image icon;
+		private FileIcon icon_play;
+		private FileIcon icon_pause;
+		private FileIcon icon_warning;
+		private FileIcon icon_time;
 
 		private State state = State.ACTIVE;
+
+
 
 		public Breaker () {
 			Object (
@@ -43,10 +57,25 @@ namespace TypeBreaker {
 				flags: ApplicationFlags.FLAGS_NONE
 			);
 
+			icon_play = new FileIcon(File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-play.png"));
+			icon_pause = new FileIcon(File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-pause.png"));
+			icon_warning = new FileIcon(File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-warning.png"));
+			icon_time = new FileIcon(File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-time.png"));
+
+
 			/* icon = new Gtk.Image.from_file("/usr/share/icons/hicolor/48x48/apps/typebreaker.png"); */
 		}
 
+
+
 		protected override void activate () {
+
+			// Send notification
+			var notification = new Notification("Type Breaker");
+			notification.set_body("Hoola Hoop, man!");
+			notification.set_icon(icon_play);
+			send_notification("typebreaker.notification.work", notification);
+
 
 			this.timer = new Timer();
 			this.timer.start();
@@ -87,17 +116,15 @@ namespace TypeBreaker {
 				}
 			});
 
-			/* debug ("type time:    %u\n", this.work_time); */
-			/* debug ("warn time:    %u\n", this.warn_time); */
-			/* debug ("break time:    %u\n", this.break_time); */
-			/* debug ("postpones:    %u\n", this.postpones); */
-			/* debug ("postpone time:    %u\n", this.postpone_time); */
+			debug ("type time:    %u\n", this.work_time);
+			debug ("warn time:    %u\n", this.warn_time);
+			debug ("break time:    %u\n", this.break_time);
+			debug ("postpones:    %u\n", this.postpones);
+			debug ("postpone time:    %u\n", this.postpone_time);
 
 			this.break_window = null;
 
-			this.key_grabber = new KeyGrabber();
-			this.key_grabber.break_time = this.break_time;
-			/* this.key_grabber.activity.connect(on_activity); */
+			this.key_grabber = new KeyGrabber(break_time);
 			this.key_grabber.break_completed.connect(on_break_completed);
 			key_grabber.activity_begin.connect( () => {
 				state = State.ACTIVE;
@@ -125,41 +152,59 @@ namespace TypeBreaker {
 			add_window(this.break_window);
 
 			// only for debugging
-			take_break();
+			/* take_break(); */
 
 			/* on_break_completed(); */
 		}
+
+
 
 		private void take_break(){
 			break_window.show_all();
 		}
 
+
+
 		private void on_break_completed(){
+
 			debug ("Break has been completed");
+
+			// Reset postpones 
+			this.postpones = settings.get_int("postpones");
+
 			this.timer.start(); // Will reset the timer!
 			this.has_been_warned = false;
 			this.break_window.hide();
 
+			// Send notification
+			var t = new TimeString();
 			var notification = new Notification("Type Breaker");
-			
-			notification.set_body("Happy hacking for the next %u minutes".printf(work_time / 60));
-			var icon = new Gtk.Image.from_icon_name ("input-keyboard", Gtk.IconSize.DIALOG);
-			notification.set_icon(icon.gicon);
+			notification.set_body("Happy hacking for the next %s".printf(t.nice(work_time / 60)));
+			notification.set_icon(icon_play);
 			send_notification("typebreaker.notification.work", notification);
+
 		}
 
+
+
 		private void on_warn_break(){
+
 			if (this.warn_time > 0){
-				string mssg = "Attention, attention! KeyBreaker will shut down your keyboard in %u:%0u!".printf(warn_time / 60, warn_time % 60);
+
+				var t = new TimeString();
 				var notification = new Notification("Type Breaker");
-				/* notification.set_icon(icon.gicon); */
-				notification.set_body(mssg);
+				notification.set_icon(icon_warning);
+				notification.set_body("Attention, attention! KeyBreaker will shut down your keyboard in %s".printf(t.nice(warn_time)));
 				this.send_notification("typebreaker.notification.warn", notification);
 				has_been_warned = true;
+
 			}
 		}
 
+
+
 		private DBusProxy get_screensaver_proxy(){
+
 			DBusConnection connection = null;
 
 			if (this.screensaver_proxy != null){
@@ -186,6 +231,8 @@ namespace TypeBreaker {
 			return this.screensaver_proxy;
 		}
 
+
+
 		private void on_lock_screen_requested(){
 			DBusProxy proxy = get_screensaver_proxy();
 			if (proxy == null){
@@ -195,6 +242,8 @@ namespace TypeBreaker {
 			proxy.call("Lock", new Variant("()"), DBusCallFlags.NONE, -1, null);
 		}
 
+
+
 		private void on_postpone_requested(){
 
 			this.break_window.hide();
@@ -202,10 +251,18 @@ namespace TypeBreaker {
 			// show notification
 			string mssg = "Postponed typing break by %u seconds!".printf(this.postpone_time);
 			var notification = new Notification("Type Breaker");
-			/* notification.set_icon(icon.gicon); */
+			/* TODO: Better icon: Something with a clock! */
+			notification.set_icon(icon_time);
 			notification.set_body(mssg);
 			this.send_notification("typebreaker.notification.postpone", notification);
+
+			var postpone_countdown = new Countdown(postpone_time);
+			postpone_countdown.finished.connect( () => {
+				this.have_a_break();
+			});
 		}
+
+
 
 		public bool main_poll () {
 
@@ -218,19 +275,15 @@ namespace TypeBreaker {
 				this.warn_break();
 			}
 
-			if (this.break_window != null){
-				if (seconds_elapsed >= this.postpone_time){
-					this.break_window.show_all();
-				}
+			if (seconds_elapsed >= this.work_time){
+				debug ("Time for a break!");
+				this.have_a_break();
 			}
-			else {
-				if (seconds_elapsed >= this.work_time){
-					debug ("Time for a break!");
-					this.have_a_break();
-				}
-			}
+
 			return true;
 		}
+
+
 
 		// Do we still need this at all?
 		public void on_activity () {
