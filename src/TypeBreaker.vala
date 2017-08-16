@@ -50,6 +50,7 @@ namespace TypeBreaker {
 
 
 
+
 		public Breaker () {
 			Object (
 				application_id: "com.github.hannenz.typebreaker",
@@ -141,7 +142,7 @@ namespace TypeBreaker {
 			this.screensaver_proxy = null;
 			this.has_been_warned = false;
 
-			break_window = new BreakWindow(this.break_time, this.postpones);
+			break_window = new BreakWindow(this.break_time, this.postpones, this.postpone_time);
 			break_window.lock_screen_requested.connect(on_lock_screen_requested);
 			break_window.postpone_requested.connect(on_postpone_requested);
 			break_window.countdown_finished.connect(on_break_completed);
@@ -150,9 +151,14 @@ namespace TypeBreaker {
 			break_window.exit_application.connect(quit);
 
 			add_window(this.break_window);
+			var swin = new SettingsWindow();
+			add_window(swin);
+			
+			swin.show_all();
+			
 
 			// only for debugging
-			/* take_break(); */
+			take_break();
 
 			/* on_break_completed(); */
 		}
@@ -248,6 +254,7 @@ namespace TypeBreaker {
 
 			this.break_window.hide();
 			timer.start();
+
 			// show notification
 			string mssg = "Postponed typing break by %u seconds!".printf(this.postpone_time);
 			var notification = new Notification("Type Breaker");
@@ -276,6 +283,7 @@ namespace TypeBreaker {
 			}
 
 			if (seconds_elapsed >= this.work_time){
+
 				debug ("Time for a break!");
 				this.have_a_break();
 			}

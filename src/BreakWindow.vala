@@ -22,6 +22,8 @@ namespace TypeBreaker {
 		/* Number of allowed postpones */
 		private uint postpones;
 
+		private uint postpone_time;
+
 
 
 		// Signalse
@@ -32,7 +34,7 @@ namespace TypeBreaker {
 
 
 
-		public BreakWindow (uint break_time, uint postpones){
+		public BreakWindow (uint break_time, uint postpones, uint postpone_time){
 			GLib.Object(
 				type: Gtk.WindowType.POPUP,
 				skip_taskbar_hint: true,
@@ -42,6 +44,7 @@ namespace TypeBreaker {
 
 			this.break_time = break_time;
 			this.postpones = postpones;
+			this.postpone_time = postpone_time;
 
 			this.set_focus_on_map(false);
 			this.set_focus(null);
@@ -157,7 +160,8 @@ namespace TypeBreaker {
 
 			if (postpones > 0){
 				var postpone_button = new Button();
-				postpone_button.set_label("Postpone Break (%u)".printf(postpones));
+				var t = new TimeString();
+				postpone_button.set_label("Postpone Break");
 				postpone_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
 				//postpone_button.set_focus_on_click(false);
 				postpone_button.clicked.connect(on_postpone_button_clicked);
@@ -165,7 +169,7 @@ namespace TypeBreaker {
 			}
 
 
-			// For debugging only
+			// For testing only
 			if (true) {
 				var exit_button = new Button();
 				exit_button.set_label("Exit");

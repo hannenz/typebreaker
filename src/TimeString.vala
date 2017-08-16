@@ -62,8 +62,8 @@ namespace TypeBreaker {
 		public string formatted(uint seconds, bool output_null = true) {
 
 			hrs = seconds / 3600;
-			mins = (seconds % 3600) / 60;
-			secs = mins % 60;
+			mins = (seconds % 3600) / 60 ;
+			secs = (seconds % 60);
 
 			var  str = new StringBuilder();
 

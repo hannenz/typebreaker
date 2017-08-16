@@ -61,7 +61,7 @@ namespace TypeBreaker {
 		 * @var uint
 		 * Seconds that the user is idle
 		 */
-		private uint idle_time;
+		private  uint idle_time;
 
 		/**
 		 * @var bool

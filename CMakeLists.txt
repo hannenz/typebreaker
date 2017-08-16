@@ -46,6 +46,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
 	src/CountdownClock.vala
 	src/Countdown.vala
 	src/TimeString.vala
+	src/SettingsWindow.vala
 
 # tell what libraries to use when compiling
 PACKAGES
