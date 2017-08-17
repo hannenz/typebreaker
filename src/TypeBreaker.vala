@@ -158,7 +158,7 @@ namespace TypeBreaker {
 			
 
 			// only for debugging
-			take_break();
+			/* take_break(); */
 
 			/* on_break_completed(); */
 		}
