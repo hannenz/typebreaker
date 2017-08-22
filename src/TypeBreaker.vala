@@ -71,7 +71,7 @@ namespace TypeBreaker {
 
 			// Send notification
 			var notification = new Notification("Type Breaker");
-			notification.set_body("Hoola Hoop, man!");
+			notification.set_body(_("Hoola Hoop, man!"));
 			notification.set_icon(icon_play);
 			send_notification("typebreaker.notification.work", notification);
 

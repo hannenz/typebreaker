@@ -84,7 +84,3 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-warning.png DESTINAT
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-time.png DESTINATION ${DATADIR}/share/icons/hicolor/48x48/apps/)
 
 
-
-
-
-
