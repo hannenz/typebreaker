@@ -249,7 +249,7 @@ namespace TypeBreaker {
 			if (--postpones == 0){
 				button.set_sensitive(false);
 			}
-			button.set_label("Postpone (%u)".printf(postpones));
+			/* button.set_label("Postpone (%u)".printf(postpones)); */
 		}
 
 

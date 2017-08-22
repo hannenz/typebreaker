@@ -250,7 +250,8 @@ namespace TypeBreaker {
 			timer.start();
 
 			// show notification
-			string mssg = "Postponed typing break by %u seconds!".printf(this.postpone_time);
+			var t = new TimeString();
+			string mssg = _("Typing break postponed by %s").printf(t.nice(this.postpone_time));
 			var notification = new Notification("Type Breaker");
 			/* TODO: Better icon: Something with a clock! */
 			notification.set_icon(icon_time);
