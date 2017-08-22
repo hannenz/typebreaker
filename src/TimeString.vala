@@ -17,15 +17,24 @@ namespace TypeBreaker {
 			mins = (seconds % 3600) / 60;
 			secs = mins % 60;
 
-			var  str = new StringBuilder();
+			var  str = new StringBuilder ();
+			var parts= new List <string> ();
 
 			if (hrs > 0) {
-				str.append("%u hours".printf(hrs));
+				parts.append(_("%u hours").printf(hrs));
 			}
 			if (mins > 0) {
-				str.append("%u minutes and ".printf(mins));
+				parts.append(_("%u minutes").printf(mins));
 			}
-			str.append("%u seconds".printf(secs));
+			if (secs > 0) {
+				parts.append(_("%u seconds").printf(secs));
+			}
+			for (uint i = 0; i < parts.length(); i++) {
+				if (i > 1 && i == parts.length() - 1) {
+					str.append (_(" and "));
+				}
+				str.append(parts.nth_data(i));
+			}
 
 			return str.str;
 		}
