@@ -151,14 +151,10 @@ namespace TypeBreaker {
 			break_window.exit_application.connect(quit);
 
 			add_window(this.break_window);
-			var swin = new SettingsWindow();
-			add_window(swin);
-			
-			swin.show_all();
 			
 
 			// only for debugging
-			/* take_break(); */
+			take_break();
 
 			/* on_break_completed(); */
 		}
@@ -298,5 +294,14 @@ namespace TypeBreaker {
 			debug("Activity detected!");
 			this.is_idle = false;
 		}
+	}
+
+
+
+	// Main: Launch app
+	int main(string[] args){
+
+		var app = new Breaker();
+		return app.run();
 	}
 }

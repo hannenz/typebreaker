@@ -39,7 +39,6 @@ ensure_vala_version("0.16" MINIMUM)
 # files we want to compile
 include(ValaPrecompile)
 vala_precompile(VALA_C ${EXEC_NAME}
-	src/main.vala
 	src/TypeBreaker.vala
 	src/BreakWindow.vala
 	src/KeyGrabber.vala
