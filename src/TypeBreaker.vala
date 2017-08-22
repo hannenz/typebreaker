@@ -69,13 +69,6 @@ namespace TypeBreaker {
 
 		protected override void activate () {
 
-			// Send notification
-			var notification = new Notification("Type Breaker");
-			notification.set_body(_("Hoola Hoop, man!"));
-			notification.set_icon(icon_play);
-			send_notification("typebreaker.notification.work", notification);
-
-
 			this.timer = new Timer();
 			this.timer.start();
 			this.timeout_id = Timeout.add(1000, main_poll);
@@ -152,7 +145,10 @@ namespace TypeBreaker {
 			
 
 			// only for debugging
-			take_break();
+			string[] envp = Environ.get ();
+			if (Environ.get_variable (envp, "G_MESSAGES_DEBUG") != null) {
+				take_break();
+			}
 
 			/* on_break_completed(); */
 		}
