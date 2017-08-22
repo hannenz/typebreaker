@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 22:14+0200\n"
+"POT-Creation-Date: 2017-08-22 23:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,10 +33,34 @@ msgstr ""
 msgid "Postpone"
 msgstr ""
 
-#: ../src/BreakWindow.vala:226
+#: ../src/BreakWindow.vala:226 ../src/BreakWindow.vala:228
 msgid "Exit"
 msgstr ""
 
-#: ../src/BreakWindow.vala:234
+#: ../src/BreakWindow.vala:234 ../src/BreakWindow.vala:236
 msgid "Lock screen"
+msgstr ""
+
+#: ../src/TypeBreaker.vala:254
+msgid "Typing break postponed by %s"
+msgstr ""
+
+#: ../src/TimeString.vala:23 ../src/TimeString.vala:24
+msgid "%u hours"
+msgstr ""
+
+#: ../src/TimeString.vala:26
+msgid "%u minutes and "
+msgstr ""
+
+#: ../src/TimeString.vala:28 ../src/TimeString.vala:30
+msgid "%u seconds"
+msgstr ""
+
+#: ../src/TimeString.vala:27
+msgid "%u minutes"
+msgstr ""
+
+#: ../src/TimeString.vala:34
+msgid " and "
 msgstr ""

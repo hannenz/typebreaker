@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 22:14+0200\n"
-"PO-Revision-Date: 2017-08-22 22:14+0200\n"
+"POT-Creation-Date: 2017-08-22 23:21+0200\n"
+"PO-Revision-Date: 2017-08-22 23:21+0200\n"
 "Last-Translator: Johannes Braun <me@hannenz.de>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -34,10 +34,34 @@ msgstr "Zeit für eine Pause"
 msgid "Postpone"
 msgstr "Verschieben"
 
-#: ../src/BreakWindow.vala:226
+#: ../src/BreakWindow.vala:226 ../src/BreakWindow.vala:228
 msgid "Exit"
 msgstr "Beenden"
 
-#: ../src/BreakWindow.vala:234
+#: ../src/BreakWindow.vala:234 ../src/BreakWindow.vala:236
 msgid "Lock screen"
 msgstr "Bildschirm sperren"
+
+#: ../src/TypeBreaker.vala:254
+msgid "Typing break postponed by %s"
+msgstr "Tippause aufgeschoben um %s"
+
+#: ../src/TimeString.vala:23 ../src/TimeString.vala:24
+msgid "%u hours"
+msgstr "%u Stunden"
+
+#: ../src/TimeString.vala:26
+msgid "%u minutes and "
+msgstr "%u Minuten und"
+
+#: ../src/TimeString.vala:28 ../src/TimeString.vala:30
+msgid "%u seconds"
+msgstr "%u Sekunden"
+
+#: ../src/TimeString.vala:27
+msgid "%u minutes"
+msgstr "%u Minuten"
+
+#: ../src/TimeString.vala:34
+msgid " and "
+msgstr " und "
