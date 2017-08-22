@@ -70,8 +70,7 @@ namespace TypeBreaker {
 			;
 
 			Cairo.TextExtents extents;
-			/* cr.set_font_face("serif"); */
-			cr.set_font_size(28);
+			cr.set_font_size(18);
 			cr.text_extents(digits, out extents);
 			cr.move_to(x - (extents.width / 2 + extents.x_bearing), y - (extents.height / 2 + extents.y_bearing));
 			cr.show_text(digits);

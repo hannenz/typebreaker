@@ -77,9 +77,13 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.hannenz.typebreaker.d
 install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.hannenz.typebreaker.appdata.xml DESTINATION ${DATADIR}/metainfo/)
 
 # install icons
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-pause.png DESTINATION ${DATADIR}/share/icons/hicolor/48x48/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-play.png DESTINATION ${DATADIR}/share/icons/hicolor/48x48/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-warning.png DESTINATION ${DATADIR}/share/icons/hicolor/48x48/apps/)
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-time.png DESTINATION ${DATADIR}/share/icons/hicolor/48x48/apps/)
+install (FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-pause.png
+	${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-play.png
+	${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-warning.png
+	${CMAKE_CURRENT_SOURCE_DIR}/data/typebreaker-time.png
+	DESTINATION ${DATADIR}/icons/hicolor/48x48/apps/
+)
+
 
 
