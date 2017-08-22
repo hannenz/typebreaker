@@ -135,8 +135,13 @@ namespace TypeBreaker {
 			Gdk.Rectangle monitor;
 			this.screen.get_monitor_geometry(0, out monitor);
 
+			// Does this respect that the UI should always appear on the
+			// primary monitor? Check!!
+
+			// TODO: Gtk.Alignment is deprecated since 3.14.
+			// Use widget xalign,yalign and margin properties!
 			var outer_vbox = new Box(Orientation.VERTICAL, 0);
-			var align = new Alignment(0.5f, 0.5f, 1.0f, 1.0f);
+			/* var align = new Alignment(0.5f, 0.5f, 1.0f, 1.0f); */
 			int right_padding = this.screen.get_width() - monitor.width - monitor.x;
 			int bottom_padding = this.screen.get_height() - monitor.height - monitor.y;
 
@@ -146,69 +151,32 @@ namespace TypeBreaker {
 			this.add(monitor_box);
 			monitor_box.add(outer_vbox);
 
-			outer_vbox.pack_start(align, true, true, 0);
-
-			var button_box = new ButtonBox(Orientation.HORIZONTAL);
-			button_box.set_layout(ButtonBoxStyle.END);
-			button_box.set_border_width(12);
-			button_box.set_spacing(12);
-			outer_vbox.pack_start(button_box, false, false, 0);;
-
-			var bgcolor = new Gdk.RGBA();
-			bgcolor.red = bgcolor.green = bgcolor.blue = 0.75;
-			bgcolor.alpha = 1;
-
-			if (postpones > 0){
-				var postpone_button = new Button();
-				var t = new TimeString();
-				postpone_button.set_label("Postpone Break");
-				postpone_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
-				//postpone_button.set_focus_on_click(false);
-				postpone_button.clicked.connect(on_postpone_button_clicked);
-				button_box.pack_end(postpone_button, false, true, 0);
-			}
-
-
-			// For testing only
-			if (true) {
-				var exit_button = new Button();
-				exit_button.set_label("Exit");
-				exit_button.clicked.connect(() => {
-					exit_application();
-				});
-				exit_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
-				button_box.pack_start(exit_button, false, true, 0);
-			}
-			
-			var lock_button = new Button.with_mnemonic("Lock screen");
-			lock_button.clicked.connect(on_lock_button_clicked);
-			lock_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
-			button_box.pack_start(lock_button, false, false, 0);
-
 			var vbox = new Box(Orientation.VERTICAL, 0);
-			align.add(vbox);
-
-			var dummyLabel = new Label("...");
-			vbox.pack_start(dummyLabel, true, true, 0);
-
-			var image = new Image.from_stock(Gtk.Stock.STOP, Gtk.IconSize.DIALOG);
-			/* image.set_alignment(0.5f, 0.5f); */
-			image.set_halign(Align.CENTER);
-			image.set_valign(Align.CENTER);
-
-			vbox.pack_start(image, false, false, 0);
+			vbox.halign = Align.CENTER;
+			vbox.valign = Align.CENTER;
 
 			var label = new Label(null);
 			label.set_markup("<span size=\"xx-large\" foreground=\"white\"><b>Time for a break...!</b></span>");
 			label.set_xalign(0.5f);
 			label.set_yalign(0.5f);
-			vbox.pack_start(label, false, false, 0);
+			label.halign = Gtk.Align.CENTER;
+			label.valign = Gtk.Align.END;
 
 			countdown_clock = new CountdownClock(this.break_time);
 			countdown_clock.finished.connect( () => {
 				countdown_finished();
 			});
-			vbox.pack_start(countdown_clock, true, true, 8);
+
+			vbox.homogeneous = true;
+			vbox.pack_start(label, true, true, 0);
+			vbox.pack_start(countdown_clock, true, false, 0);
+			countdown_clock.halign = Gtk.Align.CENTER;
+			countdown_clock.valign = Gtk.Align.START;
+
+			outer_vbox.pack_start(vbox, true, true, 0);
+			outer_vbox.pack_start(this.create_button_box (), false, false, 0);;
+
+
 
 			this.stick();
 
@@ -225,6 +193,44 @@ namespace TypeBreaker {
 			});
 
 			return false;
+		}
+
+
+		
+		private Widget create_button_box () {
+			var button_box = new ButtonBox(Orientation.HORIZONTAL);
+			button_box.set_layout(ButtonBoxStyle.END);
+			button_box.set_border_width(12);
+			button_box.set_spacing(12);
+
+			var bgcolor = Gdk.RGBA();
+			bgcolor.red = bgcolor.green = bgcolor.blue = 0.75;
+			bgcolor.alpha = 1;
+
+			if (postpones > 0){
+				var postpone_button = new Button.with_label("Postpone Break");
+				postpone_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
+				postpone_button.clicked.connect(on_postpone_button_clicked);
+				button_box.pack_end(postpone_button, false, true, 0);
+			}
+
+
+			// For testing only
+			if (true) {
+				var exit_button = new Button.with_label("Exit");
+				exit_button.clicked.connect(() => {
+					exit_application();
+				});
+				exit_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
+				button_box.pack_start(exit_button, false, true, 0);
+			}
+			
+			var lock_button = new Button.with_mnemonic("Lock screen");
+			lock_button.clicked.connect(on_lock_button_clicked);
+			lock_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
+			button_box.pack_start(lock_button, false, false, 0);
+			
+			return button_box;
 		}
 
 
