@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 23:20+0200\n"
+"POT-Creation-Date: 2017-08-23 22:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,8 +16,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: ../src/TypeBreaker.vala:186 ../src/TypeBreaker.vala:182
+#: ../src/TypeBreaker.vala:180 ../src/TypeBreaker.vala:194
 msgid "Happy hacking for the next %s"
 msgstr ""
 
@@ -41,7 +43,8 @@ msgstr ""
 msgid "Lock screen"
 msgstr ""
 
-#: ../src/TypeBreaker.vala:254
+#: ../src/TypeBreaker.vala:254 ../src/TypeBreaker.vala:252
+#: ../src/TypeBreaker.vala:266
 msgid "Typing break postponed by %s"
 msgstr ""
 
@@ -64,3 +67,37 @@ msgstr ""
 #: ../src/TimeString.vala:34
 msgid " and "
 msgstr ""
+
+#: ../src/TypeBreaker.vala:195 ../src/TypeBreaker.vala:209
+msgid "Attention, attention! KeyBreaker will shut down your keyboard in %s"
+msgstr ""
+
+#: ../src/TimeString.vala:24
+msgid "%u hour%s"
+msgstr ""
+
+#: ../src/TimeString.vala:27
+msgid "%u minute%s"
+msgstr ""
+
+#: ../src/TimeString.vala:30
+msgid "%u second%s"
+msgstr ""
+
+#: ../src/TimeString.vala:24
+msgid "%u hour"
+msgid_plural "%u hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../src/TimeString.vala:27
+msgid "%u minute"
+msgid_plural "%u minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../src/TimeString.vala:30
+msgid "%u second"
+msgid_plural "%u seconds"
+msgstr[0] ""
+msgstr[1] ""

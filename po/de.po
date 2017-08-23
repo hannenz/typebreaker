@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-22 23:21+0200\n"
-"PO-Revision-Date: 2017-08-22 23:21+0200\n"
+"POT-Creation-Date: 2017-08-23 22:39+0200\n"
+"PO-Revision-Date: 2017-08-23 22:39+0200\n"
 "Last-Translator: Johannes Braun <me@hannenz.de>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -19,6 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../src/TypeBreaker.vala:186 ../src/TypeBreaker.vala:182
+#: ../src/TypeBreaker.vala:180 ../src/TypeBreaker.vala:194
 msgid "Happy hacking for the next %s"
 msgstr "Fröhliches Tippen für die nächsten %s"
 
@@ -42,7 +43,8 @@ msgstr "Beenden"
 msgid "Lock screen"
 msgstr "Bildschirm sperren"
 
-#: ../src/TypeBreaker.vala:254
+#: ../src/TypeBreaker.vala:254 ../src/TypeBreaker.vala:252
+#: ../src/TypeBreaker.vala:266
 msgid "Typing break postponed by %s"
 msgstr "Tippause aufgeschoben um %s"
 
@@ -65,3 +67,39 @@ msgstr "%u Minuten"
 #: ../src/TimeString.vala:34
 msgid " and "
 msgstr " und "
+
+#: ../src/TypeBreaker.vala:195 ../src/TypeBreaker.vala:209
+msgid "Attention, attention! KeyBreaker will shut down your keyboard in %s"
+msgstr "Achtung, Achtung! KeyBreaker wird ihre Tastatur in %s herunter fahren"
+
+#: ../src/TimeString.vala:24
+msgid "%u hour%s"
+msgstr "%u Stunden"
+
+#: ../src/TimeString.vala:27
+#, fuzzy
+msgid "%u minute%s"
+msgstr "%u Minuten"
+
+#: ../src/TimeString.vala:30
+#, fuzzy
+msgid "%u second%s"
+msgstr "%u Sekunden"
+
+#: ../src/TimeString.vala:24
+msgid "%u hour"
+msgid_plural "%u hours"
+msgstr[0] "%u Stunde"
+msgstr[1] "%u Stunden"
+
+#: ../src/TimeString.vala:27
+msgid "%u minute"
+msgid_plural "%u minutes"
+msgstr[0] "%u Minute"
+msgstr[1] "%u Minuten"
+
+#: ../src/TimeString.vala:30
+msgid "%u second"
+msgid_plural "%u seconds"
+msgstr[0] "%u Sekunde"
+msgstr[1] "%u Sekunden"
