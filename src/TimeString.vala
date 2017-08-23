@@ -11,29 +11,32 @@ namespace TypeBreaker {
 
 
 
-		public string nice(uint seconds) {
+		public string nice (uint seconds) {
 
 			hrs = seconds / 3600;
 			mins = (seconds % 3600) / 60;
-			secs = mins % 60;
+			secs = seconds % 60;
 
-			var  str = new StringBuilder ();
-			var parts= new List <string> ();
+			var str = new StringBuilder ();
+			var parts = new List <string> ();
 
 			if (hrs > 0) {
-				parts.append(_("%u hours").printf(hrs));
+				parts.append (ngettext ("%u hour", "%u hours", hrs).printf(hrs));
 			}
 			if (mins > 0) {
-				parts.append(_("%u minutes").printf(mins));
+				parts.append (ngettext ("%u minute", "%u minutes", mins).printf (mins));
 			}
 			if (secs > 0) {
-				parts.append(_("%u seconds").printf(secs));
+				parts.append (ngettext ("%u second", "%u seconds", secs).printf (secs));
 			}
-			for (uint i = 0; i < parts.length(); i++) {
-				if (i > 1 && i == parts.length() - 1) {
+			for (uint i = 0; i < parts.length (); i++) {
+				if (i > 1 && i == parts.length () - 1) {
 					str.append (_(" and "));
 				}
-				str.append(parts.nth_data(i));
+				else if (i > 0) {
+					str.append(", ");
+				}
+				str.append (parts.nth_data (i));
 			}
 
 			return str.str;
@@ -41,21 +44,21 @@ namespace TypeBreaker {
 
 
 
-		public string nice_short(uint seconds) {
+		public string nice_short (uint seconds) {
 
 			hrs = seconds / 3600;
 			mins = (seconds % 3600) / 60;
 			secs = mins % 60;
 
-			var  str = new StringBuilder();
+			var  str = new StringBuilder ();
 
 			if (hrs > 0) {
-				str.append("%uh".printf(hrs));
+				str.append ("%uh".printf (hrs));
 			}
 			if (mins > 0) {
-				str.append("%um ".printf(mins));
+				str.append ("%um ".printf (mins));
 			}
-			str.append("%us ".printf(secs));
+			str.append ("%us ".printf (secs));
 
 			return str.str;
 		}
@@ -68,21 +71,21 @@ namespace TypeBreaker {
 		 * @param uint seconds
 		 * @return string		e.g. "03:20:11"
 		 */
-		public string formatted(uint seconds, bool output_null = true) {
+		public string formatted (uint seconds, bool output_null = true) {
 
 			hrs = seconds / 3600;
 			mins = (seconds % 3600) / 60 ;
 			secs = (seconds % 60);
 
-			var  str = new StringBuilder();
+			var  str = new StringBuilder ();
 
 			if (hrs > 0 || output_null) {
-				str.append("%02u:".printf(hrs));
+				str.append ("%02u:".printf (hrs));
 			}
 			if (mins > 0 || output_null) {
-				str.append("%02u:".printf(mins));
+				str.append ("%02u:".printf (mins));
 			}
-			str.append("%02u".printf(secs));
+			str.append ("%02u".printf (secs));
 
 			return str.str;
 
