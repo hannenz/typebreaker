@@ -1,3 +1,5 @@
+// modules: gtk+-3.0
+
 using Gtk;
 
 namespace TypeBreaker {
@@ -19,9 +21,13 @@ namespace TypeBreaker {
 	public class Breaker : Gtk.Application { // Shouldn't this rather be Gdk.Application??
 
 
-		public signal void have_a_break();
-		public signal void warn_break();
+		// Signals
+		public signal void have_a_break ();
+		public signal void warn_break ();
 
+
+
+		// Public properties
 		public uint work_time;
 		public uint warn_time;
 		public uint break_time;
@@ -30,6 +36,9 @@ namespace TypeBreaker {
 
 		public DBusProxy screensaver_proxy;
 
+
+
+		// Private properties
 		private GLib.Settings settings;
 
 		private Timer timer;
@@ -51,6 +60,9 @@ namespace TypeBreaker {
 
 
 
+		/**
+		  * Constructor
+		  */
 		public Breaker () {
 			Object (
 				application_id: "com.github.hannenz.typebreaker",
@@ -58,51 +70,55 @@ namespace TypeBreaker {
 				flags: ApplicationFlags.FLAGS_NONE
 			);
 
-			icon_play = new FileIcon(File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-play.png"));
-			icon_pause = new FileIcon(File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-pause.png"));
-			icon_warning = new FileIcon(File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-warning.png"));
-			icon_time = new FileIcon(File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-time.png"));
+			icon_play = new FileIcon (File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-play.png"));
+			icon_pause = new FileIcon (File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-pause.png"));
+			icon_warning = new FileIcon (File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-warning.png"));
+			icon_time = new FileIcon (File.new_for_path("/usr/share/icons/hicolor/48x48/apps/typebreaker-time.png"));
 
 		}
 
 
 
+		/**
+		  * On application activation, e.g. startup / init
+		  * Set-up everything
+		  */
 		protected override void activate () {
 
-			this.timer = new Timer();
-			this.timer.start();
-			this.timeout_id = Timeout.add(1000, main_poll);
+			this.timer = new Timer ();
+			this.timer.start ();
+			this.timeout_id = Timeout.add (1000, main_poll);
 
-			this.settings = new GLib.Settings("com.github.hannenz.typebreaker");
+			this.settings = new GLib.Settings ("com.github.hannenz.typebreaker");
 
-			this.work_time = settings.get_int("type-time");
-			this.warn_time = settings.get_int("warn-time");
-			this.break_time = settings.get_int("break-time");
-			this.postpones = settings.get_int("postpones");
-			this.postpone_time = settings.get_int("postpone-time");
+			this.work_time = settings.get_int ("type-time");
+			this.warn_time = settings.get_int ("warn-time");
+			this.break_time = settings.get_int ("break-time");
+			this.postpones = settings.get_int ("postpones");
+			this.postpone_time = settings.get_int ("postpone-time");
 
 			// Allow hot changing settings
 			settings.changed.connect( (key) => {
 				debug ("Change in settings key <%s> detected", key);
 				switch (key) {
 					case "type-time":
-						this.work_time = settings.get_int(key);
+						this.work_time = settings.get_int (key);
 						debug ("work_time has been updated to %u", this.work_time);
 						break;
 					case "warn-time":
-						this.warn_time = settings.get_int(key);
+						this.warn_time = settings.get_int (key);
 						debug ("warn_time has been updated to %u", this.warn_time);
 						break;
 					case "break-time":
-						this.break_time = settings.get_int(key);
+						this.break_time = settings.get_int (key);
 						debug ("break_time has been updated to %u", this.break_time);
 						break;
 					case "postpones":
-						this.postpones = settings.get_int(key);
+						this.postpones = settings.get_int (key);
 						debug ("postpones has been updated to %u", this.postpones);
 						break;
 					case "postpone-time":
-						this.postpone_time = settings.get_int(key);
+						this.postpone_time = settings.get_int (key);
 						debug ("postpone_time has been updated to %u", this.postpone_time);
 						break;
 				}
@@ -116,38 +132,38 @@ namespace TypeBreaker {
 
 			this.break_window = null;
 
-			this.key_grabber = new KeyGrabber(break_time);
-			this.key_grabber.break_completed.connect(on_break_completed);
-			key_grabber.activity_begin.connect( () => {
+			key_grabber = new KeyGrabber (break_time);
+			key_grabber.break_completed.connect (on_break_completed);
+			key_grabber.activity_begin.connect ( () => {
 				state = State.ACTIVE;
 				debug ("Going ACTIVE");
 			});
-			key_grabber.idle_begin.connect( () => {
+			key_grabber.idle_begin.connect ( () => {
 				state = State.IDLE;
 				debug ("Going IDLE");
 			});
 
-			this.have_a_break.connect(take_break);
-			this.warn_break.connect(on_warn_break);
+			this.have_a_break.connect (take_break);
+			this.warn_break.connect (on_warn_break);
 
 			this.screensaver_proxy = null;
 			this.has_been_warned = false;
 
-			break_window = new BreakWindow(this.break_time, this.postpones, this.postpone_time);
-			break_window.lock_screen_requested.connect(on_lock_screen_requested);
-			break_window.postpone_requested.connect(on_postpone_requested);
-			break_window.countdown_finished.connect(on_break_completed);
+			break_window = new BreakWindow (this.break_time, this.postpones, this.postpone_time);
+			break_window.lock_screen_requested.connect (on_lock_screen_requested);
+			break_window.postpone_requested.connect (on_postpone_requested);
+			break_window.countdown_finished.connect (on_break_completed);
 
 			// Only in debugging mode: Quit app if qxit button has been clicked
-			break_window.exit_application.connect(quit);
+			break_window.exit_application.connect (quit);
 
-			add_window(this.break_window);
+			add_window (this.break_window);
 			
 
 			// only for debugging
 			string[] envp = Environ.get ();
 			if (Environ.get_variable (envp, "G_MESSAGES_DEBUG") != null) {
-				take_break();
+				/* take_break(); */
 			}
 
 			/* on_break_completed(); */
@@ -155,42 +171,42 @@ namespace TypeBreaker {
 
 
 
-		private void take_break(){
-			break_window.show_all();
+		private void take_break () {
+			break_window.show_all ();
 		}
 
 
 
-		private void on_break_completed(){
+		private void on_break_completed (){
 
 			debug ("Break has been completed");
 
 			// Reset postpones 
-			this.postpones = settings.get_int("postpones");
+			this.postpones = settings.get_int ("postpones");
 
-			this.timer.start(); // Will reset the timer!
+			this.timer.start (); // Will reset the timer!
 			this.has_been_warned = false;
-			this.break_window.hide();
+			this.break_window.hide ();
 
 			// Send notification
-			var t = new TimeString();
-			var notification = new Notification("Type Breaker");
-			notification.set_body(_("Happy hacking for the next %s").printf(t.nice(work_time / 60)));
-			notification.set_icon(icon_play);
-			send_notification("typebreaker.notification.work", notification);
+			var t = new TimeString ();
+			var notification = new Notification ("Type Breaker");
+			notification.set_body (_("Happy hacking for the next %s").printf (t.nice (work_time / 60)));
+			notification.set_icon (icon_play);
+			send_notification ("typebreaker.notification.work", notification);
 
 		}
 
 
 
-		private void on_warn_break(){
+		private void on_warn_break (){
 
 			if (this.warn_time > 0){
-
-				var t = new TimeString();
-				var notification = new Notification("Type Breaker");
-				notification.set_icon(icon_warning);
-				notification.set_body("Attention, attention! KeyBreaker will shut down your keyboard in %s".printf(t.nice(warn_time)));
+ 
+				var t = new TimeString ();
+				var notification = new Notification ("Type Breaker");
+				notification.set_icon (icon_warning);
+				notification.set_body (_("Attention, attention! KeyBreaker will shut down your keyboard in %s").printf (t.nice (warn_time)));
 				this.send_notification("typebreaker.notification.warn", notification);
 				has_been_warned = true;
 
@@ -199,16 +215,16 @@ namespace TypeBreaker {
 
 
 
-		private DBusProxy get_screensaver_proxy(){
+		private DBusProxy get_screensaver_proxy () {
 
 			DBusConnection connection = null;
 
-			if (this.screensaver_proxy != null){
+			if (this.screensaver_proxy != null) {
 				return this.screensaver_proxy;
 			}
 			try {
-				connection = Bus.get_sync(BusType.SESSION, null);
-				screensaver_proxy = new DBusProxy.sync(connection,
+				connection = Bus.get_sync (BusType.SESSION, null);
+				screensaver_proxy = new DBusProxy.sync (connection,
 					DBusProxyFlags.DO_NOT_LOAD_PROPERTIES |
 					DBusProxyFlags.DO_NOT_CONNECT_SIGNALS |
 					DBusProxyFlags.DO_NOT_AUTO_START,
@@ -219,8 +235,8 @@ namespace TypeBreaker {
 					null
 				);
 			}
-			catch (Error e){
-				stderr.printf("Error: %s", e.message);
+			catch (Error e) {
+				stderr.printf ("Error: %s", e.message);
 				return (DBusProxy)null;
 			}
 
@@ -230,33 +246,32 @@ namespace TypeBreaker {
 
 
 		private void on_lock_screen_requested(){
-			DBusProxy proxy = get_screensaver_proxy();
-			if (proxy == null){
+			DBusProxy proxy = get_screensaver_proxy ();
+			if (proxy == null) {
 				return;
 			}
-			Gdk.keyboard_ungrab(0);
-			proxy.call("Lock", new Variant("()"), DBusCallFlags.NONE, -1, null);
+			Gdk.keyboard_ungrab (0);
+			proxy.call ("Lock", new Variant("()"), DBusCallFlags.NONE, -1, null);
 		}
 
 
 
 		private void on_postpone_requested(){
 
-			this.break_window.hide();
-			timer.start();
+			this.break_window.hide ();
+			timer.start ();
 
 			// show notification
-			var t = new TimeString();
-			string mssg = _("Typing break postponed by %s").printf(t.nice(this.postpone_time));
-			var notification = new Notification("Type Breaker");
-			/* TODO: Better icon: Something with a clock! */
-			notification.set_icon(icon_time);
-			notification.set_body(mssg);
-			this.send_notification("typebreaker.notification.postpone", notification);
+			var t = new TimeString ();
+			string mssg = _("Typing break postponed by %s").printf (t.nice (this.postpone_time));
+			var notification = new Notification  ("Type Breaker");
+			notification.set_icon (icon_time);
+			notification.set_body (mssg);
+			this.send_notification ("typebreaker.notification.postpone", notification);
 
-			var postpone_countdown = new Countdown(postpone_time);
-			postpone_countdown.finished.connect( () => {
-				this.have_a_break();
+			var postpone_countdown = new Countdown (postpone_time);
+			postpone_countdown.finished.connect ( () => {
+				this.have_a_break ();
 			});
 		}
 
@@ -264,19 +279,21 @@ namespace TypeBreaker {
 
 		public bool main_poll () {
 
-			uint seconds_elapsed = (uint)this.timer.elapsed();
+			uint seconds_elapsed = (uint)this.timer.elapsed ();
 
-			debug ("Seconds elapsed since timer start: %u", seconds_elapsed);
+			/* debug ("Seconds elapsed since timer start: %u", seconds_elapsed); */
+			var t = new TimeString ();
+			debug ("Time until break: %s".printf ( t.nice (work_time - seconds_elapsed)));
 
 			if ((seconds_elapsed >= this.work_time - this.warn_time) && !has_been_warned){
 				debug ("Uh oh! Time to warn the user...\n");
-				this.warn_break();
+				this.warn_break ();
 			}
 
 			if (seconds_elapsed >= this.work_time){
 
 				debug ("Time for a break!");
-				this.have_a_break();
+				this.have_a_break ();
 			}
 
 			return true;
@@ -286,7 +303,7 @@ namespace TypeBreaker {
 
 		// Do we still need this at all?
 		public void on_activity () {
-			debug("Activity detected!");
+			debug ("Activity detected!");
 			this.is_idle = false;
 		}
 	}
@@ -294,9 +311,9 @@ namespace TypeBreaker {
 
 
 	// Main: Launch app
-	int main(string[] args){
+	int main (string[] args){
 
-		var app = new Breaker();
-		return app.run();
+		var app = new Breaker ();
+		return app.run ();
 	}
 }
