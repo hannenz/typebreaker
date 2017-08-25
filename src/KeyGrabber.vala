@@ -62,6 +62,7 @@ namespace TypeBreaker {
 		public uint interval { get; set; default = 500; }
 
 
+		private  DBusProxy screensaver_proxy;
 
 		// Non-public properties
 
@@ -85,8 +86,9 @@ namespace TypeBreaker {
 
 			Timeout.add (interval, () => {
 
-				idle_time = get_idle_time();
-				/* debug ("Idle time: %u".printf (idle_time)); */
+				/* idle_time = get_idle_time(); */
+				idle_time = get_idle_time ();
+				Plank.Logger.notification ("Idle time: %u".printf (idle_time));
 
 				if (idle_time < 1) {
 					// User is active
@@ -116,6 +118,69 @@ namespace TypeBreaker {
 				return true;
 
 			}, Priority.DEFAULT_IDLE);
+		}
+
+
+
+		/**
+		  * Get the session's idle time in seconds
+		  * from DBus (org.freedesktop.ScreenSaver)
+		  *
+		  * @return uint
+		  * @access public
+		  */
+		public uint get_idle_time () {
+			uint64 session_idle_time = 0;
+
+			try {
+				var proxy = get_screensaver_proxy ();
+				if (proxy == null) {
+					return 0;
+				}
+				var variant = proxy.call_sync ("GetSessionIdleTime", null, DBusCallFlags.NONE, -1, null);
+				var inner = variant.get_child_value (0);
+				session_idle_time = inner.get_uint32 ();
+			}
+			catch (Error e) {
+				warning (e.message);
+			}
+			return (uint)session_idle_time;
+		}
+
+
+
+		/**
+		  * Get the screensacver DBusProxy
+		  *
+		  * @return DBusProxy
+		  * @access private
+		  */
+		private DBusProxy get_screensaver_proxy () {
+
+			DBusConnection connection = null;
+
+			if (this.screensaver_proxy != null) {
+				return this.screensaver_proxy;
+			}
+			try {
+				connection = Bus.get_sync (BusType.SESSION, null);
+				screensaver_proxy = new DBusProxy.sync (connection,
+					DBusProxyFlags.DO_NOT_LOAD_PROPERTIES |
+					DBusProxyFlags.DO_NOT_CONNECT_SIGNALS |
+					DBusProxyFlags.DO_NOT_AUTO_START,
+					null,
+					"org.freedesktop.ScreenSaver",
+					"/org/freedesktop/ScreenSaver",
+					"org.freedesktop.ScreenSaver",
+					null
+				);
+			}
+			catch (Error e) {
+				stderr.printf ("Error: %s", e.message);
+				return (DBusProxy)null;
+			}
+
+			return this.screensaver_proxy;
 		}
 	}
 }

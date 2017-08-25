@@ -24,6 +24,8 @@ namespace TypeBreaker {
 		public uint postpones;
 		public uint postpone_time;
 
+		public uint seconds_elapsed;
+
 
 
 		// Private properties
@@ -34,7 +36,7 @@ namespace TypeBreaker {
 		private uint timeout_id = 0;
 		private bool has_been_warned = false;
 
-		private KeyGrabber key_grabber;
+		public KeyGrabber key_grabber;
 		public BreakWindow break_window;
 		private ScreenLocker screen_locker;
 
@@ -53,7 +55,7 @@ namespace TypeBreaker {
 		private bool flag = false;
 
 
-		public Breaker (Gtk.Application app) {
+		public Breaker (Gtk.Application? app) {
 
 			this.app = app;
 
@@ -130,12 +132,12 @@ namespace TypeBreaker {
 				on_activity_begin ();
 			});
 
-			main_loop.run ();
+			//main_loop.run ();
 		}
 
 
 
-		private void take_break () {
+		public void take_break () {
 			// block main polling
 			flag = true;
 			break_window.show_all ();
@@ -228,7 +230,7 @@ namespace TypeBreaker {
 		  */
 		protected bool main_poll () {
 
-			uint seconds_elapsed = (uint)this.timer.elapsed ();
+			seconds_elapsed = (uint)this.timer.elapsed ();
 
 			var t = new TimeString ();
 			debug ("Time until break: %s".printf ( t.nice (work_time - seconds_elapsed)));
@@ -274,10 +276,15 @@ namespace TypeBreaker {
 		  * @access public
 		  */
 		public void do_notify (string message, FileIcon icon, string id) {
-			var notification = new Notification ("Type Breaker");
-			notification.set_body (message);
-			notification.set_icon (icon);
-			app.send_notification ("typebreaker.notification." + id, notification);
+			if (this.app != null) {
+				var notification = new Notification ("Type Breaker");
+				notification.set_body (message);
+				notification.set_icon (icon);
+				this.app.send_notification ("typebreaker.notification." + id, notification);
+			}
+			else {
+				Plank.Logger.notification(message);
+			}
 		}
 	}
 }

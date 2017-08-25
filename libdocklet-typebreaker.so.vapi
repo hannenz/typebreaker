@@ -17,14 +17,17 @@ namespace TypeBreaker {
 	public class Breaker : GLib.Object {
 		public uint break_time;
 		public global::TypeBreaker.BreakWindow break_window;
+		public global::TypeBreaker.KeyGrabber key_grabber;
 		public uint postpone_time;
 		public uint postpones;
+		public uint seconds_elapsed;
 		public uint warn_time;
 		public uint work_time;
-		public Breaker (Gtk.Application app);
+		public Breaker (Gtk.Application? app);
 		public void do_notify (string message, GLib.FileIcon icon, string id);
 		protected bool main_poll ();
 		public void run ();
+		public void take_break ();
 		public signal void quit ();
 	}
 	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
@@ -58,6 +61,7 @@ namespace TypeBreaker {
 	public class KeyGrabber : GLib.Object {
 		public uint break_time;
 		public KeyGrabber (uint break_time);
+		public uint get_idle_time ();
 		public uint interval { get; set; }
 		public global::TypeBreaker.State state { get; set; }
 		public signal void activity_begin ();
@@ -69,6 +73,24 @@ namespace TypeBreaker {
 		public GLib.DBusProxy screensaver_proxy;
 		public ScreenLocker ();
 		public void @lock ();
+	}
+	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
+	public class SettingsDialog : Gtk.Dialog {
+		protected Gtk.SpinButton break_time_hours_spin_button;
+		protected Gtk.SpinButton break_time_minutes_spin_button;
+		protected Gtk.SpinButton break_time_seconds_spin_button;
+		protected Gtk.SpinButton postpone_time_hours_spin_button;
+		protected Gtk.SpinButton postpone_time_minutes_spin_button;
+		protected Gtk.SpinButton postpone_time_seconds_spin_button;
+		protected Gtk.SpinButton postpones_count_spin_button;
+		protected GLib.Settings settings;
+		protected Gtk.SpinButton warn_time_hours_spin_button;
+		protected Gtk.SpinButton warn_time_minutes_spin_button;
+		protected Gtk.SpinButton warn_time_seconds_spin_button;
+		protected Gtk.SpinButton work_time_hours_spin_button;
+		protected Gtk.SpinButton work_time_minutes_spin_button;
+		protected Gtk.SpinButton work_time_seconds_spin_button;
+		public SettingsDialog ();
 	}
 	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
 	public class TimeString {
@@ -88,14 +110,24 @@ namespace TypeBreaker {
 	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
 	public class TypeBreakerDockItem : Plank.DockletItem {
 		public Gdk.Pixbuf icon_pixbuf;
+		public global::TypeBreaker.TypeBreakerPreferences prefs;
 		public TypeBreakerDockItem ();
 		protected override void draw_icon (Plank.Surface surface);
+		public override Gee.ArrayList<Gtk.MenuItem> get_menu_items ();
 		protected override Plank.AnimationType on_clicked (Plank.PopupButton button, Gdk.ModifierType mod, uint32 event_time);
 		public TypeBreakerDockItem.with_dockitem_file (GLib.File file);
 	}
 	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
 	public class TypeBreakerDocklet : GLib.Object, Plank.Docklet {
 		public TypeBreakerDocklet ();
+	}
+	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
+	public class TypeBreakerPreferences : Plank.DockItemPreferences {
+		public TypeBreakerPreferences ();
+		protected override void reset_properties ();
+		public TypeBreakerPreferences.with_file (GLib.File file);
+		[Description (blurb = "Number of foo-bars", nick = "foo-bar-count")]
+		public int FooBarCount { get; set; }
 	}
 	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
 	public enum State {
