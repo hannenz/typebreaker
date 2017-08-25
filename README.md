@@ -1,7 +1,6 @@
-
-![typebreaker logo](https://github.com/hannenz/typebreaker/blob/master/data/typebreaker.svg)
-
 # TypeBreaker
+
+![Logo](https://github.com/hannenz/typebreaker/blob/master/data/typebreaker.svg)
 
 A typing monitor and typing break application for elementary os inspired by drwright.
 
