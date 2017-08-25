@@ -1,11 +1,8 @@
 /**
  * TypeBreaker Docklet
  *
- * Typing Break
- *
  * @author Johannes Braun <johannes.braun@hannenz.de>
  * @package typebreaker
- * 
  */
 
 public static void docklet_init(Plank.DockletManager manager) {
@@ -27,7 +24,7 @@ namespace TypeBreaker {
 		}
 
 		public unowned string get_name() {
-			return "TypeBreaker";
+			return "Type Breaker";
 		}
 
 		public unowned string get_description() {
