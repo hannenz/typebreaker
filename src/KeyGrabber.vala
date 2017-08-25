@@ -5,6 +5,15 @@ extern int get_idle_time();
 
 namespace TypeBreaker {
 
+
+
+	public enum State {
+		IDLE,
+		ACTIVE
+	}
+
+
+
 	/**
 	 * @class KeyGrabber
 	 *
@@ -43,7 +52,6 @@ namespace TypeBreaker {
 		 * The current activity state
 		 */
 		public State state { get; set; default = State.ACTIVE; }
-
 
 		/**
 		 * Interval to check for idle_time.

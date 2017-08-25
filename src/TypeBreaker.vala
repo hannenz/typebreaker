@@ -6,25 +6,12 @@ namespace TypeBreaker {
 
 
 
-	public enum State {
-		IDLE,
-		ACTIVE
-	}
-	
-
-
 	/**
 	 * @class Breaker
 	 *
 	 * The main application
 	 */
 	public class Breaker : Gtk.Application { // Shouldn't this rather be Gdk.Application??
-
-
-		// Signals
-		public signal void have_a_break ();
-		public signal void warn_break ();
-
 
 
 		// Public properties
@@ -42,10 +29,8 @@ namespace TypeBreaker {
 		private GLib.Settings settings;
 
 		private Timer timer;
-		private uint timeout_id;
+		private uint timeout_id = 0;
 		private bool has_been_warned;
-		// Do we still need this at all?
-		private bool is_idle;
 
 		private KeyGrabber key_grabber;
 		private BreakWindow break_window;
@@ -54,9 +39,6 @@ namespace TypeBreaker {
 		private FileIcon icon_pause;
 		private FileIcon icon_warning;
 		private FileIcon icon_time;
-
-		private State state = State.ACTIVE;
-
 
 
 
@@ -86,8 +68,8 @@ namespace TypeBreaker {
 		protected override void activate () {
 
 			this.timer = new Timer ();
-			this.timer.start ();
-			this.timeout_id = Timeout.add (1000, main_poll);
+			/* this.timer.start (); */
+			/* this.timeout_id = Timeout.add (1000, main_poll); */
 
 			this.settings = new GLib.Settings ("com.github.hannenz.typebreaker");
 
@@ -132,19 +114,15 @@ namespace TypeBreaker {
 
 			this.break_window = null;
 
+
+			// Setup keygrabber and connect to its signals
 			key_grabber = new KeyGrabber (break_time);
 			key_grabber.break_completed.connect (on_break_completed);
-			key_grabber.activity_begin.connect ( () => {
-				state = State.ACTIVE;
-				debug ("Going ACTIVE");
-			});
-			key_grabber.idle_begin.connect ( () => {
-				state = State.IDLE;
-				debug ("Going IDLE");
-			});
+			key_grabber.activity_begin.connect (on_activity_begin);
+			/* key_grabber.idle_begin.connect ( () => { */
+			/* 	debug ("Going IDLE"); */
+			/* }); */
 
-			this.have_a_break.connect (take_break);
-			this.warn_break.connect (on_warn_break);
 
 			this.screensaver_proxy = null;
 			this.has_been_warned = false;
@@ -173,9 +151,18 @@ namespace TypeBreaker {
 
 		private void take_break () {
 			break_window.show_all ();
+			stop_polling ();
 		}
 
 
+		private void on_activity_begin () {
+			debug ("Going ACTIVE");
+
+			if (this.timeout_id == 0) {
+				this.timeout_id = GLib.Timeout.add (1000, main_poll);
+				timer.start ();
+			}
+		}
 
 		private void on_break_completed (){
 
@@ -184,12 +171,11 @@ namespace TypeBreaker {
 			// Reset postpones 
 			this.postpones = settings.get_int ("postpones");
 
-			this.timer.start (); // Will reset the timer!
+			/* this.timer.start (); // Will reset the timer! */
 			this.has_been_warned = false;
 			this.break_window.hide ();
 
-			// Re-start main poll
-			this.timeout_id = Timeout.add (1000, main_poll);
+			stop_polling ();
 
 			// Send notification
 			var t = new TimeString ();
@@ -202,7 +188,7 @@ namespace TypeBreaker {
 
 
 
-		private void on_warn_break (){
+		private void warn_break (){
 
 			if (this.warn_time > 0){
  
@@ -274,7 +260,7 @@ namespace TypeBreaker {
 
 			var postpone_countdown = new Countdown (postpone_time);
 			postpone_countdown.finished.connect ( () => {
-				this.have_a_break ();
+				have_a_break ();
 			});
 		}
 
@@ -284,22 +270,17 @@ namespace TypeBreaker {
 
 			uint seconds_elapsed = (uint)this.timer.elapsed ();
 
-			/* debug ("Seconds elapsed since timer start: %u", seconds_elapsed); */
 			var t = new TimeString ();
 			debug ("Time until break: %s".printf ( t.nice (work_time - seconds_elapsed)));
 
 			if ((seconds_elapsed >= this.work_time - this.warn_time) && !has_been_warned){
 				debug ("Uh oh! Time to warn the user...\n");
-				this.warn_break ();
+				warn_break ();
 			}
 
 			if (seconds_elapsed >= this.work_time){
-
 				debug ("Time for a break!");
-				this.have_a_break ();
-
-				// Remove this poll, we want a clean start after the pause...
-				return false;
+				have_a_break ();
 			}
 
 			return true;
@@ -307,10 +288,11 @@ namespace TypeBreaker {
 
 
 
-		// Do we still need this at all?
-		public void on_activity () {
-			debug ("Activity detected!");
-			this.is_idle = false;
+		private void stop_polling () {
+			if (this.timeout_id > 0) {
+				GLib.Source.remove (this.timeout_id);
+				this.timeout_id = 0;
+			}
 		}
 	}
 
