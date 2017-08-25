@@ -59,7 +59,7 @@ namespace TypeBreaker {
 		 * be more insensitive for "false activities", e.g.
 		 * bumping the table moves the mouse etc.
 		 */
-		public uint interval { get; set; default = 2000; }
+		public uint interval { get; set; default = 500; }
 
 
 
@@ -89,7 +89,6 @@ namespace TypeBreaker {
 				debug ("Idle time: %u".printf (idle_time));
 
 				if (idle_time < 1) {
-
 					// User is active
 					break_has_completed = false;
 

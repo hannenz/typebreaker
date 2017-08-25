@@ -38,11 +38,14 @@ namespace TypeBreaker {
 				finished();
 			}
 
+			// Remove any possibly attached interval
+			if (timeout_id > 0) {
+				GLib.Source.remove (timeout_id);
+			}
+
 			timeout_id = Timeout.add(interval, on_interval, Priority.DEFAULT_IDLE);
 		}
 
-
-		
 		public void stop() {
 
 			GLib.Source.remove(timeout_id);

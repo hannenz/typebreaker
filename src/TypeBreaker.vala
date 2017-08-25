@@ -42,6 +42,8 @@ namespace TypeBreaker {
 
 
 
+		private bool flag = false;
+
 		/**
 		  * Constructor
 		  */
@@ -150,6 +152,8 @@ namespace TypeBreaker {
 
 
 		private void take_break () {
+			// block main polling
+			flag = true;
 			break_window.show_all ();
 			stop_polling ();
 		}
@@ -158,9 +162,11 @@ namespace TypeBreaker {
 		private void on_activity_begin () {
 			debug ("Going ACTIVE");
 
-			if (this.timeout_id == 0) {
-				this.timeout_id = GLib.Timeout.add (1000, main_poll);
-				timer.start ();
+			if (!flag) {
+				if (this.timeout_id == 0) {
+					this.timeout_id = GLib.Timeout.add (1000, main_poll);
+					timer.start ();
+				}
 			}
 		}
 
@@ -184,6 +190,8 @@ namespace TypeBreaker {
 			notification.set_icon (icon_play);
 			send_notification ("typebreaker.notification.work", notification);
 
+			flag = true;
+
 		}
 
 
@@ -206,8 +214,14 @@ namespace TypeBreaker {
 
 		private void on_postpone_requested(){
 
+			// On postpone we assume, that -- no matter what --
+			// The next break will happen after <postpone-time> seconds
+			// (even if in the meantime a <break-time> length idle time happens)
+			// So we stop polling and start an own countdown
+
+			flag = true;
 			this.break_window.hide ();
-			timer.start ();
+			stop_polling ();
 
 			// show notification
 			var t = new TimeString ();
@@ -218,14 +232,26 @@ namespace TypeBreaker {
 			this.send_notification ("typebreaker.notification.postpone", notification);
 
 			var postpone_countdown = new Countdown (postpone_time);
+			postpone_countdown.tick.connect ( (sec, prgr) => {
+				debug ("Postpone - tick: %u seconds, %.2f", sec, prgr);
+			});
 			postpone_countdown.finished.connect ( () => {
 				take_break ();
 			});
+			postpone_countdown.start ();
 		}
 
 
-
-		public bool main_poll () {
+		/**
+		  * Main polling loop
+		  *
+		  * Will watch for elapsed time if it is time for a break or to warn
+		  * the user
+		  *
+		  * @return boolean			Always true (keep GLib.Source/Timeout running)
+		  * @access protected
+		  */
+		protected bool main_poll () {
 
 			uint seconds_elapsed = (uint)this.timer.elapsed ();
 
@@ -247,6 +273,12 @@ namespace TypeBreaker {
 
 
 
+		/**
+		  * Stop the main polling loop
+		  *
+		  * @return void
+		  * @access private
+		  */
 		private void stop_polling () {
 			if (this.timeout_id > 0) {
 				GLib.Source.remove (this.timeout_id);
