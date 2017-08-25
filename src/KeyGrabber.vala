@@ -78,6 +78,7 @@ namespace TypeBreaker {
 			Timeout.add (interval, () => {
 
 				idle_time = get_idle_time();
+				debug ("Idle time: %u".printf (idle_time));
 
 				if (idle_time < 1) {
 
