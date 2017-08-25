@@ -188,6 +188,9 @@ namespace TypeBreaker {
 			this.has_been_warned = false;
 			this.break_window.hide ();
 
+			// Re-start main poll
+			this.timeout_id = Timeout.add (1000, main_poll);
+
 			// Send notification
 			var t = new TimeString ();
 			var notification = new Notification ("Type Breaker");
@@ -294,6 +297,9 @@ namespace TypeBreaker {
 
 				debug ("Time for a break!");
 				this.have_a_break ();
+
+				// Remove this poll, we want a clean start after the pause...
+				return false;
 			}
 
 			return true;
