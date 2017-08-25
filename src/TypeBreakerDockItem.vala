@@ -4,16 +4,26 @@ using Cairo;
 namespace TypeBreaker {
 	
 	public class TypeBreakerDockItem : DockletItem {
+
+		/**
+		  * @var Gdk.Pixbuf
+		  * @access public
+		  */
+		public Gdk.Pixbuf icon_pixbuf;
+
+		/**
+		  * @var TypeBreakerPreferences
+		  * @access public
+		  */
+		public TypeBreakerPreferences prefs;
+
 		
   
 		// Constructor
 		public TypeBreakerDockItem.with_dockitem_file(GLib.File file) {
-			GLib.Object(
-				/* Prefs: new TypeBreakerPreferences.with_file(file) */
-			);
+			GLib.Object( Prefs: new TypeBreakerPreferences.with_file(file));
 		}
 
-		public Gdk.Pixbuf icon_pixbuf;
 
 
 		construct {
@@ -21,11 +31,11 @@ namespace TypeBreaker {
 			Logger.initialize("typebreaker");
 			Logger.DisplayLevel = LogLevel.NOTIFY;
 
-			/* prefs = (TypeBreakerPreferences) Prefs; */
-			Icon = "resource://" + G_RESOURCE_PATH + "/icons/typebreaker.png";
+			prefs = (TypeBreakerPreferences) Prefs;
+			Icon = "resource:///com/github/hannenz/typebreaker/data/typebreaker.png";
 
 			try {
-				icon_pixbuf = new Gdk.Pixbuf.from_resource(G_RESOURCE_PATH + "/icons/typebreaker.png");
+				icon_pixbuf = new Gdk.Pixbuf.from_resource(G_RESOURCE_PATH + "/data/typebreaker.png");
 			}
 			catch (Error e) {
 				warning("Error: " + e.message);

@@ -1,8 +1,6 @@
+#include <stdlib.h>
 #include <time.h>
-/* #include <stdio.h> */
-/* #include <unistd.h> */
 #include <X11/Xlib.h>
-/* #include <X11/Xutil.h> */
 #include <X11/extensions/scrnsaver.h>
 
 int get_idle_time () {
@@ -12,7 +10,8 @@ int get_idle_time () {
 	Display *display;
 	int screen;
 
-	mit_info = XScreenSaverAllocInfo();
+	/* mit_info = XScreenSaverAllocInfo(); */
+	mit_info = malloc (sizeof (XScreenSaverInfo) );
 	
 	if((display = XOpenDisplay(NULL)) == NULL) {
 		return(-1);

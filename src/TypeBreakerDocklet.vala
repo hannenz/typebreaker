@@ -32,7 +32,8 @@ namespace TypeBreaker {
 		}
 
 		public unowned string get_icon() {
-			return "resource://" + G_RESOURCE_PATH + "/icons/typebreaker.png";
+			/* return "resource://" + G_RESOURCE_PATH + "/data/typebreaker.png"; */
+			return "resource:///com/github/hannenz/typebreaker/data/typebreaker.png";
 		}
 
 		public bool is_supported() {
