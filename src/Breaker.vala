@@ -127,7 +127,6 @@ namespace TypeBreaker {
 			key_grabber = new KeyGrabber (break_time);
 			/* key_grabber.break_completed.connect (on_break_completed); */
 			key_grabber.activity_begin.connect ( () => {
-				debug (" ************************************ ");
 				on_activity_begin ();
 			});
 

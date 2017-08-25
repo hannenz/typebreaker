@@ -94,7 +94,6 @@ namespace TypeBreaker {
 
 					if (state == State.IDLE) {
 						state = State.ACTIVE;
-						debug ("Emmiting signal: activity_begin");
 						activity_begin();
 					}
 				}
