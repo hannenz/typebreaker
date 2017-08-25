@@ -21,7 +21,6 @@ namespace TypeBreaker {
 		public uint postpones;
 		public uint postpone_time;
 
-		public DBusProxy screensaver_proxy;
 
 
 
@@ -34,6 +33,7 @@ namespace TypeBreaker {
 
 		private KeyGrabber key_grabber;
 		private BreakWindow break_window;
+		private ScreenLocker screen_locker;
 
 		private FileIcon icon_play;
 		private FileIcon icon_pause;
@@ -67,52 +67,53 @@ namespace TypeBreaker {
 		  */
 		protected override void activate () {
 
-			this.timer = new Timer ();
+			timer = new Timer ();
 			/* this.timer.start (); */
 			/* this.timeout_id = Timeout.add (1000, main_poll); */
 
-			this.settings = new GLib.Settings ("com.github.hannenz.typebreaker");
+			settings = new GLib.Settings ("com.github.hannenz.typebreaker");
+			screen_locker = new ScreenLocker ();
 
-			this.work_time = settings.get_int ("type-time");
-			this.warn_time = settings.get_int ("warn-time");
-			this.break_time = settings.get_int ("break-time");
-			this.postpones = settings.get_int ("postpones");
-			this.postpone_time = settings.get_int ("postpone-time");
+			work_time = settings.get_int ("type-time");
+			warn_time = settings.get_int ("warn-time");
+			break_time = settings.get_int ("break-time");
+			postpones = settings.get_int ("postpones");
+			postpone_time = settings.get_int ("postpone-time");
 
 			// Allow hot changing settings
 			settings.changed.connect( (key) => {
 				debug ("Change in settings key <%s> detected", key);
 				switch (key) {
 					case "type-time":
-						this.work_time = settings.get_int (key);
-						debug ("work_time has been updated to %u", this.work_time);
+						work_time = settings.get_int (key);
+						debug ("work_time has been updated to %u", work_time);
 						break;
 					case "warn-time":
-						this.warn_time = settings.get_int (key);
-						debug ("warn_time has been updated to %u", this.warn_time);
+						warn_time = settings.get_int (key);
+						debug ("warn_time has been updated to %u", warn_time);
 						break;
 					case "break-time":
-						this.break_time = settings.get_int (key);
-						debug ("break_time has been updated to %u", this.break_time);
+						break_time = settings.get_int (key);
+						debug ("break_time has been updated to %u", break_time);
 						break;
 					case "postpones":
-						this.postpones = settings.get_int (key);
-						debug ("postpones has been updated to %u", this.postpones);
+						postpones = settings.get_int (key);
+						debug ("postpones has been updated to %u", postpones);
 						break;
 					case "postpone-time":
-						this.postpone_time = settings.get_int (key);
-						debug ("postpone_time has been updated to %u", this.postpone_time);
+						postpone_time = settings.get_int (key);
+						debug ("postpone_time has been updated to %u", postpone_time);
 						break;
 				}
 			});
 
-			debug ("type time:    %u\n", this.work_time);
-			debug ("warn time:    %u\n", this.warn_time);
-			debug ("break time:    %u\n", this.break_time);
-			debug ("postpones:    %u\n", this.postpones);
-			debug ("postpone time:    %u\n", this.postpone_time);
+			debug ("type time:    %u\n", work_time);
+			debug ("warn time:    %u\n", warn_time);
+			debug ("break time:    %u\n", break_time);
+			debug ("postpones:    %u\n", postpones);
+			debug ("postpone time:    %u\n", postpone_time);
 
-			this.break_window = null;
+			break_window = null;
 
 
 			// Setup keygrabber and connect to its signals
@@ -124,11 +125,10 @@ namespace TypeBreaker {
 			/* }); */
 
 
-			this.screensaver_proxy = null;
 			this.has_been_warned = false;
 
 			break_window = new BreakWindow (this.break_time, this.postpones, this.postpone_time);
-			break_window.lock_screen_requested.connect (on_lock_screen_requested);
+			break_window.lock_screen_requested.connect (screen_locker.lock);
 			break_window.postpone_requested.connect (on_postpone_requested);
 			break_window.countdown_finished.connect (on_break_completed);
 
@@ -204,47 +204,6 @@ namespace TypeBreaker {
 
 
 
-		private DBusProxy get_screensaver_proxy () {
-
-			DBusConnection connection = null;
-
-			if (this.screensaver_proxy != null) {
-				return this.screensaver_proxy;
-			}
-			try {
-				connection = Bus.get_sync (BusType.SESSION, null);
-				screensaver_proxy = new DBusProxy.sync (connection,
-					DBusProxyFlags.DO_NOT_LOAD_PROPERTIES |
-					DBusProxyFlags.DO_NOT_CONNECT_SIGNALS |
-					DBusProxyFlags.DO_NOT_AUTO_START,
-					null,
-					"org.gnome.ScreenSaver",
-					"/org/gnome/ScreenSaver",
-					"org.gnome.ScreenSaver",
-					null
-				);
-			}
-			catch (Error e) {
-				stderr.printf ("Error: %s", e.message);
-				return (DBusProxy)null;
-			}
-
-			return this.screensaver_proxy;
-		}
-
-
-
-		private void on_lock_screen_requested(){
-			DBusProxy proxy = get_screensaver_proxy ();
-			if (proxy == null) {
-				return;
-			}
-			Gdk.keyboard_ungrab (0);
-			proxy.call ("Lock", new Variant("()"), DBusCallFlags.NONE, -1, null);
-		}
-
-
-
 		private void on_postpone_requested(){
 
 			this.break_window.hide ();
@@ -260,7 +219,7 @@ namespace TypeBreaker {
 
 			var postpone_countdown = new Countdown (postpone_time);
 			postpone_countdown.finished.connect ( () => {
-				have_a_break ();
+				take_break ();
 			});
 		}
 
@@ -280,7 +239,7 @@ namespace TypeBreaker {
 
 			if (seconds_elapsed >= this.work_time){
 				debug ("Time for a break!");
-				have_a_break ();
+				take_break ();
 			}
 
 			return true;
