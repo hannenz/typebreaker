@@ -1,6 +1,5 @@
 
-![typebreaker logo][logo]
-[logo]: https://github.com/hannenz/typebreaker/blob/master/data/typebreaker.svg "TypeBreaker"
+![typebreaker logo](https://github.com/hannenz/typebreaker/blob/master/data/typebreaker.svg)
 
 # TypeBreaker
 
