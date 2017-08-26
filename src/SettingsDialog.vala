@@ -8,31 +8,26 @@ namespace TypeBreaker {
 	public class SettingsDialog : Gtk.Dialog {
 
 		protected GLib.Settings		settings;
-		protected Gtk.SpinButton	work_time_hours_spin_button;
-		protected Gtk.SpinButton	work_time_minutes_spin_button;
-		protected Gtk.SpinButton	work_time_seconds_spin_button;
-		protected Gtk.SpinButton	break_time_hours_spin_button;
-		protected Gtk.SpinButton	break_time_minutes_spin_button;
-		protected Gtk.SpinButton	break_time_seconds_spin_button;
-		protected Gtk.SpinButton	postpone_time_hours_spin_button;
-		protected Gtk.SpinButton	postpone_time_minutes_spin_button;
-		protected Gtk.SpinButton	postpone_time_seconds_spin_button;
-		protected Gtk.SpinButton	warn_time_hours_spin_button;
-		protected Gtk.SpinButton	warn_time_minutes_spin_button;
-		protected Gtk.SpinButton	warn_time_seconds_spin_button;
-		protected Gtk.SpinButton	postpones_count_spin_button;
-		
+
+		protected TimePeriodWidget work_time_widget;
+		protected TimePeriodWidget break_time_widget;
+		protected TimePeriodWidget warn_time_widget;
+		protected TimePeriodWidget postpone_time_widget;
+		protected Gtk.SpinButton   postpones_count_spin_button;
+
+
 
 		public SettingsDialog() {
-		
-			settings = new GLib.Settings("com.github.hannenz.typebreaker");
-
 			title = _("Settings");
 			border_width = 10;
+
+			settings = new GLib.Settings("com.github.hannenz.typebreaker");
 
 			create_widgets();
 			connect_signals();
 		}
+
+
 
 		private void create_widgets() {
 			var content_area = get_content_area();
@@ -47,39 +42,50 @@ namespace TypeBreaker {
 			int row = 0;
 
 			grid.attach (new Label (_("Active Time")), 0, row, 1, 1);
-			var work_time_widget = new TimePeriodWidget (settings.get_int("type-time"));
-			work_time_widget.time_value_changed.connect ( (time_value) => {
-				settings.set_int ("type-time", (int) time_value);
-			});
-			grid.attach(work_time_widget, 1, row, 1, 1);
+			work_time_widget = new TimePeriodWidget (settings.get_int ("type-time"));
+			grid.attach (work_time_widget, 1, row, 1, 1);
 			row++;
 
 			grid.attach (new Label (_("Break Time")), 0, row, 1, 1);
-			var break_time_widget = new TimePeriodWidget (settings.get_int("break-time"));
-			break_time_widget.time_value_changed.connect ( (time_value) => {
-				settings.set_int ("break-time", (int) time_value);
-			});
-			grid.attach(break_time_widget, 1, row, 1, 1);
+			break_time_widget = new TimePeriodWidget (settings.get_int ("break-time"));
+			grid.attach (break_time_widget, 1, row, 1, 1);
 			row++;
+
+			grid.attach (new Label (_("Warn Time")), 0, row, 1, 1);
+			warn_time_widget = new TimePeriodWidget (settings.get_int ("warn-time"));
+			grid.attach (warn_time_widget, 1, row, 1, 1);
+			row++;
+
+			grid.attach (new Label (_("Postpone Time")), 0, row, 1, 1);
+			postpone_time_widget = new TimePeriodWidget (settings.get_int ("postpone-time"));
+			grid.attach (postpone_time_widget, 1, row, 1, 1);
+			row++;
+
+			grid.attach (new Label (_("Nr. of postpones")), 0, row, 1, 1);
+			postpones_count_spin_button = new SpinButton (new Adjustment (0, 0, 10, 1, 1, 1), 1, 0);
+			postpones_count_spin_button.set_value (settings.get_int ("postpones"));
+			grid.attach (postpones_count_spin_button, 1, row, 1, 1);
 
 			show_all();
 		}
 
-		private void connect_signals() {
 
-			work_time_hours_spin_button.changed.connect ( () => {
-				settings.set_int ("type-time", 
-					(int) work_time_hours_spin_button.get_value () * 3600 +
-					(int) work_time_minutes_spin_button.get_value () * 60 +
-					(int) work_time_seconds_spin_button.get_value ()
-				);
+
+		private void connect_signals() {
+			work_time_widget.value_changed.connect ( (time_value) => {
+				settings.set_int ("type-time", (int) time_value);
 			});
-			break_time_hours_spin_button.changed.connect ( () => {
-				settings.set_int ("type-time", 
-					(int) break_time_hours_spin_button.get_value () * 3600 +
-					(int) break_time_minutes_spin_button.get_value () * 60 +
-					(int) break_time_seconds_spin_button.get_value ()
-				);
+			break_time_widget.value_changed.connect ( (time_value) => {
+				settings.set_int ("break-time", (int) time_value);
+			});
+			warn_time_widget.value_changed.connect ( (time_value) => {
+				settings.set_int ("warn-time", (int) time_value);
+			});
+			postpone_time_widget.value_changed.connect ( (time_value) => {
+				settings.set_int ("postpone-time", (int) time_value);
+			});
+			postpones_count_spin_button.value_changed.connect ( () => {
+				settings.set_int ("postpones", postpones_count_spin_button.get_value_as_int ());
 			});
 		}
 	}

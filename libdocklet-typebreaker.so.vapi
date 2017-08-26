@@ -76,20 +76,12 @@ namespace TypeBreaker {
 	}
 	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
 	public class SettingsDialog : Gtk.Dialog {
-		protected Gtk.SpinButton break_time_hours_spin_button;
-		protected Gtk.SpinButton break_time_minutes_spin_button;
-		protected Gtk.SpinButton break_time_seconds_spin_button;
-		protected Gtk.SpinButton postpone_time_hours_spin_button;
-		protected Gtk.SpinButton postpone_time_minutes_spin_button;
-		protected Gtk.SpinButton postpone_time_seconds_spin_button;
+		protected global::TypeBreaker.TimePeriodWidget break_time_widget;
+		protected global::TypeBreaker.TimePeriodWidget postpone_time_widget;
 		protected Gtk.SpinButton postpones_count_spin_button;
 		protected GLib.Settings settings;
-		protected Gtk.SpinButton warn_time_hours_spin_button;
-		protected Gtk.SpinButton warn_time_minutes_spin_button;
-		protected Gtk.SpinButton warn_time_seconds_spin_button;
-		protected Gtk.SpinButton work_time_hours_spin_button;
-		protected Gtk.SpinButton work_time_minutes_spin_button;
-		protected Gtk.SpinButton work_time_seconds_spin_button;
+		protected global::TypeBreaker.TimePeriodWidget warn_time_widget;
+		protected global::TypeBreaker.TimePeriodWidget work_time_widget;
 		public SettingsDialog ();
 	}
 	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
@@ -98,11 +90,12 @@ namespace TypeBreaker {
 		protected Gtk.SpinButton hours_spin_button;
 		protected Gtk.SpinButton minutes_spin_button;
 		protected Gtk.SpinButton seconds_spin_button;
+		public bool show_seconds;
 		protected uint time_value;
-		public TimePeriodWidget (uint time_value);
+		public TimePeriodWidget (uint time_value, bool show_seconds = false);
 		public uint get_time_value ();
 		protected void update_time_value ();
-		public signal void time_value_changed (uint time_value);
+		public signal void value_changed (uint time_value);
 	}
 	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
 	public class TimeString {
