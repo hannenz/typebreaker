@@ -21,6 +21,7 @@ namespace TypeBreaker {
 		protected SpinButton seconds_spin_button;
 
 		public TimePeriodWidget (uint time_value) {
+
 			this.time_value = time_value;
 
 			var h_adj = new Adjustment (0, 0, 99, 1, 10, 1);
@@ -44,7 +45,7 @@ namespace TypeBreaker {
 			hours_spin_button.output.connect (leading_zeros);
 			minutes_spin_button.output.connect (leading_zeros);
 			minutes_spin_button.output.connect (leading_zeros);
-			
+
 			hours_spin_button.value_changed.connect ( () => {
 				update_time_value ();
 				time_value_changed (time_value);
@@ -57,6 +58,8 @@ namespace TypeBreaker {
 				update_time_value ();
 				time_value_changed (time_value);
 			});
+
+			this.add (box);
 		}
 
 
