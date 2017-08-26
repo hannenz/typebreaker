@@ -48,7 +48,6 @@ namespace TypeBreaker {
 
 			grid.attach (new Label (_("Active Time")), 0, row, 1, 1);
 			var work_time_widget = new TimePeriodWidget (settings.get_int("type-time"));
-			work_time_widget.show_all ();
 			work_time_widget.time_value_changed.connect ( (time_value) => {
 				settings.set_int ("type-time", (int) time_value);
 			});
