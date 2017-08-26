@@ -32,7 +32,6 @@ namespace TypeBreaker {
 
 			Logger.initialize ("typebreaker");
 			Logger.DisplayLevel = LogLevel.NOTIFY;
-			Logger.notification ("Ok, we are starting up at least");
 
 			prefs = (TypeBreakerPreferences) Prefs;
 			Icon = "resource://" + G_RESOURCE_PATH + "/data/typebreaker.png";
@@ -51,6 +50,10 @@ namespace TypeBreaker {
 				updated();
 				return true;
 			}, Priority.DEFAULT_IDLE);
+
+			var dlg = new SettingsDialog ();
+			dlg.run ();
+			dlg.destroy ();
 			
 			updated();
 		}
@@ -74,7 +77,7 @@ namespace TypeBreaker {
 			r -= 10;
 
 			double progress = (double) idle_time / (double) breaker.break_time;
-			Plank.Logger.notification ("Redrawing: %.2f".printf (progress));
+			/* Plank.Logger.notification ("Redrawing: %.2f".printf (progress)); */
 			ctx.new_path( );
 			ctx.arc (x, y, r, 0, 2 * Math.PI * progress);
 			ctx.set_source_rgba (0, 1, 0, 1);
@@ -137,18 +140,9 @@ namespace TypeBreaker {
 
 
 		void updated() {
-
 			/* needs_redraw(); */
 			reset_icon_buffer();
 		}
-
-
-
-		void take_break () {
-		}
-
-
-		
 
 
 

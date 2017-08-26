@@ -93,6 +93,18 @@ namespace TypeBreaker {
 		public SettingsDialog ();
 	}
 	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
+	public class TimePeriodWidget : Gtk.Bin {
+		protected Gtk.Box box;
+		protected Gtk.SpinButton hours_spin_button;
+		protected Gtk.SpinButton minutes_spin_button;
+		protected Gtk.SpinButton seconds_spin_button;
+		protected uint time_value;
+		public TimePeriodWidget (uint time_value);
+		public uint get_time_value ();
+		protected void update_time_value ();
+		public signal void time_value_changed (uint time_value);
+	}
+	[CCode (cheader_filename = "src/TypeBreakerDocklet.h")]
 	public class TimeString {
 		protected uint hrs;
 		protected uint mins;

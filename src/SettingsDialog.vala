@@ -42,37 +42,24 @@ namespace TypeBreaker {
 			grid.set_column_spacing(10);
 
 			content_area.pack_start(grid);
-
 			add_button(_("Close"), ResponseType.CLOSE);
 
 			int row = 0;
 
 			grid.attach (new Label (_("Active Time")), 0, row, 1, 1);
-			work_time_hours_spin_button = new SpinButton.with_range (0, 10, 1);
-			work_time_minutes_spin_button.orientation = Orientation.VERTICAL;
-			work_time_minutes_spin_button.wrap = true;
-			work_time_minutes_spin_button = new SpinButton.with_range (0, 60, 1);
-			work_time_seconds_spin_button = new SpinButton.with_range (0, 60, 1);
-			uint work_time = settings.get_int ("type-time");
-			work_time_hours_spin_button.set_value (work_time / 3600);
-			work_time_minutes_spin_button.set_value ((work_time % 3600) / 60);
-			work_time_seconds_spin_button.set_value (work_time % 60);
-			grid.attach(work_time_hours_spin_button, 1, row, 1, 1);
-			grid.attach(work_time_minutes_spin_button, 2, row, 1, 1);
-			grid.attach(work_time_seconds_spin_button, 3, row, 1, 1);
+			var work_time_widget = new TimePeriodWidget (settings.get_int("type-time"));
+			work_time_widget.time_value_changed.connect ( (time_value) => {
+				settings.set_int ("type-time", (int) time_value);
+			});
+			grid.attach(work_time_widget, 1, row, 1, 1);
 			row++;
 
 			grid.attach (new Label (_("Break Time")), 0, row, 1, 1);
-			break_time_hours_spin_button = new SpinButton.with_range (0, 10, 1);
-			break_time_minutes_spin_button = new SpinButton.with_range (0, 60, 1);
-			break_time_seconds_spin_button = new SpinButton.with_range (0, 60, 1);
-			uint break_time = settings.get_int ("type-time");
-			break_time_hours_spin_button.set_value (break_time / 3600);
-			break_time_minutes_spin_button.set_value ((break_time % 3600) / 60);
-			break_time_seconds_spin_button.set_value (break_time % 60);
-			grid.attach(break_time_hours_spin_button, 1, row, 1, 1);
-			grid.attach(break_time_minutes_spin_button, 2, row, 1, 1);
-			grid.attach(break_time_seconds_spin_button, 3, row, 1, 1);
+			var break_time_widget = new TimePeriodWidget (settings.get_int("break-time"));
+			break_time_widget.time_value_changed.connect ( (time_value) => {
+				settings.set_int ("break-time", (int) time_value);
+			});
+			grid.attach(break_time_widget, 1, row, 1, 1);
 			row++;
 
 			show_all();

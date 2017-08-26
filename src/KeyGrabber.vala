@@ -1,8 +1,6 @@
 using GLib;
 using Gtk;
 
-extern int get_idle_time();
-
 namespace TypeBreaker {
 
 
@@ -88,7 +86,7 @@ namespace TypeBreaker {
 
 				/* idle_time = get_idle_time(); */
 				idle_time = get_idle_time ();
-				Plank.Logger.notification ("Idle time: %u".printf (idle_time));
+				/* Plank.Logger.notification ("Idle time: %u".printf (idle_time)); */
 
 				if (idle_time < 1) {
 					// User is active

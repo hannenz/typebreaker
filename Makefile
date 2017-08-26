@@ -16,7 +16,8 @@ SOURCES = src/TypeBreakerDocklet.vala\
 	src/TimeString.vala\
 	src/Countdown.vala\
 	src/CountdownClock.vala\
-	src/SettingsDialog.vala
+	src/SettingsDialog.vala\
+	src/TimePeriodWidget.vala
 
 UIFILES =
 
