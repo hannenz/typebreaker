@@ -8,20 +8,32 @@ namespace TypeBreaker.Daemon {
 
 		public Settings settings;
 
-		private DBusProxy screensaver_proxy;
-
 		protected Countdown time_until_break;
 
+		private TypeBreakerDaemon app;
+		private DBusProxy screensaver_proxy;
 		private bool countdown_is_running = false;
+		private int postpones_left;
 
-		public BreakManager () {
+
+
+		public BreakManager (TypeBreakerDaemon app) {
+			this.app = app;
 			settings = new Settings ();
 
+			setup ();
+		}
+
+
+		public void setup () {
 			time_until_break = new Countdown (settings.active_time);
 			time_until_break.interval = 1000;
 			time_until_break.finished.connect (take_break);
 			time_until_break.start ();
+			postpones_left = settings.postpones_count;
+			app.break_window.enable_postponing ();
 			countdown_is_running = true;
+
 		}
 
 
@@ -48,10 +60,49 @@ namespace TypeBreaker.Daemon {
 		}
 
 
+
 		// Show the break window, forcing a break.
 		public void take_break () {
-			var break_window = new BreakWindow ();
-			break_window.show ();
+			app.break_window.show_all ();
+			/* var break_window = new BreakWindow (); */
+			/* break_window.show (); */
+		}
+
+
+
+		public void handle_break_completed () {
+			app.break_window.hide ();
+			setup ();
+		}
+
+		
+
+		/**
+		 * Handle postpone process
+		 */
+		public void handle_postpone () {
+			var postpone_countdown = new Countdown (settings.postpone_time);
+			postpone_countdown.finished.connect (take_break);
+			postpone_countdown.start ();
+			app.break_window.hide ();
+			postpones_left--;
+			if (postpones_left == 0) {
+				app.break_window.disable_postponing ();
+			}
+		}
+
+
+		public void handle_lock_screen () {
+			try {
+				var proxy = get_screensaver_proxy ();
+				if (proxy == null) {
+					return;
+				}
+				proxy.call_sync ("Lock", null, DBusCallFlags.NONE, -1, null);
+			}
+			catch (Error e) {
+				warning (e.message);
+			}
 		}
 
 

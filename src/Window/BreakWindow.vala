@@ -21,6 +21,7 @@ namespace TypeBreaker.Window {
 
 
 
+		private Button postpone_button;
 		private CountdownClock countdown_clock;
 		private int break_time2;
 		private int postpones_left;
@@ -201,7 +202,7 @@ namespace TypeBreaker.Window {
 			bgcolor.alpha = 1;
 
 			if (settings.postpones_count > 0){
-				var postpone_button = new Button.with_label(_("Postpone"));
+				postpone_button = new Button.with_label(_("Postpone"));
 				postpone_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
 				postpone_button.clicked.connect(on_postpone_button_clicked);
 				button_box.pack_end(postpone_button, false, true, 0);
@@ -230,12 +231,17 @@ namespace TypeBreaker.Window {
 
 
 
-		private void on_postpone_button_clicked(Gtk.Button button){
+		public void disable_postponing () {
+			postpone_button.set_sensitive (false);
+		}
 
+		public void enable_postponing () {
+			postpone_button.set_sensitive (true);
+		}
+
+
+		private void on_postpone_button_clicked(Gtk.Button button){
 			this.postpone_requested();
-			if (--postpones_left == 0){
-				button.set_sensitive(false);
-			}
 		}
 
 
