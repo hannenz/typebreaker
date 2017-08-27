@@ -7,12 +7,12 @@ namespace TypeBreaker {
 		public uint interval { get; set; default = 20;}
 
 
+		public  uint seconds_left;
 
 		protected uint timer;
-		protected uint seconds_left;
 		private uint seconds_count;
 
-		private uint timeout_id;
+		private uint timeout_id = 0;
 
 
 
@@ -48,7 +48,9 @@ namespace TypeBreaker {
 
 		public void stop() {
 
-			GLib.Source.remove(timeout_id);
+			if (timeout_id > 0) {
+				GLib.Source.remove(timeout_id);
+			}
 			setup();
 		}
 
