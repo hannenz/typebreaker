@@ -46,12 +46,16 @@ namespace TypeBreaker.Daemon {
 			message ("Time until break: %u", time_until_break.seconds_left);
 
 			uint idle_time = get_idle_time ();
-			if (idle_time > settings.break_time) {
-				time_until_break.stop ();
-				countdown_is_running = false;
+			if (idle_time >= settings.break_time) {
+				if (countdown_is_running) {
+					message ("Break has been completed");
+					time_until_break.stop ();
+					countdown_is_running = false;
+				}
 			}
 
 			if (idle_time < 2 && !countdown_is_running) {
+				message ("Activity detected, starting a new countdown");
 				time_until_break.start ();
 				countdown_is_running = true;
 			}
