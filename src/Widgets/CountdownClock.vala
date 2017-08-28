@@ -1,6 +1,6 @@
 using Gtk;
 
-namespace TypeBreaker {
+namespace TypeBreaker.Widgets {
 
 	public class CountdownClock : DrawingArea {
 

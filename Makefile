@@ -9,9 +9,9 @@ SOURCES = src/Daemon/TypeBreakerDaemon.vala\
 		src/Daemon/BreakManager.vala\
 		src/Daemon/Settings.vala\
 		src/Window/BreakWindow.vala\
+		src/Widgets/CountdownClock.vala\
 		src/TimeString.vala\
-		src/Countdown.vala\
-		src/CountdownClock.vala
+		src/Countdown.vala
 
 UIFILES =
 

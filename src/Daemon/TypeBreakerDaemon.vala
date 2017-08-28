@@ -35,6 +35,7 @@ namespace TypeBreaker.Daemon {
 			message ("TypeBreakerDaemon started");
 			base.startup ();
 
+			break_window = new BreakWindow ();
 			settings = new Settings ();
 			manager = new BreakManager (this);
 
@@ -48,12 +49,13 @@ namespace TypeBreaker.Daemon {
 		public override void activate () {
 			message ("TypeBreakerDaemon activated");
 
-			break_window = new BreakWindow ();
 			// TODO: What if the window just hides itself?
 			// Why so complicated??
 			break_window.countdown_finished.connect ( manager.handle_break_completed);
 			break_window.postpone_requested.connect ( manager.handle_postpone);
 			break_window.lock_screen_requested.connect (manager.handle_lock_screen);
+			// Debugging obly...
+			break_window.exit_application.connect ( quit );
 			this.add_window (break_window);
 		}
 
