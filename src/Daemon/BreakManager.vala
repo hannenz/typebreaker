@@ -18,6 +18,7 @@ namespace TypeBreaker.Daemon {
 	public class BreakManager  {
 
 		public Settings settings;
+		public uint idle_time;
 
 		protected Countdown time_until_break;
 
@@ -38,13 +39,16 @@ namespace TypeBreaker.Daemon {
 
 			setup ();
 
-			debug ("Test Break");
-			take_break ();
+			/* debug ("Test Break"); */
+			/* take_break (); */
 		}
 
 
 
 		public void setup () {
+
+			Timeout.add (500, check_activity, Priority.DEFAULT);
+		
 			time_until_break = new Countdown (settings.active_time);
 			time_until_break.interval = 1000;
 			time_until_break.finished.connect (take_break);
@@ -52,22 +56,33 @@ namespace TypeBreaker.Daemon {
 			postpones_left = settings.postpones_count;
 			app.break_window.enable_postponing ();
 			countdown_is_running = true;
-
 		}
 
 		
+		/**
+		 * Periodically check for changes in activity state
+		 * IDLE => ACTIVE
+		 * ACTIVE => IDLE
+		 * This loop runs forever and will not be influenced
+		 * by user or other 
+		 */
+		private bool check_activity () {
+
+			return true;
+		}	
+
 
 		/**
 		 * Called periodically (poll) from TypeBreakerDaemon
 		 */
 		public bool check_break () {
-
-			/* message ("Idle time: %u", get_idle_time ()); */
 			message ("Time until break: %u", time_until_break.seconds_left);
 
-			uint idle_time = get_idle_time ();
+			idle_time = get_idle_time ();
+			/* message ("Idle time: %u", get_idle_time ()); */
 
 			if (idle_time < ACTIVE_THRESHOLD && state == State.IDLE) {
+				message ("Idle => Active");
 				state = State.ACTIVE;
 				if (!countdown_is_running) {
 					time_until_break.start ();
@@ -75,20 +90,16 @@ namespace TypeBreaker.Daemon {
 				// Emit a signal?
 			}
 			if (idle_time >= ACTIVE_THRESHOLD && state == State.ACTIVE) {
+				message ("Active => Idle");
 				state = State.IDLE;
 			}
+
 			if (idle_time >= settings.break_time) {
 				if (countdown_is_running) {
-					message ("Break has been completed");
+					message ("Break has been completed, waiting for next activity to start the next countdown");
 					time_until_break.stop ();
 					countdown_is_running = false;
 				}
-			}
-
-			if (idle_time < 2 && !countdown_is_running) {
-				message ("Activity detected, starting a new countdown");
-				time_until_break.start ();
-				countdown_is_running = true;
 			}
 
 			return true;
