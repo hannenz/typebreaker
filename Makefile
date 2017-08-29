@@ -7,8 +7,8 @@ VALAFLAGS = $(patsubst %, --pkg %, $(PACKAGES)) -X -D'GETTEXT_PACKAGE="typebreak
 
 SOURCES = src/Daemon/TypeBreakerDaemon.vala\
 		src/Daemon/BreakManager.vala\
-		src/Daemon/Settings.vala\
 		src/Window/BreakWindow.vala\
+		src/Settings.vala\
 		src/TimeString.vala\
 		src/Countdown.vala\
 		src/CountdownClock.vala
@@ -27,14 +27,18 @@ $(PRG): $(SOURCES) $(UIFILES)
 	$(VALAC) -o $(PRG) $(SOURCES) resources.c $(VALAFLAGS)
 
 
+indicator: src/Indicator.vala src/Settings.vala
+	valac -o typebreaker-indicator $^ --pkg gtk+-3.0 --pkg granite --pkg wingpanel-2.0 -X -fPIC -X -shared --library=typebreaker-indicator
+
+
 install:
 	cp $(PRG) /usr/lib/x86_64-linux-gnu/plank/docklets/
-
 
 
 clean:
 	# rm -f $(OBJS)
 	rm -f $(PRG)
+
 
 distclean: clean
 	rm -f *.vala.c

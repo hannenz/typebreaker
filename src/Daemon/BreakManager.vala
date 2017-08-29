@@ -6,7 +6,7 @@ namespace TypeBreaker.Daemon {
 	
 	public class BreakManager  {
 
-		public Settings settings;
+		public TypeBreaker.Settings settings;
 
 		protected Countdown time_until_break;
 

@@ -4,7 +4,7 @@ namespace TypeBreaker.Daemon {
 	
 	public class TypeBreakerDaemon : Gtk.Application {
 
-		public Settings settings;
+		public TypeBreaker.Settings settings;
 		public BreakManager manager;
 
 		public BreakWindow break_window;
@@ -21,6 +21,7 @@ namespace TypeBreaker.Daemon {
 			);
 
 			/* set_inactivity_timeout (1000); */
+
 		}
 
 
@@ -28,6 +29,8 @@ namespace TypeBreaker.Daemon {
 		~TypeBreakerDaemon () {
 			release ();
 		}
+
+
 
 
 
@@ -64,6 +67,16 @@ namespace TypeBreaker.Daemon {
 		}
 	}
 
+	/* private void on_bus_aquired (DBusConnection conn) { */
+	/* 	try { */
+    /*  */
+	/* 		conn.register_object ("/com/github/hannenz/typebreaker", new TypeBreakerDaemon ()); */
+	/* 	} */
+	/* 	catch (IOError e) { */
+	/* 		stderr.printf ("Could not register service\n"); */
+	/* 	} */
+	/* } */
+    /*  */
 
 
 	public static int main (string[] args) {
@@ -75,6 +88,9 @@ namespace TypeBreaker.Daemon {
 		catch (Error e) {
 			error ("Couldn't register application");
 		}
+
+		// DBus
+		/* Bus.own_name (BusType.SESSION, "com.github.hannenz.typebreaker", BusNameOwnerFlags.NONE, on_bus_aquired, () => {}, () => stderr.printf ("Could not aquire name\n")); */
 
 		return app.run (args);
 	}

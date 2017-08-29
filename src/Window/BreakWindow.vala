@@ -16,7 +16,7 @@ namespace TypeBreaker.Window {
 
 
 
-		public TypeBreaker.Daemon.Settings settings;
+		public TypeBreaker.Settings settings;
 
 
 
@@ -36,7 +36,7 @@ namespace TypeBreaker.Window {
 				focus_on_map:false
 			);
 
-			settings = new TypeBreaker.Daemon.Settings ();
+			settings = new TypeBreaker.Settings ();
 			postpones_left = settings.postpones_count;
 
 			this.set_focus_on_map(false);
