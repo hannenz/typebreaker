@@ -1,9 +1,16 @@
 using TypeBreaker.Window;
 
+namespace TypeBreaker {
+	public enum State {
+		IDLE,
+		ACTIVE
+	}
+}
 
 namespace TypeBreaker.Daemon {
 
-	
+	const int ACTIVE_THRESHOLD = 2;
+
 	public class BreakManager  {
 
 		public TypeBreaker.Settings settings;
@@ -15,17 +22,28 @@ namespace TypeBreaker.Daemon {
 		private bool countdown_is_running = false;
 		private int postpones_left;
 
+		private State state;
+
 
 
 		public BreakManager (TypeBreakerDaemon app) {
 			this.app = app;
 			settings = new Settings ();
 
+			state = get_idle_time() < ACTIVE_THRESHOLD ? State.IDLE : State.ACTIVE;
+
 			setup ();
+
+
+			app.do_notify ("This is the startip message", "xyz");
+			/* debug ("Test Break"); */
+			/* take_break (); */
 		}
 
 
+
 		public void setup () {
+
 			time_until_break = new Countdown (settings.active_time);
 			time_until_break.interval = 1000;
 			time_until_break.finished.connect (take_break);
@@ -33,31 +51,42 @@ namespace TypeBreaker.Daemon {
 			postpones_left = settings.postpones_count;
 			app.break_window.enable_postponing ();
 			countdown_is_running = true;
-
 		}
+
+		
 
 
 		/**
 		 * Called periodically (poll) from TypeBreakerDaemon
 		 */
 		public bool check_break () {
-
-			/* message ("Idle time: %u", get_idle_time ()); */
 			message ("Time until break: %u", time_until_break.seconds_left);
 
-			uint idle_time = get_idle_time ();
+			idle_time = get_idle_time ();
+			/* message ("Idle time: %u", get_idle_time ()); */
+
+			if (idle_time < ACTIVE_THRESHOLD && state == State.IDLE) {
+				message ("Idle => Active");
+				state = State.ACTIVE;
+				if (!countdown_is_running) {
+					time_until_break.start ();
+				}
+			}
+			if (idle_time >= ACTIVE_THRESHOLD && state == State.ACTIVE) {
+				message ("Active => Idle");
+				state = State.IDLE;
+			}
+
 			if (idle_time >= settings.break_time) {
 				if (countdown_is_running) {
-					message ("Break has been completed");
+					message ("Break has been completed, waiting for next activity to start the next countdown");
 					time_until_break.stop ();
 					countdown_is_running = false;
 				}
 			}
 
-			if (idle_time < 2 && !countdown_is_running) {
-				message ("Activity detected, starting a new countdown");
-				time_until_break.start ();
-				countdown_is_running = true;
+			if (time_until_break.seconds_left <= settings.warn_time) {
+				app.do_notify ("This is the message", "xyz");
 			}
 
 			return true;

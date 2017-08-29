@@ -2,7 +2,7 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-
+using TypeBreaker.Widgets;
 
 namespace TypeBreaker {
 

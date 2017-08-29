@@ -6,11 +6,9 @@ namespace TypeBreaker.Daemon {
 
 		public TypeBreaker.Settings settings;
 		public BreakManager manager;
-
 		public BreakWindow break_window;
 
 		private int postpones_left;
-		
 
 
 		// Constructor
@@ -38,6 +36,7 @@ namespace TypeBreaker.Daemon {
 			message ("TypeBreakerDaemon started");
 			base.startup ();
 
+			break_window = new BreakWindow ();
 			settings = new Settings ();
 			manager = new BreakManager (this);
 
@@ -51,12 +50,13 @@ namespace TypeBreaker.Daemon {
 		public override void activate () {
 			message ("TypeBreakerDaemon activated");
 
-			break_window = new BreakWindow ();
-			// TODO: What if the window just hides itself?
-			// Why so complicated??
+			// Connect the window's signals
 			break_window.countdown_finished.connect ( manager.handle_break_completed);
 			break_window.postpone_requested.connect ( manager.handle_postpone);
 			break_window.lock_screen_requested.connect (manager.handle_lock_screen);
+			// Debugging obly...
+			break_window.exit_application.connect ( quit );
+
 			this.add_window (break_window);
 		}
 
@@ -64,6 +64,29 @@ namespace TypeBreaker.Daemon {
 
 		public override bool dbus_register (DBusConnection connection, string object_path) throws Error {
 			return true;
+		}
+
+
+
+		/**
+		  * Send a notification
+		  * 
+		  * @param string		The message
+		  * @param FileIcon		Icon
+		  * @param string		id, something to distinguish notifications
+		  *
+		  * @return void
+		  *
+		  * @access public
+		  */
+		public void do_notify (string message, /*FileIcon icon, */string id) {
+			var notification = new Notification ("Type Breaker");
+			notification.set_body (message);
+
+			// Test
+			var icon = new FileIcon (File.new_for_uri("resource:///com/github/hannenz/typebreaker/data/typebreaker.png"));
+			notification.set_icon (icon);
+			this.send_notification ("typebreaker.notification." + id, notification);
 		}
 	}
 

@@ -9,9 +9,9 @@ SOURCES = src/Daemon/TypeBreakerDaemon.vala\
 		src/Daemon/BreakManager.vala\
 		src/Window/BreakWindow.vala\
 		src/Settings.vala\
+		src/Widgets/CountdownClock.vala\
 		src/TimeString.vala\
-		src/Countdown.vala\
-		src/CountdownClock.vala
+		src/Countdown.vala
 
 UIFILES =
 
@@ -22,7 +22,7 @@ UIFILES =
 
 all: $(PRG)
 
-$(PRG): $(SOURCES) $(UIFILES)
+$(PRG): $(SOURCES) $(UIFILES) typebreaker.gresource.xml
 	glib-compile-resources typebreaker.gresource.xml --target=resources.c --generate-source
 	$(VALAC) -o $(PRG) $(SOURCES) resources.c $(VALAFLAGS)
 
