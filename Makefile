@@ -22,7 +22,7 @@ UIFILES =
 
 all: $(PRG)
 
-$(PRG): $(SOURCES) $(UIFILES)
+$(PRG): $(SOURCES) $(UIFILES) typebreaker.gresource.xml
 	glib-compile-resources typebreaker.gresource.xml --target=resources.c --generate-source
 	$(VALAC) -o $(PRG) $(SOURCES) resources.c $(VALAFLAGS)
 

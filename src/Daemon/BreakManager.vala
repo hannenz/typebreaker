@@ -9,12 +9,8 @@ namespace TypeBreaker {
 
 namespace TypeBreaker.Daemon {
 
-
-
 	const int ACTIVE_THRESHOLD = 2;
 
-
-	
 	public class BreakManager  {
 
 		public Settings settings;
@@ -39,6 +35,8 @@ namespace TypeBreaker.Daemon {
 
 			setup ();
 
+
+			app.do_notify ("This is the startip message", "xyz");
 			/* debug ("Test Break"); */
 			/* take_break (); */
 		}
@@ -47,8 +45,6 @@ namespace TypeBreaker.Daemon {
 
 		public void setup () {
 
-			Timeout.add (500, check_activity, Priority.DEFAULT);
-		
 			time_until_break = new Countdown (settings.active_time);
 			time_until_break.interval = 1000;
 			time_until_break.finished.connect (take_break);
@@ -59,17 +55,6 @@ namespace TypeBreaker.Daemon {
 		}
 
 		
-		/**
-		 * Periodically check for changes in activity state
-		 * IDLE => ACTIVE
-		 * ACTIVE => IDLE
-		 * This loop runs forever and will not be influenced
-		 * by user or other 
-		 */
-		private bool check_activity () {
-
-			return true;
-		}	
 
 
 		/**
@@ -87,7 +72,6 @@ namespace TypeBreaker.Daemon {
 				if (!countdown_is_running) {
 					time_until_break.start ();
 				}
-				// Emit a signal?
 			}
 			if (idle_time >= ACTIVE_THRESHOLD && state == State.ACTIVE) {
 				message ("Active => Idle");
@@ -100,6 +84,10 @@ namespace TypeBreaker.Daemon {
 					time_until_break.stop ();
 					countdown_is_running = false;
 				}
+			}
+
+			if (time_until_break.seconds_left <= settings.warn_time) {
+				app.do_notify ("This is the message", "xyz");
 			}
 
 			return true;
