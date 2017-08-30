@@ -1,6 +1,8 @@
 using TypeBreaker.Window;
 
 namespace TypeBreaker.Daemon {
+
+	TypeBreakerDaemon app;
 	
 	public class TypeBreakerDaemon : Gtk.Application {
 
@@ -14,7 +16,7 @@ namespace TypeBreaker.Daemon {
 		// Constructor
 		public TypeBreakerDaemon () {
 			Object (
-				application_id: "cmo.github.hannenz.typebreaker",
+				application_id: "com.github.hannenz.typebreaker",
 				flags: ApplicationFlags.NON_UNIQUE
 			);
 
@@ -42,7 +44,6 @@ namespace TypeBreaker.Daemon {
 
 			hold ();
 
-			Timeout.add (1000, manager.check_break);
 		}
 
 
@@ -90,20 +91,39 @@ namespace TypeBreaker.Daemon {
 		}
 	}
 
-	/* private void on_bus_aquired (DBusConnection conn) { */
-	/* 	try { */
-    /*  */
-	/* 		conn.register_object ("/com/github/hannenz/typebreaker", new TypeBreakerDaemon ()); */
-	/* 	} */
-	/* 	catch (IOError e) { */
-	/* 		stderr.printf ("Could not register service\n"); */
-	/* 	} */
-	/* } */
-    /*  */
+	[DBus (name = "com.github.hannenz.TypeBreakerService")]
+	public  class TypeBreakerService : Object {
+
+		public int idle_time;
+
+		public void take_break () {
+			message ("Taking a break now!");
+		}
+
+		public int get_idle_time () {
+			return idle_time;
+		}
+
+		public TypeBreakerService () {
+			idle_time = 9;
+		}
+		
+	}
+
+	private void on_bus_aquired (DBusConnection conn) {
+		try {
+
+			conn.register_object ("/com/github/hannenz/typebreaker", new BreakManager (app));
+		}
+		catch (IOError e) {
+			stderr.printf ("Could not register service\n");
+		}
+	}
+
 
 
 	public static int main (string[] args) {
-		var app = new TypeBreakerDaemon ();
+		app = new TypeBreakerDaemon ();
 
 		try {
 			app.register ();
@@ -113,7 +133,14 @@ namespace TypeBreaker.Daemon {
 		}
 
 		// DBus
-		/* Bus.own_name (BusType.SESSION, "com.github.hannenz.typebreaker", BusNameOwnerFlags.NONE, on_bus_aquired, () => {}, () => stderr.printf ("Could not aquire name\n")); */
+		Bus.own_name (
+			BusType.SESSION, 
+			"com.github.hannenz.TypeBreakerService", 
+			BusNameOwnerFlags.NONE,
+			on_bus_aquired,
+			() => {},
+			() => stderr.printf ("Could not aquire name\n")
+		);
 
 		return app.run (args);
 	}

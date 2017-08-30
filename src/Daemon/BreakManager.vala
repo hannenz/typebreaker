@@ -11,9 +11,11 @@ namespace TypeBreaker.Daemon {
 
 	const int ACTIVE_THRESHOLD = 2;
 
+	[DBus (name = "com.github.hannenz.TypeBreakerService")]
 	public class BreakManager  {
 
 		public TypeBreaker.Settings settings;
+		public uint idle_time;
 
 		protected Countdown time_until_break;
 
@@ -21,6 +23,7 @@ namespace TypeBreaker.Daemon {
 		private DBusProxy screensaver_proxy;
 		private bool countdown_is_running = false;
 		private int postpones_left;
+		private bool has_been_warned = false;
 
 		private State state;
 
@@ -38,6 +41,8 @@ namespace TypeBreaker.Daemon {
 			app.do_notify ("This is the startip message", "xyz");
 			/* debug ("Test Break"); */
 			/* take_break (); */
+
+			Timeout.add (1000, check_break);
 		}
 
 
@@ -55,11 +60,16 @@ namespace TypeBreaker.Daemon {
 
 		
 
+		public int get_seconds_until_break () {
+			return (int) time_until_break.seconds_left;
+		}
+			
+
 
 		/**
 		 * Called periodically (poll) from TypeBreakerDaemon
 		 */
-		public bool check_break () {
+		private bool check_break () {
 			message ("Time until break: %u", time_until_break.seconds_left);
 
 			idle_time = get_idle_time ();
@@ -85,8 +95,9 @@ namespace TypeBreaker.Daemon {
 				}
 			}
 
-			if (time_until_break.seconds_left <= settings.warn_time) {
+			if (!has_been_warned && time_until_break.seconds_left <= settings.warn_time) {
 				app.do_notify ("This is the message", "xyz");
+				has_been_warned = true;
 			}
 
 			return true;
@@ -161,7 +172,7 @@ namespace TypeBreaker.Daemon {
 			catch (Error e) {
 				warning (e.message);
 			}
-			return (uint)session_idle_time;
+			return (uint) session_idle_time;
 		}
 
 
@@ -194,7 +205,7 @@ namespace TypeBreaker.Daemon {
 			}
 			catch (Error e) {
 				stderr.printf ("Error: %s", e.message);
-				return (DBusProxy)null;
+				return (DBusProxy) null;
 			}
 
 			return this.screensaver_proxy;

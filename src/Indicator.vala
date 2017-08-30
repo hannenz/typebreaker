@@ -11,6 +11,7 @@ namespace TypeBreaker {
 		private Image? display_widget = null;
 		private Gtk.Grid? main_grid = null;
 
+		private DBusProxy proxy = null;
 
 		public Indicator () {
 			Object (
@@ -22,6 +23,36 @@ namespace TypeBreaker {
 
 			settings = new TypeBreaker.Settings ();
 			this.visible = true;
+
+
+		}
+
+
+		private DBusProxy get_dbus_proxy () {
+			DBusConnection connection = null;
+			if (proxy != null) {
+				return proxy;
+			}
+			try {
+				connection = Bus.get_sync (BusType.SESSION, null);
+				proxy = new DBusProxy.sync (
+					connection,
+					DBusProxyFlags.DO_NOT_LOAD_PROPERTIES |
+					DBusProxyFlags.DO_NOT_CONNECT_SIGNALS |
+					DBusProxyFlags.DO_NOT_AUTO_START,
+					null,
+					"com.github.hannenz.TypeBreakerService",
+					"com/github/hannenz/typebreaker",
+					"com.github.hannenz.TypeBreakerService",
+					null
+				);
+			}
+			catch (Error e) {
+				error ("Error: %s", e.message);
+				// proxy is still null, so we can fall thru and return it
+			}
+
+			return proxy;
 		}
 
 		public override void opened () {
@@ -72,6 +103,14 @@ namespace TypeBreaker {
 
 		private void take_break () {
 			message ("Taking a break");
+			try {
+				var proxy = get_dbus_proxy ();
+				proxy.call_sync ("GetSecondsUntilBreak", null, DBusCallFlags.NONE, -1, null);
+				
+			}
+			catch (Error e) {
+				error ("Error: %s", e.message);
+			}
 		}
 	}
 }
