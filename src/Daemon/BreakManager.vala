@@ -27,22 +27,37 @@ namespace TypeBreaker.Daemon {
 
 		private State state;
 
+		private uint timeout_id = 0;
+
 
 
 		public BreakManager (TypeBreakerDaemon app) {
 			this.app = app;
 			settings = new Settings ();
 
+			/* app.do_notify ("This is the startup message", "xyz"); */
+
+			settings.changed["active"].connect ( () => {
+				message ("Active has been changed to: %s", settings.active.to_string ());
+				if (settings.active) {
+					activate ();
+				}
+			});
+
+			if (settings.active) {
+				activate ();
+			}
+		}
+
+
+
+		private void activate () {
 			state = get_idle_time() < ACTIVE_THRESHOLD ? State.IDLE : State.ACTIVE;
-
 			setup ();
-
-
-			app.do_notify ("This is the startip message", "xyz");
-			/* debug ("Test Break"); */
-			/* take_break (); */
-
-			Timeout.add (1000, check_break);
+			if (timeout_id > 0) {
+				GLib.Source.remove (timeout_id);
+			}
+			timeout_id = Timeout.add (1000, check_break);
 		}
 
 
@@ -70,6 +85,9 @@ namespace TypeBreaker.Daemon {
 		 * Called periodically (poll) from TypeBreakerDaemon
 		 */
 		private bool check_break () {
+			if (!settings.active) {
+				return true;
+			}
 			message ("Time until break: %u", time_until_break.seconds_left);
 
 			idle_time = get_idle_time ();
@@ -108,8 +126,6 @@ namespace TypeBreaker.Daemon {
 		// Show the break window, forcing a break.
 		public void take_break () {
 			app.break_window.show_all ();
-			/* var break_window = new BreakWindow (); */
-			/* break_window.show (); */
 		}
 
 

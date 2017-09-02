@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
 	<schema id="com.github.hannenz.typebreaker.settings" path="/com/github/hannenz/typebreaker/settings/">
+		<key type="b" name="active">
+			<default>true</default>
+			<summary>Type Breaker active</summary>
+			<description>Type Breaker active</description>
+		</key>
 		<key type="i" name="active-time">
 			<default>5400</default>
 			<summary>Active time</summary>

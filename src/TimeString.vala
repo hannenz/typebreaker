@@ -6,6 +6,8 @@ namespace TypeBreaker {
 		protected uint mins;
 		protected uint hrs;
 
+		public bool show_seconds { get; set; default = true; }
+
 		public TimeString() {
 		}
 
@@ -26,8 +28,10 @@ namespace TypeBreaker {
 			if (mins > 0) {
 				parts.append (ngettext ("%u minute", "%u minutes", mins).printf (mins));
 			}
-			if (secs > 0) {
-				parts.append (ngettext ("%u second", "%u seconds", secs).printf (secs));
+			if (show_seconds) {
+				if (secs > 0) {
+					parts.append (ngettext ("%u second", "%u seconds", secs).printf (secs));
+				}
 			}
 			for (uint i = 0; i < parts.length (); i++) {
 				if (i > 1 && i == parts.length () - 1) {
@@ -82,13 +86,14 @@ namespace TypeBreaker {
 			if (hrs > 0 || output_null) {
 				str.append ("%02u:".printf (hrs));
 			}
-			if (mins > 0 || output_null) {
-				str.append ("%02u:".printf (mins));
+			if (show_seconds) {
+				if (mins > 0 || output_null) {
+					str.append ("%02u:".printf (mins));
+				}
 			}
 			str.append ("%02u".printf (secs));
 
 			return str.str;
-
 		}
 	}
 }
