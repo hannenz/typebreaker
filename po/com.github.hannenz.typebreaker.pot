@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-23 22:39+0200\n"
+"POT-Creation-Date: 2017-09-03 01:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,86 +18,76 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../src/TypeBreaker.vala:186 ../src/TypeBreaker.vala:182
-#: ../src/TypeBreaker.vala:180 ../src/TypeBreaker.vala:194
-msgid "Happy hacking for the next %s"
-msgstr ""
-
-#: ../src/TypeBreaker.vala:74
-msgid "Hoola Hoop, man!"
-msgstr ""
-
-#: ../src/BreakWindow.vala:165
-msgid "Time for a break"
-msgstr ""
-
-#: ../src/BreakWindow.vala:217
-msgid "Postpone"
-msgstr ""
-
-#: ../src/BreakWindow.vala:226 ../src/BreakWindow.vala:228
-msgid "Exit"
-msgstr ""
-
-#: ../src/BreakWindow.vala:234 ../src/BreakWindow.vala:236
-msgid "Lock screen"
-msgstr ""
-
-#: ../src/TypeBreaker.vala:254 ../src/TypeBreaker.vala:252
-#: ../src/TypeBreaker.vala:266
-msgid "Typing break postponed by %s"
-msgstr ""
-
-#: ../src/TimeString.vala:23 ../src/TimeString.vala:24
-msgid "%u hours"
-msgstr ""
-
-#: ../src/TimeString.vala:26
-msgid "%u minutes and "
-msgstr ""
-
-#: ../src/TimeString.vala:28 ../src/TimeString.vala:30
-msgid "%u seconds"
-msgstr ""
-
-#: ../src/TimeString.vala:27
-msgid "%u minutes"
-msgstr ""
-
-#: ../src/TimeString.vala:34
+#: src/TimeString.vala:38
 msgid " and "
 msgstr ""
 
-#: ../src/TypeBreaker.vala:195 ../src/TypeBreaker.vala:209
-msgid "Attention, attention! KeyBreaker will shut down your keyboard in %s"
-msgstr ""
-
-#: ../src/TimeString.vala:24
-msgid "%u hour%s"
-msgstr ""
-
-#: ../src/TimeString.vala:27
-msgid "%u minute%s"
-msgstr ""
-
-#: ../src/TimeString.vala:30
-msgid "%u second%s"
-msgstr ""
-
-#: ../src/TimeString.vala:24
+#: src/TimeString.vala:26
+#, c-format
 msgid "%u hour"
 msgid_plural "%u hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/TimeString.vala:27
+#: src/TimeString.vala:29
+#, c-format
 msgid "%u minute"
 msgid_plural "%u minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/TimeString.vala:30
+#: src/TimeString.vala:33
+#, c-format
 msgid "%u second"
 msgid_plural "%u seconds"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/SettingsDialog.vala:44
+msgid "Active Time"
+msgstr ""
+
+#: src/SettingsDialog.vala:49
+msgid "Break Time"
+msgstr ""
+
+#: src/SettingsDialog.vala:40
+msgid "Close"
+msgstr ""
+
+#: src/Window/BreakWindow.vala:216
+msgid "Exit"
+msgstr ""
+
+#: src/Window/BreakWindow.vala:224
+msgid "Lock screen"
+msgstr ""
+
+#: src/SettingsDialog.vala:64
+msgid "Nr. of postpones"
+msgstr ""
+
+#: src/Window/BreakWindow.vala:205
+msgid "Postpone"
+msgstr ""
+
+#: src/SettingsDialog.vala:59
+msgid "Postpone Time"
+msgstr ""
+
+#: src/SettingsDialog.vala:21
+msgid "Settings"
+msgstr ""
+
+#: src/Window/BreakWindow.vala:164
+#, c-format
+msgid "Time for a break"
+msgstr ""
+
+#: src/SettingsDialog.vala:54
+msgid "Warn Time"
+msgstr ""
+
+#: src/Indicator.vala:96
+msgid "Watch for breaks"
+msgstr ""

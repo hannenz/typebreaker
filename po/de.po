@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-23 22:39+0200\n"
-"PO-Revision-Date: 2017-08-23 22:39+0200\n"
+"POT-Creation-Date: 2017-09-03 01:48+0200\n"
+"PO-Revision-Date: 2017-09-03 01:50+0200\n"
 "Last-Translator: Johannes Braun <me@hannenz.de>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -18,88 +18,111 @@ msgstr ""
 "X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../src/TypeBreaker.vala:186 ../src/TypeBreaker.vala:182
-#: ../src/TypeBreaker.vala:180 ../src/TypeBreaker.vala:194
-msgid "Happy hacking for the next %s"
-msgstr "Fröhliches Tippen für die nächsten %s"
-
-#: ../src/TypeBreaker.vala:74
-msgid "Hoola Hoop, man!"
-msgstr "Jetzt geht's rund, Alter...!"
-
-#: ../src/BreakWindow.vala:165
-msgid "Time for a break"
-msgstr "Zeit für eine Pause"
-
-#: ../src/BreakWindow.vala:217
-msgid "Postpone"
-msgstr "Verschieben"
-
-#: ../src/BreakWindow.vala:226 ../src/BreakWindow.vala:228
-msgid "Exit"
-msgstr "Beenden"
-
-#: ../src/BreakWindow.vala:234 ../src/BreakWindow.vala:236
-msgid "Lock screen"
-msgstr "Bildschirm sperren"
-
-#: ../src/TypeBreaker.vala:254 ../src/TypeBreaker.vala:252
-#: ../src/TypeBreaker.vala:266
-msgid "Typing break postponed by %s"
-msgstr "Tippause aufgeschoben um %s"
-
-#: ../src/TimeString.vala:23 ../src/TimeString.vala:24
-msgid "%u hours"
-msgstr "%u Stunden"
-
-#: ../src/TimeString.vala:26
-msgid "%u minutes and "
-msgstr "%u Minuten und"
-
-#: ../src/TimeString.vala:28 ../src/TimeString.vala:30
-msgid "%u seconds"
-msgstr "%u Sekunden"
-
-#: ../src/TimeString.vala:27
-msgid "%u minutes"
-msgstr "%u Minuten"
-
-#: ../src/TimeString.vala:34
+#: src/TimeString.vala:38
 msgid " and "
 msgstr " und "
 
-#: ../src/TypeBreaker.vala:195 ../src/TypeBreaker.vala:209
-msgid "Attention, attention! KeyBreaker will shut down your keyboard in %s"
-msgstr "Achtung, Achtung! KeyBreaker wird ihre Tastatur in %s herunter fahren"
-
-#: ../src/TimeString.vala:24
-msgid "%u hour%s"
-msgstr "%u Stunden"
-
-#: ../src/TimeString.vala:27
-#, fuzzy
-msgid "%u minute%s"
-msgstr "%u Minuten"
-
-#: ../src/TimeString.vala:30
-#, fuzzy
-msgid "%u second%s"
-msgstr "%u Sekunden"
-
-#: ../src/TimeString.vala:24
+#: src/TimeString.vala:26
+#, c-format
 msgid "%u hour"
 msgid_plural "%u hours"
 msgstr[0] "%u Stunde"
 msgstr[1] "%u Stunden"
 
-#: ../src/TimeString.vala:27
+#: src/TimeString.vala:29
+#, c-format
 msgid "%u minute"
 msgid_plural "%u minutes"
 msgstr[0] "%u Minute"
 msgstr[1] "%u Minuten"
 
-#: ../src/TimeString.vala:30
+#: src/TimeString.vala:33
+#, c-format
 msgid "%u second"
 msgid_plural "%u seconds"
 msgstr[0] "%u Sekunde"
 msgstr[1] "%u Sekunden"
+
+#: src/SettingsDialog.vala:44
+msgid "Active Time"
+msgstr "Dauer der aktiven Phase"
+
+#: src/SettingsDialog.vala:49
+msgid "Break Time"
+msgstr "Pausendauer"
+
+#: src/SettingsDialog.vala:40
+msgid "Close"
+msgstr "Schliessen"
+
+#: src/Window/BreakWindow.vala:216
+msgid "Exit"
+msgstr "Beenden"
+
+#: src/Window/BreakWindow.vala:224
+msgid "Lock screen"
+msgstr "Bildschirm sperren"
+
+#: src/SettingsDialog.vala:64
+msgid "Nr. of postpones"
+msgstr "Anzahl Aufschübe"
+
+#: src/Window/BreakWindow.vala:205
+msgid "Postpone"
+msgstr "Verschieben"
+
+#: src/SettingsDialog.vala:59
+msgid "Postpone Time"
+msgstr "Aufschub-Dauer"
+
+#: src/SettingsDialog.vala:21
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: src/Window/BreakWindow.vala:164
+#, c-format
+msgid "Time for a break"
+msgstr "Zeit für eine Pause"
+
+#: src/SettingsDialog.vala:54
+msgid "Warn Time"
+msgstr "Warnung bei"
+
+#: src/Indicator.vala:96
+msgid "Watch for breaks"
+msgstr "Pausen überwachen"
+
+#~ msgid "Happy hacking for the next %s"
+#~ msgstr "Fröhliches Tippen für die nächsten %s"
+
+#~ msgid "Hoola Hoop, man!"
+#~ msgstr "Jetzt geht's rund, Alter...!"
+
+#~ msgid "Typing break postponed by %s"
+#~ msgstr "Tippause aufgeschoben um %s"
+
+#~ msgid "%u hours"
+#~ msgstr "%u Stunden"
+
+#~ msgid "%u minutes and "
+#~ msgstr "%u Minuten und"
+
+#~ msgid "%u seconds"
+#~ msgstr "%u Sekunden"
+
+#~ msgid "%u minutes"
+#~ msgstr "%u Minuten"
+
+#~ msgid "Attention, attention! KeyBreaker will shut down your keyboard in %s"
+#~ msgstr "Achtung, Achtung! KeyBreaker wird ihre Tastatur in %s herunter fahren"
+
+#~ msgid "%u hour%s"
+#~ msgstr "%u Stunden"
+
+#, fuzzy
+#~ msgid "%u minute%s"
+#~ msgstr "%u Minuten"
+
+#, fuzzy
+#~ msgid "%u second%s"
+#~ msgstr "%u Sekunden"
