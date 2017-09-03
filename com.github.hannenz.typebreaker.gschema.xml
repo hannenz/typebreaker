@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-	<schema id="com.github.hannenz.typebreaker" path="/com/github/hannenz/typebreaker/">
-		<key type="i" name="type-time">
+	<schema id="com.github.hannenz.typebreaker.settings" path="/com/github/hannenz/typebreaker/settings/">
+		<key type="b" name="active">
+			<default>true</default>
+			<summary>Type Breaker active</summary>
+			<description>Type Breaker active</description>
+		</key>
+		<key type="i" name="active-time">
 			<default>5400</default>
-			<summary>Type time</summary>
-			<description>Typing period in seconds</description>
+			<summary>Active time</summary>
+			<description>Active period in seconds ("Typing time")</description>
 		</key>
 		<key type="i" name="warn-time">
 			<default>180</default>
@@ -16,7 +21,7 @@
 			<summary>Break time</summary>
 			<description>Duration of the typing break</description>
 		</key>
-		<key type="i" name="postpones">
+		<key type="i" name="postpones-count">
 			<default>2</default>
 			<summary>Postpones</summary>
 			<description>Number of allowed postpones</description>

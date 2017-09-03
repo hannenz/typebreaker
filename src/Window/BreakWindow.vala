@@ -4,29 +4,11 @@ using Cairo;
 
 using TypeBreaker.Widgets;
 
-namespace TypeBreaker {
+namespace TypeBreaker.Window {
 
 	public class BreakWindow : Gtk.Window {
 
-
-
-		/* private Gtk.Label clock_label; */
-		/* private Gtk.ProgressBar pbar; */
-		private CountdownClock countdown_clock;
-
-		/* Duration of a typing break in seconds */
-		private uint break_time;
-
-		private uint break_time2;
-
-		/* Number of allowed postpones */
-		private uint postpones;
-
-		private uint postpone_time;
-
-
-
-		// Signalse
+		// Signals
 		public signal void postpone_requested();
 		public signal void lock_screen_requested();
 		public signal void countdown_finished();
@@ -34,7 +16,19 @@ namespace TypeBreaker {
 
 
 
-		public BreakWindow (uint break_time, uint postpones, uint postpone_time){
+		public TypeBreaker.Settings settings;
+
+
+
+
+		private Button postpone_button;
+		private CountdownClock countdown_clock;
+		private int break_time2;
+		private int postpones_left;
+
+
+
+		public BreakWindow () {
 			GLib.Object(
 				type: Gtk.WindowType.POPUP,
 				skip_taskbar_hint: true,
@@ -42,9 +36,8 @@ namespace TypeBreaker {
 				focus_on_map:false
 			);
 
-			this.break_time = break_time;
-			this.postpones = postpones;
-			this.postpone_time = postpone_time;
+			settings = new TypeBreaker.Settings ();
+			postpones_left = settings.postpones_count;
 
 			this.set_focus_on_map(false);
 			this.set_focus(null);
@@ -58,15 +51,21 @@ namespace TypeBreaker {
 
 			setup_background();
 
-			this.break_time2 = this.break_time;
+			this.break_time2 = settings.break_time;
 
 			populate();
-		}
 
+			this.show.connect( (widget) => {
+				start_countdown();
+				while (Gdk.keyboard_grab (widget.get_window (), false, Gtk.get_current_event_time ()) != Gdk.GrabStatus.SUCCESS){
+					Posix.sleep (1);
+				}
+			});
 
+			this.hide.connect( (widget) => {
+				stop_countdown ();
+			});
 
-		~BreakWindow() {
-			debug ("BreakWindow::Deconstructing BreakWindow");
 		}
 
 
@@ -135,7 +134,7 @@ namespace TypeBreaker {
 			Gdk.Rectangle monitor;
 			this.screen.get_monitor_geometry(0, out monitor);
 
-			countdown_clock = new CountdownClock(this.break_time);
+			countdown_clock = new CountdownClock(settings.break_time);
 			countdown_clock.finished.connect( () => {
 				countdown_finished();
 			});
@@ -186,17 +185,6 @@ namespace TypeBreaker {
 
 			this.stick();
 
-			// What is this..???!
-			this.show.connect( (widget) => {
-				start_countdown();
-				while (Gdk.keyboard_grab (widget.get_window (), false, Gtk.get_current_event_time ()) != Gdk.GrabStatus.SUCCESS){
-					Posix.sleep (1);
-				}
-			});
-
-			this.hide.connect( (widget) => {
-				stop_countdown ();
-			});
 
 			return false;
 		}
@@ -213,8 +201,8 @@ namespace TypeBreaker {
 			bgcolor.red = bgcolor.green = bgcolor.blue = 0.75;
 			bgcolor.alpha = 1;
 
-			if (postpones > 0){
-				var postpone_button = new Button.with_label(_("Postpone"));
+			if (settings.postpones_count > 0){
+				postpone_button = new Button.with_label(_("Postpone"));
 				postpone_button.override_background_color(Gtk.StateFlags.NORMAL, bgcolor);
 				postpone_button.clicked.connect(on_postpone_button_clicked);
 				button_box.pack_end(postpone_button, false, true, 0);
@@ -243,13 +231,17 @@ namespace TypeBreaker {
 
 
 
-		private void on_postpone_button_clicked(Gtk.Button button){
+		public void disable_postponing () {
+			postpone_button.set_sensitive (false);
+		}
 
+		public void enable_postponing () {
+			postpone_button.set_sensitive (true);
+		}
+
+
+		private void on_postpone_button_clicked(Gtk.Button button){
 			this.postpone_requested();
-			if (--postpones == 0){
-				button.set_sensitive(false);
-			}
-			/* button.set_label("Postpone (%u)".printf(postpones)); */
 		}
 
 
@@ -259,16 +251,15 @@ namespace TypeBreaker {
 		}
 
 
+		private void start_countdown () {
+			countdown_clock.start ();
+		}
 
-
-		public void start_countdown() {
-			countdown_clock.start();
+		private void stop_countdown () {
+			/* countdown_clock.stop (); */
 		}
 
 
 
-		public void stop_countdown() {
-			//
-		}
 	}
 }

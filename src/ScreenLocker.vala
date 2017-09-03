@@ -37,6 +37,8 @@ namespace TypeBreaker {
 
 
 
+		
+
 		/**
 		  * Get the screensacver DBusProxy
 		  *
@@ -57,9 +59,9 @@ namespace TypeBreaker {
 					DBusProxyFlags.DO_NOT_CONNECT_SIGNALS |
 					DBusProxyFlags.DO_NOT_AUTO_START,
 					null,
-					"org.gnome.ScreenSaver",
-					"/org/gnome/ScreenSaver",
-					"org.gnome.ScreenSaver",
+					"org.freedesktop.ScreenSaver",
+					"/org/freedesktop/ScreenSaver",
+					"org.freedesktop.ScreenSaver",
 					null
 				);
 			}

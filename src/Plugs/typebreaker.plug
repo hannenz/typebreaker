@@ -1,6 +1,0 @@
-[typebreaker.plug]
-exec=TypeBreaker
-icon=stop
-title=Typing Break
-category=personal
-X-GNOME-Gettext-Domain=typebreaker

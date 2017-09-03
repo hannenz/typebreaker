@@ -1,4 +1,4 @@
 build/
 *.so
-
-
+typebreaker-daemon
+typebreaker-indicator*
