@@ -2,6 +2,7 @@ namespace TypeBreaker {
 
 	public class Settings : Granite.Services.Settings {
 
+		public bool active { get; set; }
 		public int active_time { get; set; }
 		public int break_time { get; set; }
 		public int warn_time { get; set; }
