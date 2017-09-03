@@ -26,7 +26,6 @@ namespace TypeBreaker {
 
 			settings = new TypeBreaker.Settings ();
 			this.visible = true;
-
 		}
 
 
@@ -67,9 +66,7 @@ namespace TypeBreaker {
 
 		public override Widget get_display_widget () {
 			if (display_widget == null) {
-				display_widget = new Image ();
-				display_widget.pixel_size = 24;
-				display_widget.icon_name = "media-playback-pause";
+				display_widget = new Image.from_icon_name ("typebreaker-symbolic", IconSize.SMALL_TOOLBAR);
 			}
 
 			return display_widget;
@@ -101,7 +98,9 @@ namespace TypeBreaker {
 				if (!settings.active) {
 					info_label.set_text("");
 				}
-				
+				else {
+					update_time_until_break ();
+				}
 			});
 			
 			break_button = new Wingpanel.Widgets.Button ("Take break");
