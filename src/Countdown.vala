@@ -7,12 +7,12 @@ namespace TypeBreaker {
 		public uint interval { get; set; default = 20;}
 
 
+		public  uint seconds_left;
 
 		protected uint timer;
-		protected uint seconds_left;
 		private uint seconds_count;
 
-		private uint timeout_id;
+		private uint timeout_id = 0;
 
 
 
@@ -30,31 +30,36 @@ namespace TypeBreaker {
 
 
 
-		public void start() {
+		public void start () {
 
-			setup();
+			setup ();
 
 			if (timer == 0) {
-				finished();
+				finished ();
 			}
 
 			// Remove any possibly attached interval
 			if (timeout_id > 0) {
 				GLib.Source.remove (timeout_id);
+				timeout_id = 0;
 			}
 
-			timeout_id = Timeout.add(interval, on_interval, Priority.DEFAULT_IDLE);
+			// Start a new timer
+			timeout_id = Timeout.add (interval, on_interval, Priority.DEFAULT_IDLE);
 		}
 
-		public void stop() {
+		public void stop () {
 
-			GLib.Source.remove(timeout_id);
-			setup();
+			if (timeout_id > 0) {
+				GLib.Source.remove (timeout_id);
+				timeout_id = 0;
+			}
+			setup ();
 		}
 
 
 
-		protected void setup() {
+		protected void setup () {
 			microseconds = seconds_count * 1000;
 			timer = microseconds;
 			seconds_left = seconds_count;
@@ -62,7 +67,7 @@ namespace TypeBreaker {
 
 
 
-		public bool on_interval() {
+		public bool on_interval () {
 
 			timer -= interval;
 			progress = (double)(microseconds - timer) / (double)microseconds; 
@@ -76,7 +81,7 @@ namespace TypeBreaker {
 			}
 
 			if (timer <= 0 ) {
-				finished();
+				finished ();
 				return false;
 			}
 

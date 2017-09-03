@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gresources>
+	<gresource prefix="/com/github/hannenz/typebreaker">
+		<file>data/typebreaker.png</file>
+		<file>data/typebreaker-play.png</file>
+		<file>data/typebreaker-pause.png</file>
+		<file>data/typebreaker-time.png</file>
+		<file>data/typebreaker-warning.png</file>
+	</gresource>
+</gresources>
+
