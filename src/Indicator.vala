@@ -66,7 +66,7 @@ namespace TypeBreaker {
 
 		public override Widget get_display_widget () {
 			if (display_widget == null) {
-				display_widget = new Image.from_icon_name ("typebreaker-symbolic", IconSize.SMALL_TOOLBAR);
+				display_widget = new Image.from_resource ("/com/github/hannenz/typebreaker/data/typebreaker-symbolic.png");
 			}
 
 			return display_widget;
