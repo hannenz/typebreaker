@@ -36,19 +36,28 @@ $(PRG): $(SOURCES) typebreaker.gresource.xml
 
 
 
-indicator: $(INDICATOR_SOURCES) typebreaker.gresource.xml
+indicator: $(INDICATOR_SOURCES) typebreaker.gresource.xml $(PRG)
 	glib-compile-resources typebreaker.gresource.xml --target=resources.c --generate-source
 	$(VALAC) -o $(INDICATOR_PRG) $(INDICATOR_SOURCES) resources.c $(INDICATOR_VALAFLAGS)
 
 
 install:
-	#cp $(PRG) /usr/local/bin/
+	# Binaries
+	cp $(PRG) /usr/local/bin/
 	cp $(INDICATOR_PRG) /usr/lib/x86_64-linux-gnu/wingpanel/
+	# GSettings Schema
 	cp com.github.hannenz.typebreaker.gschema.xml /usr/share/glib-2.0/schemas/
 	glib-compile-schemas /usr/share/glib-2.0/schemas
+	# Desktop file, metadata and icon
+	cp data/com.github.hannenz.typebreaker.desktop /usr/share/applications/
+	cp data/com.github.hannenz.typebreaker.appdata.xml /usr/share/metainfo/
+	cp data/typebreaker.png /usr/share/icons/hicolor/
+	# Autostart
+	cp data/com.github.hannenz.typebreaker.desktop /etc/xdg/autostart/
 
 pot:
 	xgettext --language=C --keyword=_ --escape --sort-output -o po/com.github.hannenz.typebreaker.pot $(SOURCES) $(INDICATOR_SOURCES)
+
 
 clean:
 	# rm -f $(OBJS)
