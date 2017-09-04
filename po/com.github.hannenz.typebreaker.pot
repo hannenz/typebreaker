@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-03 01:47+0200\n"
+"POT-Creation-Date: 2017-09-03 22:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,6 +63,11 @@ msgstr ""
 msgid "Lock screen"
 msgstr ""
 
+#: src/Daemon/TypeBreakerDaemon.vala:25
+#, c-format
+msgid "My brother, the cow"
+msgstr ""
+
 #: src/SettingsDialog.vala:64
 msgid "Nr. of postpones"
 msgstr ""
@@ -88,6 +93,6 @@ msgstr ""
 msgid "Warn Time"
 msgstr ""
 
-#: src/Indicator.vala:96
+#: src/Indicator.vala:93
 msgid "Watch for breaks"
 msgstr ""
