@@ -36,6 +36,7 @@ namespace TypeBreaker.Daemon {
 
 		public override void startup () {
 			message ("TypeBreakerDaemon started");
+			message (_("My brother, the cow"));
 			base.startup ();
 
 			break_window = new BreakWindow ();
@@ -43,7 +44,6 @@ namespace TypeBreaker.Daemon {
 			manager = new BreakManager (this);
 
 			hold ();
-
 		}
 
 
