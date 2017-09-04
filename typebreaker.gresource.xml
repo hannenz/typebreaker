@@ -6,6 +6,7 @@
 		<file>data/typebreaker-pause.png</file>
 		<file>data/typebreaker-time.png</file>
 		<file>data/typebreaker-warning.png</file>
+		<file>data/typebreaker-symbolic.png</file>
 	</gresource>
 </gresources>
 

@@ -1,4 +1,8 @@
 build/
 *.so
+<<<<<<< HEAD
 typebreaker-daemo
+=======
+typebreaker-daemon
+>>>>>>> 632528d1c4a1b3570644d64551fbdd6541935708
 typebreaker-indicator*

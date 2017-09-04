@@ -10,6 +10,7 @@ namespace TypeBreaker {
 		private Wingpanel.Widgets.Switch active_switch;
 		private Wingpanel.Widgets.Button break_button;
 		private Wingpanel.Widgets.Button settings_button;
+		private ProgressBar progress_bar;
 
 		private Image? display_widget = null;
 		private Gtk.Grid? main_grid = null;
@@ -66,7 +67,7 @@ namespace TypeBreaker {
 
 		public override Widget get_display_widget () {
 			if (display_widget == null) {
-				display_widget = new Image.from_icon_name ("typebreaker-symbolic", IconSize.SMALL_TOOLBAR);
+				display_widget = new Image.from_resource ("/com/github/hannenz/typebreaker/data/typebreaker-symbolic.png");
 			}
 
 			return display_widget;
@@ -90,6 +91,9 @@ namespace TypeBreaker {
 			/* info_label.margin_end = 12; */
 			update_time_until_break ();
 
+			progress_bar = new ProgressBar ();
+			progress_bar.set_show_text (true);
+
 			active_switch = new Wingpanel.Widgets.Switch (_("Watch for breaks"));
 			active_switch.set_active (settings.active);
 			active_switch.switched.connect ( () => {
@@ -112,6 +116,7 @@ namespace TypeBreaker {
 			var separator = new Wingpanel.Widgets.Separator ();
 
 			main_grid.add (info_label);
+			main_grid.add (progress_bar);
 			main_grid.add (active_switch);
 			main_grid.add (separator);
 			main_grid.add (break_button);
@@ -119,6 +124,7 @@ namespace TypeBreaker {
 
 			main_grid.show_all ();
 
+			update_time_until_break ();
 			Timeout.add (5000, () => {
 				update_time_until_break ();
 				check_daemon_running ();
@@ -135,6 +141,7 @@ namespace TypeBreaker {
 
 		private void update_time_until_break () {
 			int time_until_break;
+			string text;
 
 			var proxy = get_dbus_proxy ();
 			if (proxy == null) {
@@ -145,10 +152,19 @@ namespace TypeBreaker {
 			var inner = variant.get_child_value (0);
 			time_until_break = inner.get_int32 ();
 
-			var t = new TypeBreaker.TimeString ();
-			t.show_seconds = false;
-			string s = t.nice (time_until_break);
-			info_label.set_text (s + " until break");
+			if (time_until_break >= 60) {
+				var t = new TypeBreaker.TimeString ();
+				t.show_seconds = false;
+				string s = t.nice (time_until_break);
+				text = s + " until break";
+			}
+			else {
+				text = "Less than 1 minute until break";
+			}
+			info_label.set_text (text);
+
+			double frac = 1 - ((double) time_until_break / (double) settings.active_time);
+			progress_bar.set_fraction (frac);
 		}
 
 

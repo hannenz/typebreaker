@@ -36,17 +36,16 @@ $(PRG): $(SOURCES) typebreaker.gresource.xml
 
 
 
-indicator: $(INDICATOR_SOURCES) 
-	# valac -X -D'GETTEXT_PACKAGE="typebreaker"' -o $(INDICATOR_PRG) $^ --pkg gtk+-3.0 --pkg granite --pkg wingpanel-2.0 -X -fPIC -X -shared --library=typebreaker-indicator
-	$(VALAC) -o $(INDICATOR_PRG) $(INDICATOR_SOURCES) $(INDICATOR_VALAFLAGS)
+indicator: $(INDICATOR_SOURCES) typebreaker.gresource.xml
+	glib-compile-resources typebreaker.gresource.xml --target=resources.c --generate-source
+	$(VALAC) -o $(INDICATOR_PRG) $(INDICATOR_SOURCES) resources.c $(INDICATOR_VALAFLAGS)
 
 
 install:
-	# cp $(PRG) /usr/lib/x86_64-linux-gnu/plank/docklets/
+	#cp $(PRG) /usr/local/bin/
 	cp $(INDICATOR_PRG) /usr/lib/x86_64-linux-gnu/wingpanel/
 	cp com.github.hannenz.typebreaker.gschema.xml /usr/share/glib-2.0/schemas/
 	glib-compile-schemas /usr/share/glib-2.0/schemas
-	update-icon-caches /usr/share/icons/*
 
 pot:
 	xgettext --language=C --keyword=_ --escape --sort-output -o po/com.github.hannenz.typebreaker.pot $(SOURCES) $(INDICATOR_SOURCES)

@@ -6,29 +6,29 @@ A typing monitor and typing break application for elementary os inspired by drwr
 
 After i could not get drwright running on elementaryos I decided to port it and learn vala/ elementary development by this means.
 
-## Dependencies (Ubuntu)
+## Dependencies (elementary loki / ubuntu 16.04)
 
 ```
-# apt install elementary-sdk libx11-dev libxss-dev
+# apt install libgranite-dev libwingpanel-2.0-dev
 ```
 
 ## Compile / Install
 
 ```
-$ mkdir build && cd build
-$ cmake -DCMAKE_INSTALL_PREFIX=/usr ../
 $ make
+$ make indicator
 $ sudo make install
 ```
 
 ## Configuration
 
-TypeBreaker is configured via GSettings in path `com.github.hannenz.typebreaker`
+TypeBreaker is configured via GSettings in path `com.github.hannenz.typebreaker.settings`
+or via the settings dialog from the wingpanel indicator
 
 ### List available keys
 
 ```
-$ gsettings list-keys com.github.hannenz.typebreaker
+$ gsettings list-keys com.github.hannenz.typebreaker.settings
 ```
 
 At the moment these are:
@@ -39,9 +39,9 @@ At the moment these are:
 
 - postpone-time: Time when postponing
 
-- postpones: Allow n postpones
+- postpones-count: Allow n postpones
 
-- type-time: Duration of non-idle time in seconds
+- active-time: Duration of non-idle time in seconds
 
 e.g. set break time to 10 Minutes
 
