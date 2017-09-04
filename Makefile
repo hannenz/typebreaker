@@ -42,7 +42,7 @@ indicator: $(INDICATOR_SOURCES) typebreaker.gresource.xml
 
 
 install:
-	cp $(PRG) /usr/local/bin/
+	#cp $(PRG) /usr/local/bin/
 	cp $(INDICATOR_PRG) /usr/lib/x86_64-linux-gnu/wingpanel/
 	cp com.github.hannenz.typebreaker.gschema.xml /usr/share/glib-2.0/schemas/
 	glib-compile-schemas /usr/share/glib-2.0/schemas
