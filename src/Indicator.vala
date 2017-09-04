@@ -119,12 +119,18 @@ namespace TypeBreaker {
 
 			main_grid.show_all ();
 
-			Timeout.add (15000, () => {
+			Timeout.add (5000, () => {
 				update_time_until_break ();
+				check_daemon_running ();
 				return true;
 			});
 		}
 
+
+		
+		private void check_daemon_running () {
+			
+		}
 
 
 		private void update_time_until_break () {
@@ -132,6 +138,7 @@ namespace TypeBreaker {
 
 			var proxy = get_dbus_proxy ();
 			if (proxy == null) {
+				info_label.set_text ("Daemon is not running");
 				return;
 			}
 			var variant = proxy.call_sync ("GetSecondsUntilBreak", null, DBusCallFlags.NONE, -1, null);
