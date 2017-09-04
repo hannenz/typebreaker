@@ -1,0 +1,136 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-03 22:25+0200\n"
+"PO-Revision-Date: 2017-09-03 22:26+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/TimeString.vala:38
+msgid " and "
+msgstr " und "
+
+#: src/TimeString.vala:26
+#, c-format
+msgid "%u hour"
+msgid_plural "%u hours"
+msgstr[0] "%u Stunde"
+msgstr[1] "%u Stunden"
+
+#: src/TimeString.vala:29
+#, c-format
+msgid "%u minute"
+msgid_plural "%u minutes"
+msgstr[0] "%u Minute"
+msgstr[1] "%u Minuten"
+
+#: src/TimeString.vala:33
+#, c-format
+msgid "%u second"
+msgid_plural "%u seconds"
+msgstr[0] "%u Sekunde"
+msgstr[1] "%u Sekunden"
+
+#: src/SettingsDialog.vala:44
+msgid "Active Time"
+msgstr "Dauer der aktiven Periode"
+
+#: src/SettingsDialog.vala:49
+msgid "Break Time"
+msgstr "Pausendauer"
+
+#: src/SettingsDialog.vala:40
+msgid "Close"
+msgstr "Schliessen"
+
+#: src/Window/BreakWindow.vala:216
+msgid "Exit"
+msgstr "Beenden"
+
+#: src/Window/BreakWindow.vala:224
+msgid "Lock screen"
+msgstr "Bildschirm sperren"
+
+#: src/Daemon/TypeBreakerDaemon.vala:25
+#, c-format
+msgid "My brother, the cow"
+msgstr "Mein Bruder, die Kuh"
+
+#: src/SettingsDialog.vala:64
+msgid "Nr. of postpones"
+msgstr "Wie oft darf "
+
+#: src/Window/BreakWindow.vala:205
+msgid "Postpone"
+msgstr "Verschieben"
+
+#: src/SettingsDialog.vala:59
+msgid "Postpone Time"
+msgstr "Aufschubdauer"
+
+#: src/SettingsDialog.vala:21
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: src/Window/BreakWindow.vala:164
+#, c-format
+msgid "Time for a break"
+msgstr "Zeit für eine Pause"
+
+#: src/SettingsDialog.vala:54
+msgid "Warn Time"
+msgstr "Warnzeit"
+
+#: src/Indicator.vala:93
+msgid "Watch for breaks"
+msgstr "Auf Pausen überwachen"
+
+#~ msgid "My brother the cow"
+#~ msgstr "Mein Bruder, die Kuh"
+
+#~ msgid "Happy hacking for the next %s"
+#~ msgstr "Fröhliches Tippen für die nächsten %s"
+
+#~ msgid "Hoola Hoop, man!"
+#~ msgstr "Jetzt geht's rund, Alter...!"
+
+#~ msgid "Typing break postponed by %s"
+#~ msgstr "Tippause aufgeschoben um %s"
+
+#~ msgid "%u hours"
+#~ msgstr "%u Stunden"
+
+#~ msgid "%u minutes and "
+#~ msgstr "%u Minuten und"
+
+#~ msgid "%u seconds"
+#~ msgstr "%u Sekunden"
+
+#~ msgid "%u minutes"
+#~ msgstr "%u Minuten"
+
+#~ msgid "Attention, attention! KeyBreaker will shut down your keyboard in %s"
+#~ msgstr "Achtung, Achtung! KeyBreaker wird ihre Tastatur in %s herunter fahren"
+
+#~ msgid "%u hour%s"
+#~ msgstr "%u Stunden"
+
+#, fuzzy
+#~ msgid "%u minute%s"
+#~ msgstr "%u Minuten"
+
+#, fuzzy
+#~ msgid "%u second%s"
+#~ msgstr "%u Sekunden"
