@@ -1,4 +1,4 @@
-PRG = typebreaker-daemon
+PRG = com.github.hannenz.typebreaker-daemon
 CC = gcc
 VALAC = valac
 PKGCONFIG = $(shell which pkg-config)
@@ -13,7 +13,7 @@ SOURCES = src/Daemon/TypeBreakerDaemon.vala\
 		src/Countdown.vala
 
 
-INDICATOR_PRG = typebreaker-indicator
+INDICATOR_PRG = libcom.github.hannenz.typebreaker-indicator.so
 INDICATOR_PACKAGES = gtk+-3.0 granite wingpanel-2.0 
 INDICATOR_VALAFLAGS = $(patsubst %, --pkg %, $(INDICATOR_PACKAGES)) -X -fPIC -X -shared --library=$(INDICATOR_PRG) -X -D'GETTEXT_PACKAGE="typebreaker"' 
 INDICATOR_SOURCES = src/Indicator.vala\

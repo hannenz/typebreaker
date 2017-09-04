@@ -51,6 +51,7 @@ namespace TypeBreaker {
 			}
 			catch (Error e) {
 				error ("Error: %s", e.message);
+				info_label.set_text (e.message);
 				// proxy is still null, so we can fall thru and return it
 			}
 
@@ -195,8 +196,6 @@ namespace TypeBreaker {
 * Create and return your indicator here if it should be displayed on the current server.
 */
 public Wingpanel.Indicator? get_indicator (Module module, Wingpanel.IndicatorManager.ServerType server_type) {
-    /* A small warning for debugging reasons */
-    warning ("Activating TypeBreaker Indicator");
 
     /* Check which server has loaded the plugin */
     if (server_type != Wingpanel.IndicatorManager.ServerType.SESSION) {
