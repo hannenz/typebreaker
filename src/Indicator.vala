@@ -115,7 +115,7 @@ namespace TypeBreaker {
 
 			var separator = new Wingpanel.Widgets.Separator ();
 
-			/* main_grid.add (info_label); */
+			main_grid.add (info_label);
 			main_grid.add (progress_bar);
 			main_grid.add (active_switch);
 			main_grid.add (separator);
