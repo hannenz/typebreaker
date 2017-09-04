@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-03 22:25+0200\n"
-"PO-Revision-Date: 2017-09-03 22:26+0200\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2017-09-04 23:06+0200\n"
+"PO-Revision-Date: 2017-09-04 23:26+0200\n"
+"Last-Translator: Johannes Braun <me@hannenz.de>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,10 @@ msgstr ""
 #: src/TimeString.vala:38
 msgid " and "
 msgstr " und "
+
+#: src/Indicator.vala:160
+msgid " until break"
+msgstr " bis zur Pause"
 
 #: src/TimeString.vala:26
 #, c-format
@@ -59,12 +63,15 @@ msgstr "Schliessen"
 msgid "Exit"
 msgstr "Beenden"
 
+#: src/Indicator.vala:163
+msgid "Less than 1 minute until break"
+msgstr "Weniger als eine Minute bis zur Pause"
+
 #: src/Window/BreakWindow.vala:224
 msgid "Lock screen"
 msgstr "Bildschirm sperren"
 
-#: src/Daemon/TypeBreakerDaemon.vala:25
-#, c-format
+#: src/Daemon/TypeBreakerDaemon.vala:39
 msgid "My brother, the cow"
 msgstr "Mein Bruder, die Kuh"
 
@@ -80,9 +87,13 @@ msgstr "Verschieben"
 msgid "Postpone Time"
 msgstr "Aufschubdauer"
 
-#: src/SettingsDialog.vala:21
+#: src/Indicator.vala:114 src/SettingsDialog.vala:21
 msgid "Settings"
 msgstr "Einstellungen"
+
+#: src/Indicator.vala:111
+msgid "Take break"
+msgstr "Pause machen"
 
 #: src/Window/BreakWindow.vala:164
 #, c-format
@@ -93,7 +104,7 @@ msgstr "Zeit für eine Pause"
 msgid "Warn Time"
 msgstr "Warnzeit"
 
-#: src/Indicator.vala:93
+#: src/Indicator.vala:98
 msgid "Watch for breaks"
 msgstr "Auf Pausen überwachen"
 

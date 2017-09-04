@@ -51,7 +51,6 @@ namespace TypeBreaker {
 			}
 			catch (Error e) {
 				error ("Error: %s", e.message);
-				info_label.set_text (e.message);
 				// proxy is still null, so we can fall thru and return it
 			}
 
@@ -88,8 +87,6 @@ namespace TypeBreaker {
 			info_label = new Label ("");
 			info_label.margin_top = 6;
 			info_label.margin_bottom = 6;
-			/* info_label.margin_start = 12; */
-			/* info_label.margin_end = 12; */
 			update_time_until_break ();
 
 			progress_bar = new ProgressBar ();
@@ -108,10 +105,10 @@ namespace TypeBreaker {
 				}
 			});
 			
-			break_button = new Wingpanel.Widgets.Button ("Take break");
+			break_button = new Wingpanel.Widgets.Button (_("Take break"));
 			break_button.clicked.connect (take_break);
 
-			settings_button = new Wingpanel.Widgets.Button ("Settings");
+			settings_button = new Wingpanel.Widgets.Button (_("Settings"));
 			settings_button.clicked.connect (show_settings);
 
 			var separator = new Wingpanel.Widgets.Separator ();
@@ -128,15 +125,47 @@ namespace TypeBreaker {
 			update_time_until_break ();
 			Timeout.add (5000, () => {
 				update_time_until_break ();
-				check_daemon_running ();
+				if (!check_daemon_running ()) {
+					info_label.set_text ("Daemon is not running!");
+				}
+
 				return true;
 			});
 		}
 
 
 		
-		private void check_daemon_running () {
-			
+		private bool check_daemon_running () {
+			try {
+				string? key = null;
+				Variant? val = null;
+
+				var connection = Bus.get_sync (BusType.SESSION, null);	
+				var ret = connection.call_sync (
+					"org.freedesktop.DBus",
+					"/org/freedesktop/DBus",
+					"org.freedesktop.DBus",
+					"ListNames",
+					null,
+					VariantType.STRING_ARRAY,
+					DBusCallFlags.NONE,
+					-1,
+					null
+				);
+				var inner = ret.get_child_value (0);
+				var iter = inner.iterator ();
+				while (iter.next ("s", &key, &val)) {
+					var name = val.get_type_string ();
+					if (name == "com.github.hannenz.typebreaker") {
+						return true;
+					}
+				}
+
+			}
+			catch (Error e) {
+				return false;
+			}
+			return false;
 		}
 
 
@@ -146,7 +175,6 @@ namespace TypeBreaker {
 
 			var proxy = get_dbus_proxy ();
 			if (proxy == null) {
-				info_label.set_text ("Daemon is not running");
 				return;
 			}
 			var variant = proxy.call_sync ("GetSecondsUntilBreak", null, DBusCallFlags.NONE, -1, null);
@@ -157,10 +185,10 @@ namespace TypeBreaker {
 				var t = new TypeBreaker.TimeString ();
 				t.show_seconds = false;
 				string s = t.nice (time_until_break);
-				text = s + " until break";
+				text = s + _(" until break");
 			}
 			else {
-				text = "Less than 1 minute until break";
+				text = _("Less than 1 minute until break");
 			}
 			info_label.set_text (text);
 
@@ -191,11 +219,18 @@ namespace TypeBreaker {
 	}
 }
 
+
 /*
 * This method is called once after your plugin has been loaded.
 * Create and return your indicator here if it should be displayed on the current server.
 */
 public Wingpanel.Indicator? get_indicator (Module module, Wingpanel.IndicatorManager.ServerType server_type) {
+	/* const string GETTEXT_PACKAGE = "typebreaker"; */
+
+	/* Intl.setlocale (LocaleCategory.MESSAGES, ""); */
+	/* Intl.textdomain (GETTEXT_PACKAGE); */
+	/* Intl.bind_textdomain_codeset (GETTEXT_PACKAGE, "utf-8"); */
+	/* Intl.bindtextdomain (GETTEXT_PACKAGE, "./locale"); */
 
     /* Check which server has loaded the plugin */
     if (server_type != Wingpanel.IndicatorManager.ServerType.SESSION) {

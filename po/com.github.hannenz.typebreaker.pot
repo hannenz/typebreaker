@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-03 22:25+0200\n"
+"POT-Creation-Date: 2017-09-04 23:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,6 +20,10 @@ msgstr ""
 
 #: src/TimeString.vala:38
 msgid " and "
+msgstr ""
+
+#: src/Indicator.vala:160
+msgid " until break"
 msgstr ""
 
 #: src/TimeString.vala:26
@@ -59,12 +63,15 @@ msgstr ""
 msgid "Exit"
 msgstr ""
 
+#: src/Indicator.vala:163
+msgid "Less than 1 minute until break"
+msgstr ""
+
 #: src/Window/BreakWindow.vala:224
 msgid "Lock screen"
 msgstr ""
 
-#: src/Daemon/TypeBreakerDaemon.vala:25
-#, c-format
+#: src/Daemon/TypeBreakerDaemon.vala:39
 msgid "My brother, the cow"
 msgstr ""
 
@@ -80,8 +87,12 @@ msgstr ""
 msgid "Postpone Time"
 msgstr ""
 
-#: src/SettingsDialog.vala:21
+#: src/Indicator.vala:114 src/SettingsDialog.vala:21
 msgid "Settings"
+msgstr ""
+
+#: src/Indicator.vala:111
+msgid "Take break"
 msgstr ""
 
 #: src/Window/BreakWindow.vala:164
@@ -93,6 +104,6 @@ msgstr ""
 msgid "Warn Time"
 msgstr ""
 
-#: src/Indicator.vala:93
+#: src/Indicator.vala:98
 msgid "Watch for breaks"
 msgstr ""

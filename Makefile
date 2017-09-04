@@ -51,13 +51,25 @@ install:
 	# Desktop file, metadata and icon
 	cp data/com.github.hannenz.typebreaker.desktop /usr/share/applications/
 	cp data/com.github.hannenz.typebreaker.appdata.xml /usr/share/metainfo/
-	cp data/typebreaker.png /usr/share/icons/hicolor/
+	cp data/typebreaker.svg /usr/share/icons/hicolor/16x16/apps/
+	cp data/typebreaker.svg /usr/share/icons/hicolor/24x24/apps/
+	cp data/typebreaker.svg /usr/share/icons/hicolor/32x32/apps/
+	cp data/typebreaker.svg /usr/share/icons/hicolor/48x48/apps/
+	cp data/typebreaker.svg /usr/share/icons/hicolor/64x64/apps/
+	cp data/typebreaker.svg /usr/share/icons/hicolor/128x128/apps/
+	cp data/typebreaker.svg /usr/share/icons/hicolor/scalable/apps/
+	gtk-update-icon-cache /usr/share/icons/hicolor/
 	# Autostart
 	cp data/com.github.hannenz.typebreaker.desktop /etc/xdg/autostart/
+	# Translations
+	cp po/de_DE.mo /usr/share/locale/de/LC_MESSAGES/typebreaker.mo
+
 
 pot:
 	xgettext --language=C --keyword=_ --escape --sort-output -o po/com.github.hannenz.typebreaker.pot $(SOURCES) $(INDICATOR_SOURCES)
 
+po:
+	msgfmt --check --verbose -o po/de_DE.mo po/de_DE.po
 
 clean:
 	# rm -f $(OBJS)
