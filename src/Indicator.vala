@@ -1,5 +1,6 @@
 using Gtk;
 using Wingpanel;
+using Granite.Services;
 
 namespace TypeBreaker {
 	
@@ -156,6 +157,7 @@ namespace TypeBreaker {
 				var iter = inner.iterator ();
 				while (iter.next ("s", &key, &val)) {
 					var name = val.get_type_string ();
+					warning ("name = %s", name);
 					if (name == "com.github.hannenz.typebreaker") {
 						return true;
 					}
@@ -177,23 +179,28 @@ namespace TypeBreaker {
 			if (proxy == null) {
 				return;
 			}
-			var variant = proxy.call_sync ("GetSecondsUntilBreak", null, DBusCallFlags.NONE, -1, null);
-			var inner = variant.get_child_value (0);
-			time_until_break = inner.get_int32 ();
+			try {
+				var variant = proxy.call_sync ("GetSecondsUntilBreak", null, DBusCallFlags.NONE, -1, null);
+				var inner = variant.get_child_value (0);
+				time_until_break = inner.get_int32 ();
 
-			if (time_until_break >= 60) {
-				var t = new TypeBreaker.TimeString ();
-				t.show_seconds = false;
-				string s = t.nice (time_until_break);
-				text = s + _(" until break");
-			}
-			else {
-				text = _("Less than 1 minute until break");
-			}
-			info_label.set_text (text);
+				if (time_until_break >= 60) {
+					var t = new TypeBreaker.TimeString ();
+					t.show_seconds = false;
+					string s = t.nice (time_until_break);
+					text = s + _(" until break");
+				}
+				else {
+					text = _("Less than 1 minute until break");
+				}
+				info_label.set_text (text);
 
-			double frac = 1 - ((double) time_until_break / (double) settings.active_time);
-			progress_bar.set_fraction (frac);
+				double frac = 1 - ((double) time_until_break / (double) settings.active_time);
+				progress_bar.set_fraction (frac);
+			}
+			catch (Error e) {
+				warning (e.message);
+			}
 		}
 
 
@@ -225,6 +232,16 @@ namespace TypeBreaker {
 * Create and return your indicator here if it should be displayed on the current server.
 */
 public Wingpanel.Indicator? get_indicator (Module module, Wingpanel.IndicatorManager.ServerType server_type) {
+
+	/* Logger.initialize ("com.github.hannenz.typebreaker-indicator"); */
+	/* Logger.DisplayLevel = LogLevel.DEBUG; */
+	/* Logger.notification ("Starting com.github.hannenz.typebreaker-indicator"); */
+    /*  */
+	/* GLib.Log.set_writer_func ((LogWriterFunc) GLib.Log.writer_journald); */
+	
+
+	debug ("typebreaker-foo");
+
 	/* const string GETTEXT_PACKAGE = "typebreaker"; */
 
 	/* Intl.setlocale (LocaleCategory.MESSAGES, ""); */
