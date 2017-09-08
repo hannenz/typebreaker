@@ -2,3 +2,6 @@ build/
 *.so
 typebreaker-daemon
 typebreaker-indicator*
+com.github.hannenz.typebreaker-daemon
+libcom.github.hannenz.typebreaker-indicator.so.vapi
+
