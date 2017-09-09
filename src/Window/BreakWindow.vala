@@ -19,7 +19,6 @@ namespace TypeBreaker.Window {
 
 		private Button postpone_button;
 		private CountdownClock countdown_clock;
-		/* private int break_time2; */
 		private int postpones_left;
 
 
@@ -47,7 +46,6 @@ namespace TypeBreaker.Window {
 
 			setup_background();
 
-			/* this.break_time2 = settings.break_time; */
 
 			populate();
 
@@ -131,8 +129,15 @@ namespace TypeBreaker.Window {
 			this.screen.get_monitor_geometry(0, out monitor);
 
 			countdown_clock = new CountdownClock(settings.break_time);
-			countdown_clock.finished.connect( () => {
-				countdown_finished();
+			/* countdown_clock.finished.connect( () => { */
+			/* 	countdown_finished(); */
+			/* }); */
+			countdown_clock.finished.connect( () => countdown_finished() );
+
+			settings.changed["break_time"].connect ( () => {
+				message ("Break-time has been changed to %u", settings.break_time);
+				countdown_clock = new CountdownClock (settings.break_time);
+				countdown_clock.finished.connect( () => countdown_finished() );
 			});
 
 			// Does this respect that the UI should always appear on the
