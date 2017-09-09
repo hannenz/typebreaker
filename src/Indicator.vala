@@ -11,7 +11,7 @@ namespace TypeBreaker {
 		private Wingpanel.Widgets.Switch active_switch;
 		private Wingpanel.Widgets.Button break_button;
 		private Wingpanel.Widgets.Button settings_button;
-		private ProgressBar progress_bar;
+		/* private ProgressBar progress_bar; */
 
 		private Image? display_widget = null;
 		private Gtk.Grid? main_grid = null;
@@ -90,20 +90,24 @@ namespace TypeBreaker {
 			info_label.margin_bottom = 6;
 			update_time_until_break ();
 
-			progress_bar = new ProgressBar ();
-			progress_bar.set_show_text (true);
+			/* progress_bar = new ProgressBar (); */
+			/* progress_bar.set_show_text (true); */
 
 			active_switch = new Wingpanel.Widgets.Switch (_("Watch for breaks"));
 			active_switch.set_active (settings.active);
 			active_switch.switched.connect ( () => {
 				settings.active = active_switch.get_active ();
 				break_button.set_sensitive (settings.active); 
+
 				if (!settings.active) {
 					info_label.set_text("");
 				}
 				else {
 					update_time_until_break ();
 				}
+			});
+			settings.changed["active"].connect ( () => {
+				active_switch.set_active (settings.active);
 			});
 			
 			break_button = new Wingpanel.Widgets.Button (_("Take break"));
@@ -115,7 +119,7 @@ namespace TypeBreaker {
 			var separator = new Wingpanel.Widgets.Separator ();
 
 			main_grid.add (info_label);
-			main_grid.add (progress_bar);
+			/* main_grid.add (progress_bar); */
 			main_grid.add (active_switch);
 			main_grid.add (separator);
 			main_grid.add (break_button);
@@ -195,8 +199,8 @@ namespace TypeBreaker {
 				}
 				info_label.set_text (text);
 
-				double frac = 1 - ((double) time_until_break / (double) settings.active_time);
-				progress_bar.set_fraction (frac);
+				/* double frac = 1 - ((double) time_until_break / (double) settings.active_time); */
+				/* progress_bar.set_fraction (frac); */
 			}
 			catch (Error e) {
 				warning (e.message);
