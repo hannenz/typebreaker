@@ -14,16 +14,12 @@ namespace TypeBreaker.Window {
 		public signal void countdown_finished();
 		public signal void exit_application();
 
-
-
 		public TypeBreaker.Settings settings;
-
-
 
 
 		private Button postpone_button;
 		private CountdownClock countdown_clock;
-		private int break_time2;
+		/* private int break_time2; */
 		private int postpones_left;
 
 
@@ -51,7 +47,7 @@ namespace TypeBreaker.Window {
 
 			setup_background();
 
-			this.break_time2 = settings.break_time;
+			/* this.break_time2 = settings.break_time; */
 
 			populate();
 
