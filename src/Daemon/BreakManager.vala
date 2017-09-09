@@ -3,7 +3,8 @@ using TypeBreaker.Window;
 namespace TypeBreaker {
 	public enum State {
 		IDLE,
-		ACTIVE
+		ACTIVE,
+		UNKNOWN
 	}
 }
 
@@ -25,7 +26,7 @@ namespace TypeBreaker.Daemon {
 		private int postpones_left;
 		private bool has_been_warned = false;
 
-		private State state;
+		private State state = State.UNKNOWN;
 
 		private uint timeout_id = 0;
 
@@ -46,6 +47,9 @@ namespace TypeBreaker.Daemon {
 
 			if (settings.active) {
 				activate ();
+			}
+			else {
+				setup ();
 			}
 		}
 
@@ -125,6 +129,7 @@ namespace TypeBreaker.Daemon {
 
 		// Show the break window, forcing a break.
 		public void take_break () {
+			time_until_break.stop ();
 			app.break_window.show_all ();
 		}
 
@@ -152,6 +157,7 @@ namespace TypeBreaker.Daemon {
 		}
 
 
+
 		public void handle_lock_screen () {
 			try {
 				var proxy = get_screensaver_proxy ();
@@ -164,6 +170,7 @@ namespace TypeBreaker.Daemon {
 				warning (e.message);
 			}
 		}
+
 
 
 		/**
