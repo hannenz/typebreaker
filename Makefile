@@ -43,7 +43,7 @@ indicator: $(INDICATOR_SOURCES) typebreaker.gresource.xml $(PRG)
 
 install:
 	# Binaries
-	# install -o root -g root -m 644 $(PRG) /usr/local/bin/
+	#install -o root -g root -m 644 $(PRG) /usr/local/bin/
 	install -o root -g root -m 644 $(INDICATOR_PRG) /usr/lib/x86_64-linux-gnu/wingpanel/
 	# GSettings Schema
 	install -o root -g root -m 644 com.github.hannenz.typebreaker.gschema.xml /usr/share/glib-2.0/schemas/
