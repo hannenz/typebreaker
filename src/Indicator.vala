@@ -120,18 +120,24 @@ namespace TypeBreaker {
 
 			main_grid.add (info_label);
 			/* main_grid.add (progress_bar); */
-			main_grid.add (active_switch);
 			main_grid.add (separator);
+			main_grid.add (active_switch);
 			main_grid.add (break_button);
 			main_grid.add (settings_button);
 
 			main_grid.show_all ();
 
 			update_time_until_break ();
-			Timeout.add (5000, () => {
+			Timeout.add (15000, () => {
 				update_time_until_break ();
 				if (!check_daemon_running ()) {
-					info_label.set_text ("Daemon is not running!");
+					info_label.set_text ("Type Breaker is not running!");
+					break_button.set_sensitive (false);
+					active_switch.set_sensitive (false);
+				}
+				else {
+					break_button.set_sensitive (true);
+					active_switch.set_sensitive (true);
 				}
 
 				return true;
@@ -183,6 +189,10 @@ namespace TypeBreaker {
 		private void update_time_until_break () {
 			int time_until_break;
 			string text;
+
+			if (!settings.active) {
+				return;
+			}
 
 			var proxy = get_dbus_proxy ();
 			if (proxy == null) {
