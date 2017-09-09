@@ -139,40 +139,45 @@ namespace TypeBreaker {
 		}
 
 
-		
+
+		/**
+		 * Check the list of DBus Services to see if the
+		 * typebreaker daemon is running
+		 * 
+		 * @return bool
+		 */
 		private bool check_daemon_running () {
 			try {
-				string? key = null;
-				Variant? val = null;
 
-				var connection = Bus.get_sync (BusType.SESSION, null);	
+				var connection = GLib.Bus.get_sync (BusType.SESSION, null);	
 				var ret = connection.call_sync (
 					"org.freedesktop.DBus",
 					"/org/freedesktop/DBus",
 					"org.freedesktop.DBus",
 					"ListNames",
 					null,
-					VariantType.STRING_ARRAY,
+					VariantType.TUPLE,
 					DBusCallFlags.NONE,
 					-1,
 					null
 				);
-				var inner = ret.get_child_value (0);
-				var iter = inner.iterator ();
-				while (iter.next ("s", &key, &val)) {
-					var name = val.get_type_string ();
-					warning ("name = %s", name);
-					if (name == "com.github.hannenz.typebreaker") {
+				var names = ret.get_child_value (0);
+				var iter = names.iterator ();
+
+				Variant? v = null;
+				while ((v = iter.next_value ()) != null) {
+					var name = v.get_string ();
+					if (name == "com.github.hannenz.TypeBreakerService") {
 						return true;
 					}
 				}
-
 			}
 			catch (Error e) {
-				return false;
+				warning (e.message);
 			}
 			return false;
 		}
+
 
 
 		private void update_time_until_break () {
