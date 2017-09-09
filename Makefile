@@ -43,26 +43,44 @@ indicator: $(INDICATOR_SOURCES) typebreaker.gresource.xml $(PRG)
 
 install:
 	# Binaries
-	cp $(PRG) /usr/local/bin/
-	cp $(INDICATOR_PRG) /usr/lib/x86_64-linux-gnu/wingpanel/
+	# install -o root -g root -m 644 $(PRG) /usr/local/bin/
+	install -o root -g root -m 644 $(INDICATOR_PRG) /usr/lib/x86_64-linux-gnu/wingpanel/
 	# GSettings Schema
-	cp com.github.hannenz.typebreaker.gschema.xml /usr/share/glib-2.0/schemas/
+	install -o root -g root -m 644 com.github.hannenz.typebreaker.gschema.xml /usr/share/glib-2.0/schemas/
 	glib-compile-schemas /usr/share/glib-2.0/schemas
 	# Desktop file, metadata and icon
-	cp data/com.github.hannenz.typebreaker.desktop /usr/share/applications/
-	cp data/com.github.hannenz.typebreaker.appdata.xml /usr/share/metainfo/
-	cp data/typebreaker.svg /usr/share/icons/hicolor/16x16/apps/
-	cp data/typebreaker.svg /usr/share/icons/hicolor/24x24/apps/
-	cp data/typebreaker.svg /usr/share/icons/hicolor/32x32/apps/
-	cp data/typebreaker.svg /usr/share/icons/hicolor/48x48/apps/
-	cp data/typebreaker.svg /usr/share/icons/hicolor/64x64/apps/
-	cp data/typebreaker.svg /usr/share/icons/hicolor/128x128/apps/
-	cp data/typebreaker.svg /usr/share/icons/hicolor/scalable/apps/
+	install -o root -g root -m 644 data/com.github.hannenz.typebreaker.desktop /usr/share/applications/
+	install -o root -g root -m 644 data/com.github.hannenz.typebreaker.appdata.xml /usr/share/metainfo/
+	install -o root -g root -m 644 data/typebreaker.svg /usr/share/icons/hicolor/16x16/apps/
+	install -o root -g root -m 644 data/typebreaker.svg /usr/share/icons/hicolor/24x24/apps/
+	install -o root -g root -m 644 data/typebreaker.svg /usr/share/icons/hicolor/32x32/apps/
+	install -o root -g root -m 644 data/typebreaker.svg /usr/share/icons/hicolor/48x48/apps/
+	install -o root -g root -m 644 data/typebreaker.svg /usr/share/icons/hicolor/64x64/apps/
+	install -o root -g root -m 644 data/typebreaker.svg /usr/share/icons/hicolor/128x128/apps/
+	install -o root -g root -m 644 data/typebreaker.svg /usr/share/icons/hicolor/scalable/apps/
 	gtk-update-icon-cache /usr/share/icons/hicolor/
 	# Autostart
-	cp data/com.github.hannenz.typebreaker.desktop /etc/xdg/autostart/
+	install -o root -g root -m 644 data/com.github.hannenz.typebreaker.desktop /etc/xdg/autostart/
 	# Translations
-	cp po/de_DE.mo /usr/share/locale/de/LC_MESSAGES/typebreaker.mo
+	install -o root -g root -m 644 po/de_DE.mo /usr/share/locale/de/LC_MESSAGES/typebreaker.mo
+
+uninstall:
+	rm -f /usr/local/bin/$(PRG)
+	rm -f /usr/lib/x86_64-linux-gnu/wingpanel/$(INDICATOR_PRG)
+	rm -f /usr/share/glib-2.0/schemas/com.github.hannenz.typebreaker.gschema.xml
+	rm -f /usr/share/applications/com.github.hannenz.typebreaker.desktop 
+	rm -f /usr/share/metainfo/com.github.hannenz.typebreaker.appdata.xml
+	rm -f /usr/share/icons/hicolor/16x16/apps/typebreaker.svg
+	rm -f /usr/share/icons/hicolor/24x24/apps/typebreaker.svg
+	rm -f /usr/share/icons/hicolor/32x32/apps/typebreaker.svg
+	rm -f /usr/share/icons/hicolor/48x48/apps/typebreaker.svg
+	rm -f /usr/share/icons/hicolor/64x64/apps/typebreaker.svg
+	rm -f /usr/share/icons/hicolor/128x128/apps/typebreaker.svg
+	rm -f /usr/share/icons/hicolor/scalable/apps/typebreaker.svg
+	rm -f /etc/xdg/autostart/com.github.hannenz.typebreaker.desktop
+	rm -f /usr/share/locale/de/LC_MESSAGES/typebreaker.mo
+	glib-compile-schemas /usr/share/glib-2.0/schemas
+	gtk-update-icon-cache /usr/share/icons/hicolor/
 
 
 pot:
