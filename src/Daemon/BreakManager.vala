@@ -75,6 +75,14 @@ namespace TypeBreaker.Daemon {
 			postpones_left = settings.postpones_count;
 			app.break_window.enable_postponing ();
 			countdown_is_running = true;
+
+			settings.changed["active_time"].connect ( () => {
+				int secs = settings.active_time - (int)time_until_break.seconds_left;
+				if (secs < 0) {
+					secs = 0;
+				}
+				time_until_break.seconds_left = secs;
+			});
 		}
 
 		
