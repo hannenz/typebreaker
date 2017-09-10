@@ -58,6 +58,7 @@ install:
 	install -o root -g root -m 644 data/typebreaker.svg /usr/share/icons/hicolor/64x64/apps/
 	install -o root -g root -m 644 data/typebreaker.svg /usr/share/icons/hicolor/128x128/apps/
 	install -o root -g root -m 644 data/typebreaker.svg /usr/share/icons/hicolor/scalable/apps/
+	install -o root -g root -m 644 data/com.github.hannenz.typebreaker.service /usr/share/dbus-1/services
 	gtk-update-icon-cache /usr/share/icons/hicolor/
 	# Autostart
 	install -o root -g root -m 644 data/com.github.hannenz.typebreaker.desktop /etc/xdg/autostart/
@@ -78,6 +79,7 @@ uninstall:
 	rm -f /usr/share/icons/hicolor/128x128/apps/typebreaker.svg
 	rm -f /usr/share/icons/hicolor/scalable/apps/typebreaker.svg
 	rm -f /etc/xdg/autostart/com.github.hannenz.typebreaker.desktop
+	rm -f /usr/share/dbus-1/services/com.github.hannenz.typebreaker.service
 	rm -f /usr/share/locale/de/LC_MESSAGES/typebreaker.mo
 	glib-compile-schemas /usr/share/glib-2.0/schemas
 	gtk-update-icon-cache /usr/share/icons/hicolor/

@@ -5,4 +5,6 @@ Exec=com.github.hannenz.typebreaker-daemon
 Icon=/usr/share/icons/hicolor/scalable/apps/typebreaker.svg
 X-GNOME-UsesNotifications=true
 X-GNOME-Autostart-enabled=true
+DBusActivatable=true
+
 
