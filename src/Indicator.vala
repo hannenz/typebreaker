@@ -85,7 +85,7 @@ namespace TypeBreaker {
 			main_grid = new Grid ();
 			main_grid.set_orientation (Orientation.VERTICAL);
 
-			info_label = new Label ("");
+			info_label = new Label (_("Type Breaker is not running"));
 			info_label.margin_top = 6;
 			info_label.margin_bottom = 6;
 			update_time_until_break ();
@@ -109,9 +109,11 @@ namespace TypeBreaker {
 			settings.changed["active"].connect ( () => {
 				active_switch.set_active (settings.active);
 			});
+			active_switch.set_sensitive (false);
 			
 			break_button = new Wingpanel.Widgets.Button (_("Take break"));
 			break_button.clicked.connect (take_break);
+			break_button.set_sensitive (false);
 
 			settings_button = new Wingpanel.Widgets.Button (_("Settings"));
 			settings_button.clicked.connect (show_settings);
@@ -128,10 +130,11 @@ namespace TypeBreaker {
 			main_grid.show_all ();
 
 			update_time_until_break ();
-			Timeout.add (15000, () => {
+			Timeout.add (5000, () => {
 				update_time_until_break ();
 				if (!check_daemon_running ()) {
-					info_label.set_text ("Type Breaker is not running!");
+					
+					info_label.set_text (_("Type Breaker is not running!"));
 					break_button.set_sensitive (false);
 					active_switch.set_sensitive (false);
 				}
@@ -180,8 +183,40 @@ namespace TypeBreaker {
 			}
 			catch (Error e) {
 				warning (e.message);
+				return false;
 			}
+
+			// Daemon is not running, try to launch it
+			launch_daemon ();
 			return false;
+		}
+
+
+
+		/**
+		 * Try to launch the daemon
+		 *
+		 * @return void
+		 */
+		private void launch_daemon () {
+			Pid child_pid;
+
+			try {
+				Process.spawn_async (
+					"/",
+					{ "com.github.hannenz.typebreaker-daemon" },
+					Environ.get (),
+					SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD | SpawnFlags.STDOUT_TO_DEV_NULL | SpawnFlags.STDERR_TO_DEV_NULL,
+					null,
+					out child_pid
+				);
+				ChildWatch.add (child_pid, (pid, status) => {
+					Process.close_pid (pid);
+				});
+			}
+			catch (Error e) {
+				warning (e.message);
+			}
 		}
 
 
