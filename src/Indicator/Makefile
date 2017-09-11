@@ -15,7 +15,7 @@ SOURCES = ../Indicator/Indicator.vala\
 #Disable implicit rules by empty target .SUFFIXES
 .SUFFIXES:
 
-.PHONY: all clean distclean
+.PHONY: all clean distclean install uninstall
 
 all: $(PRG)
 

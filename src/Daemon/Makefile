@@ -4,18 +4,18 @@ VALAC = valac
 PACKAGES = gtk+-3.0 granite posix 
 VALAFLAGS = $(patsubst %, --pkg %, $(PACKAGES)) -X -D'GETTEXT_PACKAGE="typebreaker"' 
 DATADIR=../../data
-SOURCES = ../Daemon/TypeBreakerDaemon.vala\
-		../Daemon/BreakManager.vala\
-		../Window/BreakWindow.vala\
-		../Utils/Settings.vala\
-		../Widgets/CountdownClock.vala\
-		../Utils/TimeString.vala\
-		../Utils/Countdown.vala
+SOURCES = 	../Daemon/TypeBreakerDaemon.vala\
+			../Daemon/BreakManager.vala\
+			../Window/BreakWindow.vala\
+			../Utils/Settings.vala\
+			../Widgets/CountdownClock.vala\
+			../Utils/TimeString.vala\
+			../Utils/Countdown.vala
 
 #Disable implicit rules by empty target .SUFFIXES
 .SUFFIXES:
 
-.PHONY: all clean distclean
+.PHONY: all clean distclean install uninstall
 
 all: $(PRG)
 

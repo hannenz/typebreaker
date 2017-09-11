@@ -36,8 +36,6 @@ namespace TypeBreaker.Daemon {
 			this.app = app;
 			settings = new Settings ();
 
-			/* app.do_notify ("This is the startup message", "xyz"); */
-
 			settings.changed["active"].connect ( () => {
 				message ("Active has been changed to: %s", settings.active.to_string ());
 				if (settings.active) {
@@ -118,11 +116,15 @@ namespace TypeBreaker.Daemon {
 			}
 
 			if (idle_time >= settings.break_time) {
-				if (countdown_is_running) {
-					message ("Break has been completed, waiting for next activity to start the next countdown");
-					time_until_break.stop ();
-					countdown_is_running = false;
-				}
+
+				// We simply restart the countdown
+				time_until_break.reset ();
+
+				/* if (countdown_is_running) { */
+				/* 	message ("Break has been completed, waiting for next activity to start the next countdown"); */
+				/* 	time_until_break.stop (); */
+				/* 	countdown_is_running = false; */
+				/* } */
 			}
 
 			if (!has_been_warned && time_until_break.seconds_left <= settings.warn_time) {

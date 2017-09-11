@@ -80,7 +80,7 @@ namespace TypeBreaker.Daemon {
 			notification.set_body (message);
 
 			// Test
-			var icon = new FileIcon (File.new_for_uri("resource:///com/github/hannenz/typebreaker/data/typebreaker.png"));
+			var icon = new FileIcon (File.new_for_uri("resource:///com/github/hannenz/typebreaker-daemon/typebreaker.png"));
 			notification.set_icon (icon);
 			this.send_notification ("typebreaker.notification." + id, notification);
 		}
