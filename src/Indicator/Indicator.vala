@@ -12,6 +12,7 @@ namespace TypeBreaker {
 		private Wingpanel.Widgets.Button break_button;
 		private Wingpanel.Widgets.Button settings_button;
 		/* private ProgressBar progress_bar; */
+		private Revealer revealer;
 
 		private Image? display_widget = null;
 		private Gtk.Grid? main_grid = null;
@@ -26,12 +27,12 @@ namespace TypeBreaker {
 				description: "A typing break monitor"
 			);
 
-			const string app_name = "com.github.hannenz.typebreaker-indicator";
-			Logger.initialize (app_name);
-			Logger.DisplayLevel = LogLevel.DEBUG;
-			Logger.notification ("Starting up Indicator: %s".printf (app_name));
-
-			error ("typebreaker-indicator: QjHt");
+			/* const string app_name = "com.github.hannenz.typebreaker-indicator"; */
+			/* Logger.initialize (app_name); */
+			/* Logger.DisplayLevel = LogLevel.DEBUG; */
+			/* Logger.notification ("Starting up Indicator: %s".printf (app_name)); */
+            /*  */
+			/* error ("typebreaker-indicator: QjHt"); */
 
 			settings = new TypeBreaker.Settings ();
 			this.visible = true;
@@ -105,6 +106,7 @@ namespace TypeBreaker {
 			active_switch.switched.connect ( () => {
 				settings.active = active_switch.get_active ();
 				break_button.set_sensitive (settings.active); 
+				revealer.set_reveal_child  (settings.active);
 
 				if (!settings.active) {
 					info_label.set_text("");
@@ -116,11 +118,16 @@ namespace TypeBreaker {
 			settings.changed["active"].connect ( () => {
 				active_switch.set_active (settings.active);
 			});
-			active_switch.set_sensitive (false);
+			/* active_switch.set_sensitive (false); */
+
+			revealer = new Revealer ();
 			
 			break_button = new Wingpanel.Widgets.Button (_("Take break"));
 			break_button.clicked.connect (take_break);
 			break_button.set_sensitive (false);
+
+			revealer.set_reveal_child (true);
+			revealer.add (break_button);
 
 			settings_button = new Wingpanel.Widgets.Button (_("Settings"));
 			settings_button.clicked.connect (show_settings);
@@ -131,7 +138,7 @@ namespace TypeBreaker {
 			/* main_grid.add (progress_bar); */
 			main_grid.add (separator);
 			main_grid.add (active_switch);
-			main_grid.add (break_button);
+			main_grid.add (revealer);
 			main_grid.add (settings_button);
 
 			main_grid.show_all ();
@@ -140,14 +147,13 @@ namespace TypeBreaker {
 			Timeout.add (5000, () => {
 				update_time_until_break ();
 				if (!check_daemon_running ()) {
-					
 					info_label.set_text (_("Type Breaker is not running!"));
 					break_button.set_sensitive (false);
-					active_switch.set_sensitive (false);
+					/* active_switch.set_sensitive (false); */
 				}
 				else {
 					break_button.set_sensitive (true);
-					active_switch.set_sensitive (true);
+					/* active_switch.set_sensitive (true); */
 				}
 
 				return true;
