@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=TypeBreaker
-Exec=com.github.hannenz.typebreaker-daemon
+Exec=com.github.hannenz.typebreaker
 Icon=/usr/share/icons/hicolor/scalable/apps/typebreaker.svg
 X-GNOME-UsesNotifications=true
 X-GNOME-Autostart-enabled=true

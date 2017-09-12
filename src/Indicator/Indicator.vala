@@ -223,7 +223,7 @@ namespace TypeBreaker {
 			/* try { */
 			/* 	Process.spawn_async ( */
 			/* 		"/", */
-			/* 		{ "com.github.hannenz.typebreaker-daemon" }, */
+			/* 		{ "com.github.hannenz.typebreaker" }, */
 			/* 		Environ.get (), */
 			/* 		SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD | SpawnFlags.STDOUT_TO_DEV_NULL | SpawnFlags.STDERR_TO_DEV_NULL, */
 			/* 		null, */

@@ -36,9 +36,10 @@ uninstall:
 clean:
 	# rm -f $(OBJS)
 	rm -f $(PRG)
+	rm -f $(PRG).vapi
+	rm -f resources.c
 
 
 distclean: clean
-	rm -f resources.c
 	rm -f *.vala.c
 

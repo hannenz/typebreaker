@@ -77,6 +77,7 @@ po:
 clean:
 	# rm -f $(OBJS)
 	rm -f $(PRG)
+	rm -f resources.c
 
 
 distclean: clean
