@@ -49,12 +49,11 @@ namespace TypeBreaker {
 				proxy = new DBusProxy.sync (						// throws Error
 					connection,
 					DBusProxyFlags.DO_NOT_LOAD_PROPERTIES |
-					DBusProxyFlags.DO_NOT_CONNECT_SIGNALS |
-					DBusProxyFlags.DO_NOT_AUTO_START,
+					DBusProxyFlags.DO_NOT_CONNECT_SIGNALS,
 					null,
-					"com.github.hannenz.TypeBreakerService",
+					"com.github.hannenz.typebreaker",
 					"/com/github/hannenz/typebreaker",
-					"com.github.hannenz.TypeBreakerService",
+					"com.github.hannenz.typebreaker",
 					null
 				);
 			}
@@ -125,8 +124,6 @@ namespace TypeBreaker {
 			
 			break_button = new Wingpanel.Widgets.Button (_("Take break"));
 			break_button.clicked.connect (take_break);
-			break_button.set_sensitive (false);
-
 
 			settings_button = new Wingpanel.Widgets.Button (_("Settings"));
 			settings_button.clicked.connect (show_settings);
@@ -155,15 +152,15 @@ namespace TypeBreaker {
 			update_time_until_break ();
 			Timeout.add (5000, () => {
 				update_time_until_break ();
-				if (!check_daemon_running ()) {
-					info_label.set_text (_("Type Breaker is not running!"));
-					break_button.set_sensitive (false);
-					/* active_switch.set_sensitive (false); */
-				}
-				else {
-					break_button.set_sensitive (true);
-					/* active_switch.set_sensitive (true); */
-				}
+				/* if (!check_daemon_running ()) { */
+				/* 	info_label.set_text (_("Type Breaker is not running!")); */
+				/* 	break_button.set_sensitive (false); */
+				/* 	active_switch.set_sensitive (false); */
+				/* } */
+				/* else { */
+				/* 	break_button.set_sensitive (true); */
+				/* 	active_switch.set_sensitive (true); */
+				/* } */
 
 				return true;
 			});
@@ -177,42 +174,40 @@ namespace TypeBreaker {
 		 * 
 		 * @return bool
 		 */
-		private bool check_daemon_running () {
-			try {
-
-				var connection = GLib.Bus.get_sync (BusType.SESSION, null);	
-				var ret = connection.call_sync (
-					"org.freedesktop.DBus",
-					"/org/freedesktop/DBus",
-					"org.freedesktop.DBus",
-					"ListNames",
-					null,
-					VariantType.TUPLE,
-					DBusCallFlags.NONE,
-					-1,
-					null
-				);
-				var names = ret.get_child_value (0);
-				var iter = names.iterator ();
-
-				Variant? v = null;
-				while ((v = iter.next_value ()) != null) {
-					var name = v.get_string ();
-					if (name == "com.github.hannenz.TypeBreakerService") {
-						return true;
-					}
-				}
-			}
-			catch (Error e) {
-				warning (e.message);
-				return false;
-			}
-
-			// Daemon is not running, try to launch it
-			launch_daemon ();
-			return false;
-		}
-
+		/* private bool check_daemon_running () { */
+		/* 	try { */
+        /*  */
+		/* 		var connection = GLib.Bus.get_sync (BusType.SESSION, null);	 */
+		/* 		var ret = connection.call_sync ( */
+		/* 			"org.freedesktop.DBus", */
+		/* 			"/org/freedesktop/DBus", */
+		/* 			"org.freedesktop.DBus", */
+		/* 			"ListNames", */
+		/* 			null, */
+		/* 			VariantType.TUPLE, */
+		/* 			DBusCallFlags.NONE, */
+		/* 			-1, */
+		/* 			null */
+		/* 		); */
+		/* 		var names = ret.get_child_value (0); */
+		/* 		var iter = names.iterator (); */
+        /*  */
+		/* 		Variant? v = null; */
+		/* 		while ((v = iter.next_value ()) != null) { */
+		/* 			var name = v.get_string (); */
+		/* 			if (name == "com.github.hannenz.typebreaker") { */
+		/* 				return true; */
+		/* 			} */
+		/* 		} */
+		/* 	} */
+		/* 	catch (Error e) { */
+		/* 		warning (e.message); */
+		/* 		return false; */
+		/* 	} */
+        /*  */
+		/* 	return false; */
+		/* } */
+        /*  */
 
 
 		/**
@@ -222,26 +217,26 @@ namespace TypeBreaker {
 		 *
 		 * @return void
 		 */
-		private void launch_daemon () {
-			Pid child_pid;
-
-			try {
-				Process.spawn_async (
-					"/",
-					{ "com.github.hannenz.typebreaker-daemon" },
-					Environ.get (),
-					SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD | SpawnFlags.STDOUT_TO_DEV_NULL | SpawnFlags.STDERR_TO_DEV_NULL,
-					null,
-					out child_pid
-				);
-				ChildWatch.add (child_pid, (pid, status) => {
-					Process.close_pid (pid);
-				});
-			}
-			catch (Error e) {
-				warning (e.message);
-			}
-		}
+		/* private void launch_daemon () { */
+			/* Pid child_pid; */
+            /*  */
+			/* try { */
+			/* 	Process.spawn_async ( */
+			/* 		"/", */
+			/* 		{ "com.github.hannenz.typebreaker-daemon" }, */
+			/* 		Environ.get (), */
+			/* 		SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD | SpawnFlags.STDOUT_TO_DEV_NULL | SpawnFlags.STDERR_TO_DEV_NULL, */
+			/* 		null, */
+			/* 		out child_pid */
+			/* 	); */
+			/* 	ChildWatch.add (child_pid, (pid, status) => { */
+			/* 		Process.close_pid (pid); */
+			/* 	}); */
+			/* } */
+			/* catch (Error e) { */
+			/* 	warning (e.message); */
+			/* } */
+		/* } */
 
 
 

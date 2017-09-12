@@ -12,7 +12,7 @@ namespace TypeBreaker.Daemon {
 
 	const int ACTIVE_THRESHOLD = 2;
 
-	[DBus (name = "com.github.hannenz.TypeBreakerService")]
+	[DBus (name = "com.github.hannenz.typebreaker")]
 	public class BreakManager  {
 
 		public TypeBreaker.Settings settings;
@@ -228,7 +228,7 @@ namespace TypeBreaker.Daemon {
 				screensaver_proxy = new DBusProxy.sync (connection,
 					DBusProxyFlags.DO_NOT_LOAD_PROPERTIES |
 					DBusProxyFlags.DO_NOT_CONNECT_SIGNALS |
-					DBusProxyFlags.DO_NOT_AUTO_START,
+					DBusProxyFlags.DO_NOT_AUTO_START, 
 					null,
 					"org.freedesktop.ScreenSaver",
 					"/org/freedesktop/ScreenSaver",

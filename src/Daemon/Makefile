@@ -1,4 +1,4 @@
-PRG = com.github.hannenz.typebreaker-daemon
+PRG = com.github.hannenz.typebreaker
 CC = gcc
 VALAC = valac
 PACKAGES = gtk+-3.0 granite posix 
@@ -22,7 +22,7 @@ all: $(PRG)
 $(PRG): $(SOURCES) resources.c
 	$(VALAC) -o $@ $^ $(VALAFLAGS)
 
-resources.c: $(DATADIR)/typebreaker-daemon.gresource.xml
+resources.c: $(DATADIR)/typebreaker.gresource.xml
 	glib-compile-resources $< --sourcedir=$(DATADIR) --target=$@ --generate-source
 
 install:

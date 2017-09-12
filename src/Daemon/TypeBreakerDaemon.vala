@@ -88,8 +88,8 @@ namespace TypeBreaker.Daemon {
 
 
 
-	[DBus (name = "com.github.hannenz.TypeBreakerService")]
-	public  class TypeBreakerService : Object {
+	[DBus (name = "com.github.hannenz.typebreaker")]
+	public  class TypeBreakerFoo : Object {
 
 		public int idle_time;
 
@@ -101,10 +101,10 @@ namespace TypeBreaker.Daemon {
 			return idle_time;
 		}
 
-		public TypeBreakerService () {
+		public TypeBreakerFoo () {
 			idle_time = 9;
 		}
-		
+
 	}
 
 	private void on_bus_aquired (DBusConnection conn) {
@@ -119,11 +119,9 @@ namespace TypeBreaker.Daemon {
 
 
 	public static int main (string[] args) {
-		message ("main()");
 		app = new TypeBreakerDaemon ();
 
 		try {
-			message ("registering app");
 			app.register ();
 		}
 		catch (Error e) {
@@ -134,14 +132,13 @@ namespace TypeBreaker.Daemon {
 		// DBus
 		Bus.own_name (
 			BusType.SESSION, 
-			"com.github.hannenz.TypeBreakerService", 
+			"com.github.hannenz.typebreaker", 
 			BusNameOwnerFlags.NONE,
 			on_bus_aquired,
 			() => {},
 			() => stderr.printf ("Could not aquire name\n")
 		);
 
-		message ("abouot to run app");
 		return app.run (args);
 	}
 }
