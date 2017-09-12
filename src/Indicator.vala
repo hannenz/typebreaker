@@ -1,5 +1,6 @@
 using Gtk;
 using Wingpanel;
+using Granite.Services;
 
 namespace TypeBreaker {
 	
@@ -24,6 +25,13 @@ namespace TypeBreaker {
 				display_name: "Type Breaker",
 				description: "A typing break monitor"
 			);
+
+			const string app_name = "com.github.hannenz.typebreaker-indicator";
+			Logger.initialize (app_name);
+			Logger.DisplayLevel = LogLevel.DEBUG;
+			Logger.notification ("Starting up Indicator: %s".printf (app_name));
+
+			error ("typebreaker-indicator: QjHt");
 
 			settings = new TypeBreaker.Settings ();
 			this.visible = true;
@@ -231,6 +239,8 @@ public Wingpanel.Indicator? get_indicator (Module module, Wingpanel.IndicatorMan
 	/* Intl.textdomain (GETTEXT_PACKAGE); */
 	/* Intl.bind_textdomain_codeset (GETTEXT_PACKAGE, "utf-8"); */
 	/* Intl.bindtextdomain (GETTEXT_PACKAGE, "./locale"); */
+
+
 
     /* Check which server has loaded the plugin */
     if (server_type != Wingpanel.IndicatorManager.ServerType.SESSION) {
