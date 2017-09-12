@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gresources>
+	<gresource prefix="/com/github/hannenz/typebreaker-daemon">
+		<file>typebreaker.png</file>
+		<file>typebreaker-play.png</file>
+		<file>typebreaker-pause.png</file>
+		<file>typebreaker-time.png</file>
+		<file>typebreaker-warning.png</file>
+		<file>typebreaker-symbolic.png</file>
+	</gresource>
+</gresources>
+

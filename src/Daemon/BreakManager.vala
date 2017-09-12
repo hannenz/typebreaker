@@ -3,7 +3,8 @@ using TypeBreaker.Window;
 namespace TypeBreaker {
 	public enum State {
 		IDLE,
-		ACTIVE
+		ACTIVE,
+		UNKNOWN
 	}
 }
 
@@ -25,7 +26,7 @@ namespace TypeBreaker.Daemon {
 		private int postpones_left;
 		private bool has_been_warned = false;
 
-		private State state;
+		private State state = State.UNKNOWN;
 
 		private uint timeout_id = 0;
 
@@ -34,8 +35,6 @@ namespace TypeBreaker.Daemon {
 		public BreakManager (TypeBreakerDaemon app) {
 			this.app = app;
 			settings = new Settings ();
-
-			/* app.do_notify ("This is the startup message", "xyz"); */
 
 			settings.changed["active"].connect ( () => {
 				message ("Active has been changed to: %s", settings.active.to_string ());
@@ -46,6 +45,9 @@ namespace TypeBreaker.Daemon {
 
 			if (settings.active) {
 				activate ();
+			}
+			else {
+				setup ();
 			}
 		}
 
@@ -71,6 +73,14 @@ namespace TypeBreaker.Daemon {
 			postpones_left = settings.postpones_count;
 			app.break_window.enable_postponing ();
 			countdown_is_running = true;
+
+			settings.changed["active_time"].connect ( () => {
+				int secs = settings.active_time - (int)time_until_break.seconds_left;
+				if (secs < 0) {
+					secs = 0;
+				}
+				time_until_break.seconds_left = secs;
+			});
 		}
 
 		
@@ -106,11 +116,15 @@ namespace TypeBreaker.Daemon {
 			}
 
 			if (idle_time >= settings.break_time) {
-				if (countdown_is_running) {
-					message ("Break has been completed, waiting for next activity to start the next countdown");
-					time_until_break.stop ();
-					countdown_is_running = false;
-				}
+
+				// We simply restart the countdown
+				time_until_break.reset ();
+
+				/* if (countdown_is_running) { */
+				/* 	message ("Break has been completed, waiting for next activity to start the next countdown"); */
+				/* 	time_until_break.stop (); */
+				/* 	countdown_is_running = false; */
+				/* } */
 			}
 
 			if (!has_been_warned && time_until_break.seconds_left <= settings.warn_time) {
@@ -125,6 +139,7 @@ namespace TypeBreaker.Daemon {
 
 		// Show the break window, forcing a break.
 		public void take_break () {
+			time_until_break.stop ();
 			app.break_window.show_all ();
 		}
 
@@ -152,6 +167,7 @@ namespace TypeBreaker.Daemon {
 		}
 
 
+
 		public void handle_lock_screen () {
 			try {
 				var proxy = get_screensaver_proxy ();
@@ -164,6 +180,7 @@ namespace TypeBreaker.Daemon {
 				warning (e.message);
 			}
 		}
+
 
 
 		/**

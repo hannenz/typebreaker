@@ -59,6 +59,12 @@ namespace TypeBreaker {
 
 
 
+		// An alias for setup
+		public void reset () {
+			setup ();
+		}
+
+
 		protected void setup () {
 			microseconds = seconds_count * 1000;
 			timer = microseconds;

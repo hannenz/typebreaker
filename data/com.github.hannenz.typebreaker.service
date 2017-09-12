@@ -1,0 +1,3 @@
+[DBUS-Service]
+Name=com.github.hannenz.typebreaker
+Exec=/usr/local/bin/com.github.hannenz.typebreaker-daemon

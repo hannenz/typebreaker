@@ -11,7 +11,7 @@ namespace TypeBreaker {
 		private Wingpanel.Widgets.Switch active_switch;
 		private Wingpanel.Widgets.Button break_button;
 		private Wingpanel.Widgets.Button settings_button;
-		private ProgressBar progress_bar;
+		/* private ProgressBar progress_bar; */
 
 		private Image? display_widget = null;
 		private Gtk.Grid? main_grid = null;
@@ -75,7 +75,7 @@ namespace TypeBreaker {
 
 		public override Widget get_display_widget () {
 			if (display_widget == null) {
-				display_widget = new Image.from_resource ("/com/github/hannenz/typebreaker/data/typebreaker-symbolic.png");
+				display_widget = new Image.from_resource ("/com/github/hannenz/typebreaker-indicator/typebreaker-symbolic.png");
 			}
 
 			return display_widget;
@@ -92,19 +92,20 @@ namespace TypeBreaker {
 			main_grid = new Grid ();
 			main_grid.set_orientation (Orientation.VERTICAL);
 
-			info_label = new Label ("");
+			info_label = new Label (_("Type Breaker is not running"));
 			info_label.margin_top = 6;
 			info_label.margin_bottom = 6;
 			update_time_until_break ();
 
-			progress_bar = new ProgressBar ();
-			progress_bar.set_show_text (true);
+			/* progress_bar = new ProgressBar (); */
+			/* progress_bar.set_show_text (true); */
 
 			active_switch = new Wingpanel.Widgets.Switch (_("Watch for breaks"));
 			active_switch.set_active (settings.active);
 			active_switch.switched.connect ( () => {
 				settings.active = active_switch.get_active ();
 				break_button.set_sensitive (settings.active); 
+
 				if (!settings.active) {
 					info_label.set_text("");
 				}
@@ -112,9 +113,14 @@ namespace TypeBreaker {
 					update_time_until_break ();
 				}
 			});
+			settings.changed["active"].connect ( () => {
+				active_switch.set_active (settings.active);
+			});
+			active_switch.set_sensitive (false);
 			
 			break_button = new Wingpanel.Widgets.Button (_("Take break"));
 			break_button.clicked.connect (take_break);
+			break_button.set_sensitive (false);
 
 			settings_button = new Wingpanel.Widgets.Button (_("Settings"));
 			settings_button.clicked.connect (show_settings);
@@ -122,9 +128,9 @@ namespace TypeBreaker {
 			var separator = new Wingpanel.Widgets.Separator ();
 
 			main_grid.add (info_label);
-			main_grid.add (progress_bar);
-			main_grid.add (active_switch);
+			/* main_grid.add (progress_bar); */
 			main_grid.add (separator);
+			main_grid.add (active_switch);
 			main_grid.add (break_button);
 			main_grid.add (settings_button);
 
@@ -134,7 +140,14 @@ namespace TypeBreaker {
 			Timeout.add (5000, () => {
 				update_time_until_break ();
 				if (!check_daemon_running ()) {
-					info_label.set_text ("Daemon is not running!");
+					
+					info_label.set_text (_("Type Breaker is not running!"));
+					break_button.set_sensitive (false);
+					active_switch.set_sensitive (false);
+				}
+				else {
+					break_button.set_sensitive (true);
+					active_switch.set_sensitive (true);
 				}
 
 				return true;
@@ -142,66 +155,113 @@ namespace TypeBreaker {
 		}
 
 
-		
+
+		/**
+		 * Check the list of DBus Services to see if the
+		 * typebreaker daemon is running
+		 * 
+		 * @return bool
+		 */
 		private bool check_daemon_running () {
 			try {
-				string? key = null;
-				Variant? val = null;
 
-				var connection = Bus.get_sync (BusType.SESSION, null);	
+				var connection = GLib.Bus.get_sync (BusType.SESSION, null);	
 				var ret = connection.call_sync (
 					"org.freedesktop.DBus",
 					"/org/freedesktop/DBus",
 					"org.freedesktop.DBus",
 					"ListNames",
 					null,
-					VariantType.STRING_ARRAY,
+					VariantType.TUPLE,
 					DBusCallFlags.NONE,
 					-1,
 					null
 				);
-				var inner = ret.get_child_value (0);
-				var iter = inner.iterator ();
-				while (iter.next ("s", &key, &val)) {
-					var name = val.get_type_string ();
-					if (name == "com.github.hannenz.typebreaker") {
+				var names = ret.get_child_value (0);
+				var iter = names.iterator ();
+
+				Variant? v = null;
+				while ((v = iter.next_value ()) != null) {
+					var name = v.get_string ();
+					if (name == "com.github.hannenz.TypeBreakerService") {
 						return true;
 					}
 				}
-
 			}
 			catch (Error e) {
+				warning (e.message);
 				return false;
 			}
+
+			// Daemon is not running, try to launch it
+			launch_daemon ();
 			return false;
 		}
+
+
+
+		/**
+		 * Try to launch the daemon
+		 *
+		 * @return void
+		 */
+		private void launch_daemon () {
+			Pid child_pid;
+
+			try {
+				Process.spawn_async (
+					"/",
+					{ "com.github.hannenz.typebreaker-daemon" },
+					Environ.get (),
+					SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD | SpawnFlags.STDOUT_TO_DEV_NULL | SpawnFlags.STDERR_TO_DEV_NULL,
+					null,
+					out child_pid
+				);
+				ChildWatch.add (child_pid, (pid, status) => {
+					Process.close_pid (pid);
+				});
+			}
+			catch (Error e) {
+				warning (e.message);
+			}
+		}
+
 
 
 		private void update_time_until_break () {
 			int time_until_break;
 			string text;
 
+			if (!settings.active) {
+				return;
+			}
+
 			var proxy = get_dbus_proxy ();
 			if (proxy == null) {
 				return;
 			}
-			var variant = proxy.call_sync ("GetSecondsUntilBreak", null, DBusCallFlags.NONE, -1, null);
-			var inner = variant.get_child_value (0);
-			time_until_break = inner.get_int32 ();
+			try {
+				var variant = proxy.call_sync ("GetSecondsUntilBreak", null, DBusCallFlags.NONE, -1, null);
+				var inner = variant.get_child_value (0);
+				time_until_break = inner.get_int32 ();
 
-			if (time_until_break >= 60) {
-				var t = new TypeBreaker.TimeString ();
-				t.show_seconds = false;
-				string s = t.nice (time_until_break);
-				text = s + _(" until break");
-			}
-			else {
-				text = _("Less than 1 minute until break");
-			}
-			info_label.set_text (text);
+				if (time_until_break >= 60) {
+					var t = new TypeBreaker.TimeString ();
+					t.show_seconds = false;
+					string s = t.nice (time_until_break);
+					text = s + _(" until break");
+				}
+				else {
+					text = _("Less than 1 minute until break");
+				}
+				info_label.set_text (text);
 
-			double frac = 1 - ((double) time_until_break / (double) settings.active_time);
-			progress_bar.set_fraction (frac);
+				/* double frac = 1 - ((double) time_until_break / (double) settings.active_time); */
+				/* progress_bar.set_fraction (frac); */
+			}
+			catch (Error e) {
+				warning (e.message);
+			}
 		}
 
 
@@ -233,6 +293,16 @@ namespace TypeBreaker {
 * Create and return your indicator here if it should be displayed on the current server.
 */
 public Wingpanel.Indicator? get_indicator (Module module, Wingpanel.IndicatorManager.ServerType server_type) {
+
+	/* Logger.initialize ("com.github.hannenz.typebreaker-indicator"); */
+	/* Logger.DisplayLevel = LogLevel.DEBUG; */
+	/* Logger.notification ("Starting com.github.hannenz.typebreaker-indicator"); */
+    /*  */
+	/* GLib.Log.set_writer_func ((LogWriterFunc) GLib.Log.writer_journald); */
+	
+
+	debug ("typebreaker-foo");
+
 	/* const string GETTEXT_PACKAGE = "typebreaker"; */
 
 	/* Intl.setlocale (LocaleCategory.MESSAGES, ""); */

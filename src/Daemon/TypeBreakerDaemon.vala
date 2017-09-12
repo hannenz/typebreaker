@@ -10,7 +10,6 @@ namespace TypeBreaker.Daemon {
 		public BreakManager manager;
 		public BreakWindow break_window;
 
-		private int postpones_left;
 
 
 		// Constructor
@@ -19,9 +18,6 @@ namespace TypeBreaker.Daemon {
 				application_id: "com.github.hannenz.typebreaker",
 				flags: ApplicationFlags.NON_UNIQUE
 			);
-
-			/* set_inactivity_timeout (1000); */
-
 		}
 
 
@@ -32,11 +28,8 @@ namespace TypeBreaker.Daemon {
 
 
 
-
-
 		public override void startup () {
-			message ("TypeBreakerDaemon started");
-			message (_("My brother, the cow"));
+			message ("startup ()");
 			base.startup ();
 
 			break_window = new BreakWindow ();
@@ -44,12 +37,13 @@ namespace TypeBreaker.Daemon {
 			manager = new BreakManager (this);
 
 			hold ();
+			message ("leaving startup()");
 		}
 
 
 
 		public override void activate () {
-			message ("TypeBreakerDaemon activated");
+			message ("activate ()");
 
 			// Connect the window's signals
 			break_window.countdown_finished.connect ( manager.handle_break_completed);
@@ -59,6 +53,7 @@ namespace TypeBreaker.Daemon {
 			break_window.exit_application.connect ( quit );
 
 			this.add_window (break_window);
+			message ("leaving activate ()");
 		}
 
 
@@ -85,11 +80,13 @@ namespace TypeBreaker.Daemon {
 			notification.set_body (message);
 
 			// Test
-			var icon = new FileIcon (File.new_for_uri("resource:///com/github/hannenz/typebreaker/data/typebreaker.png"));
+			var icon = new FileIcon (File.new_for_uri("resource:///com/github/hannenz/typebreaker-daemon/typebreaker.png"));
 			notification.set_icon (icon);
 			this.send_notification ("typebreaker.notification." + id, notification);
 		}
 	}
+
+
 
 	[DBus (name = "com.github.hannenz.TypeBreakerService")]
 	public  class TypeBreakerService : Object {
@@ -112,7 +109,6 @@ namespace TypeBreaker.Daemon {
 
 	private void on_bus_aquired (DBusConnection conn) {
 		try {
-
 			conn.register_object ("/com/github/hannenz/typebreaker", new BreakManager (app));
 		}
 		catch (IOError e) {
@@ -123,15 +119,18 @@ namespace TypeBreaker.Daemon {
 
 
 	public static int main (string[] args) {
+		message ("main()");
 		app = new TypeBreakerDaemon ();
 
 		try {
+			message ("registering app");
 			app.register ();
 		}
 		catch (Error e) {
 			error ("Couldn't register application");
 		}
 
+		message ("own_name");
 		// DBus
 		Bus.own_name (
 			BusType.SESSION, 
@@ -142,6 +141,7 @@ namespace TypeBreaker.Daemon {
 			() => stderr.printf ("Could not aquire name\n")
 		);
 
+		message ("abouot to run app");
 		return app.run (args);
 	}
 }
