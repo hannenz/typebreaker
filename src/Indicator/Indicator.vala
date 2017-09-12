@@ -98,6 +98,8 @@ namespace TypeBreaker {
 			info_label.margin_bottom = 6;
 			update_time_until_break ();
 
+			revealer = new Revealer ();
+
 			/* progress_bar = new ProgressBar (); */
 			/* progress_bar.set_show_text (true); */
 
@@ -120,25 +122,32 @@ namespace TypeBreaker {
 			});
 			/* active_switch.set_sensitive (false); */
 
-			revealer = new Revealer ();
 			
 			break_button = new Wingpanel.Widgets.Button (_("Take break"));
 			break_button.clicked.connect (take_break);
 			break_button.set_sensitive (false);
 
-			revealer.set_reveal_child (true);
-			revealer.add (break_button);
 
 			settings_button = new Wingpanel.Widgets.Button (_("Settings"));
 			settings_button.clicked.connect (show_settings);
 
 			var separator = new Wingpanel.Widgets.Separator ();
 
-			main_grid.add (info_label);
-			/* main_grid.add (progress_bar); */
-			main_grid.add (separator);
 			main_grid.add (active_switch);
+			main_grid.add (separator);
+
+			var inner_grid = new Grid ();
+			inner_grid.set_orientation (Orientation.VERTICAL);
+			inner_grid.add (info_label);
+			inner_grid.add (break_button);
+			revealer.add (inner_grid);
+
 			main_grid.add (revealer);
+			revealer.set_reveal_child (true);
+			
+			/* main_grid.add (info_label); */
+			/* main_grid.add (progress_bar); */
+			main_grid.add (inner_grid);
 			main_grid.add (settings_button);
 
 			main_grid.show_all ();
@@ -208,6 +217,8 @@ namespace TypeBreaker {
 
 		/**
 		 * Try to launch the daemon
+		 *
+		 * // TODO: Somehow get it launched by DBus !!
 		 *
 		 * @return void
 		 */
