@@ -28,7 +28,7 @@ resources.c: $(DATADIR)/typebreaker-daemon.gresource.xml
 install:
 	-pkill -f $(PRG)
 	# Binaries
-	install -o root -g root -m 644 $(PRG) /usr/local/bin/
+	install -o root -g root -m 755 $(PRG) /usr/local/bin/
 	# GSettings Schema
 	install -o root -g root -m 644 $(DATADIR)/com.github.hannenz.typebreaker.gschema.xml /usr/share/glib-2.0/schemas/
 	glib-compile-schemas /usr/share/glib-2.0/schemas
