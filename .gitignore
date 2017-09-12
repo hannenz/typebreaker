@@ -3,7 +3,7 @@ com.github.hannenz.typebreaker-daemon
 libcom.github.hannenz.typebreaker-indicator.so.vapi
 *.so
 typebreaker-daemon
-typebreaker-indicator*
+typebreaker-indicator
 com.github.hannenz.typebreaker-daemon
 libcom.github.hannenz.typebreaker-indicator.so.vapi
 
