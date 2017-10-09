@@ -41,6 +41,10 @@ namespace TypeBreaker.Daemon {
 				if (settings.active) {
 					activate ();
 				}
+				else {
+					time_until_break.stop ();
+					countdown_is_running = false;
+				}
 			});
 
 			if (settings.active) {

@@ -4,7 +4,9 @@ libcom.github.hannenz.typebreaker-indicator.so.vapi
 *.so
 typebreaker-daemon
 typebreaker-indicator
+com.github.hannenz.typebreaker
 com.github.hannenz.typebreaker-daemon
 com.github.hannenz.typebreaker-indicator
 src/Indicator/com.github.hannenz.typebreaker-indicator
+resources.c
 
