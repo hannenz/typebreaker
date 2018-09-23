@@ -87,12 +87,12 @@ namespace TypeBreaker.Daemon {
 			});
 		}
 
-		
+
 
 		public int get_seconds_until_break () {
 			return (int) time_until_break.seconds_left;
 		}
-			
+
 
 
 		/**
@@ -154,7 +154,7 @@ namespace TypeBreaker.Daemon {
 			setup ();
 		}
 
-		
+
 
 		/**
 		 * Handle postpone process

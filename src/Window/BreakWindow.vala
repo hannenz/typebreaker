@@ -78,7 +78,7 @@ namespace TypeBreaker.Window {
 			}
 			else {
 				is_composited = false;
-			} 
+			}
 			if (is_composited){
 				this.draw.connect(on_draw);
 			}
@@ -103,15 +103,15 @@ namespace TypeBreaker.Window {
 			if (surface.status() != Cairo.Status.SUCCESS){
 				stderr.printf("Failed to create cairo surface!\n");
 			}
-			
+
 			cr = new Context(surface);
 			if (cr.status() != Cairo.Status.SUCCESS){
 				stderr.printf("Failed to create cairo context\n");
 			}
-			cr.set_source_rgba(1.0, 1.0, 1.0, 0.0);	
+			cr.set_source_rgba(1.0, 1.0, 1.0, 0.0);
 			cr.set_operator(Operator.OVER);
 			cr.paint();
-			
+
 			cr.rectangle(0, 0, width, height);
 			cr.set_source_rgba(0.2, 0.2, 0.2, 0.85);
 			cr.fill();
@@ -191,7 +191,7 @@ namespace TypeBreaker.Window {
 		}
 
 
-		
+
 		private Widget create_button_box () {
 			var button_box = new ButtonBox(Orientation.HORIZONTAL);
 			button_box.set_layout(ButtonBoxStyle.END);
@@ -211,7 +211,7 @@ namespace TypeBreaker.Window {
 
 
 			// For testing only
-			
+
 			string[] envp = Environ.get ();
 			if (Environ.get_variable (envp, "G_MESSAGES_DEBUG") != null) {
 				var exit_button = new Button.with_label (_("Exit"));
@@ -221,12 +221,12 @@ namespace TypeBreaker.Window {
 				exit_button.override_background_color (Gtk.StateFlags.NORMAL, bgcolor);
 				button_box.pack_start (exit_button, false, true, 0);
 			}
-			
+
 			var lock_button = new Button.with_mnemonic (_("Lock screen"));
 			lock_button.clicked.connect (on_lock_button_clicked);
 			lock_button.override_background_color (Gtk.StateFlags.NORMAL, bgcolor);
 			button_box.pack_start (lock_button, false, false, 0);
-			
+
 			return button_box;
 		}
 
@@ -259,8 +259,5 @@ namespace TypeBreaker.Window {
 		private void stop_countdown () {
 			/* countdown_clock.stop (); */
 		}
-
-
-
 	}
 }

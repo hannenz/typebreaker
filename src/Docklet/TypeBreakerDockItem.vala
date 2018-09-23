@@ -2,7 +2,7 @@ using Plank;
 using Cairo;
 
 namespace TypeBreaker {
-	
+
 	public class TypeBreakerDockItem : DockletItem {
 
 		/**
@@ -17,8 +17,8 @@ namespace TypeBreaker {
 		  */
 		public TypeBreakerPreferences prefs;
 
-		
-  
+
+
 		// Constructor
 		public TypeBreakerDockItem.with_dockitem_file(GLib.File file) {
 			GLib.Object( Prefs: new TypeBreakerPreferences.with_file(file));
@@ -54,7 +54,7 @@ namespace TypeBreaker {
 			var dlg = new SettingsDialog ();
 			dlg.run ();
 			dlg.destroy ();
-			
+
 			updated();
 		}
 
@@ -157,4 +157,4 @@ namespace TypeBreaker {
 		}
 
 	}
-}	
+}

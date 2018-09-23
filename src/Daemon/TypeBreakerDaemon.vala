@@ -3,7 +3,7 @@ using TypeBreaker.Window;
 namespace TypeBreaker.Daemon {
 
 	TypeBreakerDaemon app;
-	
+
 	public class TypeBreakerDaemon : Gtk.Application {
 
 		public TypeBreaker.Settings settings;
@@ -66,7 +66,7 @@ namespace TypeBreaker.Daemon {
 
 		/**
 		  * Send a notification
-		  * 
+		  *
 		  * @param string		The message
 		  * @param FileIcon		Icon
 		  * @param string		id, something to distinguish notifications
@@ -131,8 +131,8 @@ namespace TypeBreaker.Daemon {
 		message ("own_name");
 		// DBus
 		Bus.own_name (
-			BusType.SESSION, 
-			"com.github.hannenz.typebreaker", 
+			BusType.SESSION,
+			"com.github.hannenz.typebreaker",
 			BusNameOwnerFlags.NONE,
 			on_bus_aquired,
 			() => {},

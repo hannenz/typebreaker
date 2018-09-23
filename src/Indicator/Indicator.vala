@@ -3,7 +3,7 @@ using Wingpanel;
 using Granite.Services;
 
 namespace TypeBreaker {
-	
+
 	public class Indicator : Wingpanel.Indicator {
 
 		public static TypeBreaker.Settings settings;

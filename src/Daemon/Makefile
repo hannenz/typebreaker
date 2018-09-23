@@ -1,8 +1,8 @@
 PRG = com.github.hannenz.typebreaker
 CC = gcc
 VALAC = valac
-PACKAGES = gtk+-3.0 granite posix 
-VALAFLAGS = $(patsubst %, --pkg %, $(PACKAGES)) -X -D'GETTEXT_PACKAGE="typebreaker"' 
+PACKAGES = gtk+-3.0 granite posix
+VALAFLAGS = $(patsubst %, --pkg %, $(PACKAGES)) -X -D'GETTEXT_PACKAGE="typebreaker"'
 DATADIR=../../data
 SOURCES = 	../Daemon/TypeBreakerDaemon.vala\
 			../Daemon/BreakManager.vala\
